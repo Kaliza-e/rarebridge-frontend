@@ -1,0 +1,78 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.7s ease-out both;
+}
+
+.zebra-spot {
+  box-shadow: 0 25px 80px rgba(17, 34, 80, 0.06);
+}
+
+.zebra-button-glow {
+  box-shadow: 0 16px 40px rgba(17, 34, 80, 0.18);
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 14s ease-in-out infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 6s ease-in-out infinite;
+}
+
+.particle-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
+}
+
+/* Particle follow helpers — small offsets applied via inline CSS vars */
+#rb-particles {
+  --p-x: 0px;
+  --p-y: 0px;
+  --p-x2: 0px;
+  --p-y2: 0px;
+  --p-x3: 0px;
+  --p-y3: 0px;
+  --p-x4: 0px;
+  --p-y4: 0px;
+  --p-x5: 0px;
+  --p-y5: 0px;
+}
+.particle-dot {
+  transition: transform 350ms cubic-bezier(0.2, 0.9, 0.25, 1);
+}
