@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "node node_modules/vite/bin/vite.js build",
     "dev": "vite"
   },
   "dependencies": {
