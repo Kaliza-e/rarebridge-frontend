@@ -152,7 +152,7 @@ export default function HomePage({
     async function loadDiseases() {
       try {
         const apiDiseases = await fetchDiseasesFromAPI();
-        setDiseases(apiDiseases);
+        setDiseases(apiDiseases as Disease[]);
         // Set suggested searches from actual disease names
         setSuggestedSearches(apiDiseases.slice(0, 4).map(d => d.name));
       } catch (error) {
@@ -274,7 +274,7 @@ export default function HomePage({
           <path d="M900 0 Q850 150 900 300 T900 600" stroke="var(--purple)" strokeWidth="2" fill="none" />
         </svg>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-10 md:pt-28 md:pb-14 flex flex-col items-center text-center relative z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-16 md:pb-12 flex flex-col items-center text-center relative z-10">
 
           {/* Floating doodles in hero */}
           <div className="absolute top-10 left-10 animate-float opacity-20" style={{ animationDelay: '0s' }}>
@@ -305,7 +305,7 @@ export default function HomePage({
               text-primary
               text-xs
               font-bold
-              mb-8
+              mb-5
               border
               border-[#E5EAF2]
               shadow-sm
@@ -354,7 +354,7 @@ export default function HomePage({
               md:text-xl
               text-accent
               leading-relaxed
-              mb-10
+              mb-7
               max-w-2xl
               ${fadeUp("delay-[750ms]")}
             `}
@@ -486,7 +486,7 @@ export default function HomePage({
           ================================================= */}
 
           <div
-            className={`flex flex-wrap justify-center gap-2 mb-10 ${fadeUp(
+            className={`flex flex-wrap justify-center gap-2 mb-7 ${fadeUp(
               "delay-[1000ms]"
             )}`}
           >
@@ -556,7 +556,7 @@ export default function HomePage({
           ================================================= */}
 
           <div
-            className={`flex flex-wrap justify-center gap-3 mb-14 ${fadeUp(
+            className={`flex flex-wrap justify-center gap-3 mb-8 ${fadeUp(
               "delay-[1100ms]"
             )}`}
           >
@@ -753,7 +753,7 @@ export default function HomePage({
           PATIENT JOURNEY
       ===================================================== */}
 
-      <section className="bg-[#F7F9FC] py-20 md:py-24 relative overflow-hidden">
+      <section className="bg-[#F7F9FC] py-12 md:py-16 relative overflow-hidden">
         {/* Subtle glow effects */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />

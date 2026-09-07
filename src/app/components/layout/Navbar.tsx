@@ -48,27 +48,27 @@ export default function Navbar({ onNav, activeView }: NavbarProps) {
   const links = NAV_LINKS.filter((l) => l !== "Home");
 
   return (
-    <nav className="sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 bg-ivory/95 backdrop-blur-sm">
 
       {/* ── Desktop layout ── */}
-      <div className="hidden md:flex items-center gap-5 px-6 py-3">
+      <div className="relative mx-auto hidden h-24 max-w-[1440px] items-center justify-center px-6 md:flex">
 
         {/* Logo — prominent full size */}
         <button
           onClick={() => handleNavigation("home")}
-          className="shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-2xl transition-transform duration-200 hover:scale-[1.03]"
+          className="absolute left-5 top-1/2 shrink-0 -translate-y-1/2 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-transform duration-200 hover:scale-[1.03]"
           aria-label="Go to RareBridge home"
         >
           <img
             src="/logo-transparent.png"
             alt="RareBridge"
-            className="h-28 md:h-32 lg:h-36 w-auto object-contain drop-shadow-md"
+            className="h-20 md:h-24 lg:h-28 w-auto object-contain drop-shadow-md"
           />
         </button>
 
-        {/* Pill — fills remaining space, content centered */}
-        <div className="flex-1 flex justify-center">
-          <div className="flex items-center bg-white border border-[#E4E8F2] rounded-2xl shadow-md px-2 py-1.5 gap-0.5">
+        {/* Pill — centered against the full header, independent of the logo */}
+        <div className="flex max-w-full justify-center">
+          <div className="flex items-center gap-0.5 rounded-2xl border border-[#E4E8F2] bg-white px-2 py-1.5 shadow-md">
 
             {/* Nav links */}
             {links.map((link) => {

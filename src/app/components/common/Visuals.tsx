@@ -501,7 +501,7 @@ export function PatientJourney() {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-taupe-20/50 relative overflow-hidden">
+    <section className="py-14 md:py-20 bg-gradient-to-b from-white to-taupe-20/50 relative overflow-hidden">
       {/* Elegant Background Curvy Lines */}
       <div className="absolute inset-0 pointer-events-none opacity-60 z-0">
         <svg className="w-full h-full text-accent" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -514,16 +514,16 @@ export function PatientJourney() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-20">
-          <h2 className="text-sm font-bold text-accent tracking-widest uppercase mb-3">Diagnostic Journey</h2>
-          <h3 className="text-4xl md:text-5xl font-black text-primary mb-6 tracking-tight">Understanding the Path</h3>
-          <p className="text-accent text-lg max-w-2xl mx-auto">
+        <div className="text-center mb-12 md:mb-14">
+          <h2 className="text-xs font-bold text-accent tracking-[0.2em] uppercase mb-3">Diagnostic Journey</h2>
+          <h3 className="text-3xl md:text-4xl font-black text-primary mb-4 tracking-tight">Understanding the Path</h3>
+          <p className="text-accent text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
             Navigating the complexities of a rare disease can be overwhelming. Here is a guide to what the journey often looks like, step by step.
           </p>
         </div>
 
         {/* Modern Stepper */}
-        <div className="relative max-w-5xl mx-auto mb-24">
+        <div className="relative max-w-5xl mx-auto mb-14">
           {/* Connecting Line (Desktop) */}
           <div className="absolute top-8 left-0 w-full h-1 bg-taupe-20 -translate-y-1/2 rounded-full hidden md:block"></div>
           <div 
@@ -545,7 +545,7 @@ export function PatientJourney() {
                 >
                   {/* Icon Circle */}
                   <div 
-                    className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 z-10 ${
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 z-10 ${
                       isActive 
                         ? 'bg-accent text-white scale-110 shadow-lg ring-4 ring-white' 
                         : isPast 
@@ -553,7 +553,7 @@ export function PatientJourney() {
                           : 'bg-white text-taupe border-2 border-taupe-40 hover:border-accent hover:text-accent ring-4 ring-white'
                     }`}
                   >
-                    <Icon className="w-7 h-7" />
+                    <Icon className="w-6 h-6" />
                   </div>
                   
                   {/* Label */}
@@ -573,14 +573,14 @@ export function PatientJourney() {
 
         {/* Modern Detail Card */}
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl border-2 border-taupe-20 transition-all duration-500 transform hover:border-accent/40">
-            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-[0_18px_50px_rgba(17,34,80,0.10)] border border-taupe-20 transition-all duration-500 transform hover:border-accent/40">
+            <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10">
               <div className="flex-shrink-0">
                 {(() => {
                   const Icon = JOURNEY_STEPS[activeStep].icon as any;
                   return (
-                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-accent-10 flex items-center justify-center transform rotate-3">
-                      <Icon className="w-12 h-12 md:w-16 md:h-16 text-accent" />
+                    <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-accent-10 flex items-center justify-center transform rotate-3">
+                      <Icon className="w-10 h-10 md:w-12 md:h-12 text-accent" />
                     </div>
                   );
                 })()}
@@ -589,17 +589,17 @@ export function PatientJourney() {
                 <div className="inline-block px-4 py-1.5 bg-secondary/30 text-primary text-xs font-bold tracking-widest uppercase rounded-full mb-4">
                   Phase {activeStep + 1}
                 </div>
-                <h4 className="text-2xl md:text-3xl font-black text-primary mb-4 leading-tight">
+                <h4 className="text-2xl md:text-3xl font-black text-primary mb-3 leading-tight">
                   {JOURNEY_STEPS[activeStep].label}
                 </h4>
-                <p className="text-accent text-lg leading-relaxed">
+                <p className="text-accent text-base md:text-lg leading-relaxed">
                   {JOURNEY_STEPS[activeStep].desc}
                 </p>
               </div>
             </div>
             
             {/* Quick Navigation */}
-            <div className="flex justify-center md:justify-start gap-2 mt-10 md:mt-8 md:ml-44">
+            <div className="flex justify-center md:justify-start gap-2 mt-7 md:mt-6 md:ml-34">
               {JOURNEY_STEPS.map((_, i) => (
                 <button
                   key={i}
