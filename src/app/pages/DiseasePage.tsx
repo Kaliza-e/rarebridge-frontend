@@ -351,6 +351,7 @@ function SpecialistsSection({ specialists }: { specialists: Specialist[] }) {
           const organization = spec.organization && !spec.organization.includes("Not found") ? spec.organization : "";
           const location = spec.location && !spec.location.includes("Not found") ? spec.location : "";
           const contact = spec.contact && !spec.contact.includes("Not publicly") ? spec.contact : "";
+          const sources = spec.sources || [];
 
           return (
             <div
@@ -409,14 +410,14 @@ function SpecialistsSection({ specialists }: { specialists: Specialist[] }) {
                   )}
 
                   {/* Sources */}
-                  {spec.sources && spec.sources.length > 0 && (
+                  {sources.length > 0 && (
                     <div className="flex items-start gap-2 text-[11px] text-accent/70 pt-2 flex-wrap">
                       <FileText className="h-3 w-3 shrink-0 mt-0.5 text-primary/50" />
                       <span>Sources: </span>
-                      {spec.sources.map((s, idx) => (
+                      {sources.map((s, idx) => (
                         <span key={idx} className="inline-block mr-1">
                           {renderTextWithLinks(s)}
-                          {idx < spec.sources.length - 1 ? "," : ""}
+                          {idx < sources.length - 1 ? "," : ""}
                         </span>
                       ))}
                     </div>
