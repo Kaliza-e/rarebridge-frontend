@@ -1,11 +1,17 @@
-import React from "react";
-import { DISEASES, FEATURES } from "../data";
-import { BookOpen, Microscope, FlaskConical, Users } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { DISEASES, FEATURES, fetchDiseasesFromAPI } from "../data";
+import { BookOpen, Microscope, FlaskConical, Users, ExternalLink } from "lucide-react";
 import { ZebraMascot, ZebraDoodle } from "../components/common/Visuals";
-import { renderTextWithLinks } from "../utils/link-helper";
+import { normalizeUrl, renderTextWithLinks } from "../utils/link-helper";
 
 export default function ResearchPage() {
-  const organizations = DISEASES.flatMap(d => (d as any).research || [])
+  const [diseases, setDiseases] = useState(DISEASES);
+
+  useEffect(() => {
+    fetchDiseasesFromAPI().then(setDiseases).catch(() => setDiseases(DISEASES));
+  }, []);
+
+  const organizations = diseases.flatMap(d => (d as any).research || [])
     .reduce((acc: any[], item: any) => acc.find(x => x.name === item.name) ? acc : [...acc, item], []);
 
   return (
@@ -86,6 +92,17 @@ export default function ResearchPage() {
                 </div>
                 <h3 className="font-bold text-primary mb-2">{renderTextWithLinks(org.name, { showIcon: false })}</h3>
                 <div className="text-sm text-accent leading-relaxed">{renderTextWithLinks(org.why)}</div>
+                {org.url && (
+                  <a
+                    href={normalizeUrl(org.url)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 mt-4 text-xs font-bold text-primary hover:underline"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Visit source
+                  </a>
+                )}
               </div>
             </div>
           )) : (

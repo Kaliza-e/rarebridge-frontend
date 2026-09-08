@@ -10,7 +10,7 @@ export interface DiagnosticStep {
 }
 
 export interface LifestyleData {
-  therapies: string[];
+  therapies: Array<string | { name: string; desc?: string }>;
   nutrition: string;
   devices: string[];
   caregiverTips: string[];

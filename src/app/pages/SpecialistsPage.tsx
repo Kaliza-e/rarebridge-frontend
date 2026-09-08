@@ -21,6 +21,9 @@ interface SpecialistWithDisease extends Specialist {
 }
 
 function SpecialistCard({ s }: { s: SpecialistWithDisease }) {
+  const profession = s.profession?.trim() || "";
+  const specialization = s.specialization?.trim() || "";
+  const sources = s.sources || [];
   const hasWhereToFind = (s.organization && s.organization.trim() !== "") ||
                          (s.location && s.location.trim() !== "") ||
                          (s.contact && s.contact.trim() !== "");
@@ -31,31 +34,28 @@ function SpecialistCard({ s }: { s: SpecialistWithDisease }) {
       <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-accent-10 blur-2xl" />
 
       <div className="relative space-y-4">
-        {/* Header */}
-        <div className="flex items-start gap-3">
+        {/* Keep the specialist name as the anchor for all related details. */}
+        <div className="flex items-start gap-3 border-b border-secondary/70 pb-4">
           <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary">
             <Stethoscope className="h-5 w-5 text-secondary" />
           </div>
-          <div>
+          <div className="min-w-0">
             <h3 className="font-bold text-primary leading-snug text-base">{renderTextWithLinks(s.name, { showIcon: false })}</h3>
-            {s.profession && s.profession.trim() !== "" && (
-              <p className="text-xs text-accent mt-0.5 font-medium">{renderTextWithLinks(s.profession, { showIcon: false })}</p>
+            {profession && <p className="text-xs text-accent mt-1 font-medium">{renderTextWithLinks(profession, { showIcon: false })}</p>}
+            {specialization && specialization !== profession && (
+              <p className="text-xs text-accent/80 mt-1">{renderTextWithLinks(specialization, { showIcon: false })}</p>
             )}
           </div>
         </div>
 
-        {/* Disease Tag */}
         <div className="rounded-2xl bg-secondary/80 px-3.5 py-2 text-xs font-semibold text-primary flex items-center gap-2">
           <Stethoscope className="h-3.5 w-3.5 shrink-0 text-primary" />
           <span>Disease: <strong className="font-bold">{s.disease}</strong></span>
         </div>
 
-        {/* Where to find her / him */}
         {hasWhereToFind && (
-          <div className="space-y-2 rounded-2xl bg-ivory/80 p-4 border border-secondary/60 text-xs">
-            <p className="font-bold text-primary text-[11px] uppercase tracking-wider text-accent/80">
-              Where to find her / him:
-            </p>
+          <div className="space-y-2 text-xs">
+            <p className="font-bold text-accent/80 text-[11px] uppercase tracking-wider">Contact details</p>
 
             {/* Organization */}
             {s.organization && s.organization.trim() !== "" && (
@@ -83,14 +83,6 @@ function SpecialistCard({ s }: { s: SpecialistWithDisease }) {
           </div>
         )}
 
-        {/* Specialization */}
-        {s.specialization && s.specialization.trim() !== "" && (
-          <div className="flex items-start gap-2 text-xs text-accent">
-            <FlaskConical className="h-3.5 w-3.5 shrink-0 mt-0.5 text-primary/60" />
-            <span>{renderTextWithLinks(s.specialization)}</span>
-          </div>
-        )}
-
         {/* Publications */}
         {s.publications && s.publications.trim() !== "" && (
           <div className="flex items-start gap-2 text-xs text-accent/80">
@@ -100,14 +92,14 @@ function SpecialistCard({ s }: { s: SpecialistWithDisease }) {
         )}
 
         {/* Sources */}
-        {s.sources && s.sources.length > 0 && (
+        {sources.length > 0 && (
           <div className="flex items-start gap-2 text-[11px] text-accent/70 pt-1 flex-wrap">
             <FileText className="h-3 w-3 shrink-0 mt-0.5 text-primary/50" />
             <span>Sources: </span>
-            {s.sources.map((src, idx) => (
+            {sources.map((src, idx) => (
               <span key={idx} className="inline-block mr-1">
                 {renderTextWithLinks(src)}
-                {idx < s.sources.length - 1 ? "," : ""}
+                {idx < sources.length - 1 ? "," : ""}
               </span>
             ))}
           </div>

@@ -411,11 +411,7 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
       inheritance: "Genetic",
       ageAppearance: "Variable",
       severity: "Severe",
-      symptoms: apiDisease.typesAndSymptoms ?
-        (Array.isArray(apiDisease.typesAndSymptoms)
-          ? apiDisease.typesAndSymptoms
-          : apiDisease.typesAndSymptoms.split(/\r?\n|•|,/).map(s => s.trim()).filter(Boolean)
-        ) : [],
+      symptoms: Array.isArray(apiDisease.typesAndSymptoms) ? apiDisease.typesAndSymptoms : [],
       overview: {
         simple: apiDisease.overview || "Overview information being updated.",
         medical: apiDisease.overview || "Medical overview being updated."
@@ -441,15 +437,19 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
       lifestyle: typeof apiDisease.lifestyleAndDailySupport === 'object' && apiDisease.lifestyleAndDailySupport !== null ?
         {
           therapies: apiDisease.lifestyleAndDailySupport.therapies || [],
-          nutrition: apiDisease.lifestyleAndDailySupport.nutrition || "Lifestyle and daily management information.",
+          nutrition: apiDisease.lifestyleAndDailySupport.nutrition || "",
           devices: apiDisease.lifestyleAndDailySupport.devices || [],
-          caregiverTips: apiDisease.lifestyleAndDailySupport.caregiverTips || []
+          caregiverTips: apiDisease.lifestyleAndDailySupport.caregiverTips || [],
+          community: apiDisease.lifestyleAndDailySupport.community || "",
+          raw: apiDisease.lifestyleAndDailySupport.raw || ""
         } :
         {
           therapies: [],
-          nutrition: apiDisease.lifestyleAndDailySupport || "Lifestyle and daily management information.",
+          nutrition: typeof apiDisease.lifestyleAndDailySupport === "string" ? apiDisease.lifestyleAndDailySupport : "",
           devices: [],
-          caregiverTips: []
+          caregiverTips: [],
+          community: "",
+          raw: ""
         },
       research: apiDisease.treatmentsAndPharma ?
         (Array.isArray(apiDisease.treatmentsAndPharma)
@@ -457,6 +457,7 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
             name: org.name,
             focus: org.focus,
             why: org.url ? `Visit: ${org.url}` : "Research organization",
+            url: org.url,
             logo: "RX"
           }))
           : [{

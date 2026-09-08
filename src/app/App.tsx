@@ -42,16 +42,11 @@ export default function App() {
   const [selectedDisease, setSelectedDisease] =
     useState<string | null>(null);
 
-  /*
-   * Sound hooks
-   */
   const playPopSound = usePopSound();
   const playChimeSound = useChimeSound();
   const playSparkleSound = useSparkleSound();
 
-  /*
-   * Global sound effects
-   */
+
   useEffect(() => {
     const handleGlobalClick = (event: MouseEvent) => {
       if (!(event.target instanceof Element)) return;

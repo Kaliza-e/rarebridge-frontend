@@ -902,16 +902,10 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
 
         {/* Overview */}
         {currentTab === "Overview" && (
-          <div className="grid md:grid-cols-2 gap-6">
-            <SectionCard>
-              <SectionHeader icon={BookOpen} title="Simple Explanation" iconBg="bg-secondary" iconColor="text-primary" />
-              <div className="text-accent leading-relaxed">{renderTextWithLinks(disease.overview)}</div>
-            </SectionCard>
-            <SectionCard>
-              <SectionHeader icon={FlaskConical} title="Medical Description" iconBg="bg-primary" iconColor="text-secondary" />
-              <div className="text-accent leading-relaxed text-sm">{renderTextWithLinks(disease.overview)}</div>
-            </SectionCard>
-          </div>
+          <SectionCard>
+            <SectionHeader icon={BookOpen} title="Simple Explanation" iconBg="bg-secondary" iconColor="text-primary" />
+            <div className="text-accent leading-relaxed">{renderTextWithLinks(disease.overview)}</div>
+          </SectionCard>
         )}
 
         {/* Causes */}
