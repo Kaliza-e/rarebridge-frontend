@@ -73,15 +73,6 @@ export default function SignInPage({ onNav }: { onNav: (v: string) => void }) {
 
             {/* Header */}
             <div className="mb-8">
-              <div 
-                className="inline-flex items-center gap-2 mb-4 cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => onNav("home")}
-              >
-                <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-sm">
-                  R
-                </div>
-                <span className="text-2xl font-bold text-primary tracking-tight">RareBridge</span>
-              </div>
               <h1 className="font-black text-2xl text-primary mb-1.5">Sign in</h1>
               <p className="text-sm text-accent">
                 No account?{" "}

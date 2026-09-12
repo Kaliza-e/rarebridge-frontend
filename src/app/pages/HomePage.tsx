@@ -262,53 +262,91 @@ export default function HomePage({
           HERO
       ===================================================== */}
 
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#F8FAFD] via-[#F8FAFD] to-white">
-        {/* Curvy decorative lines in hero */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-10" viewBox="0 0 1000 600">
-          <path d="M0 100 Q250 50 500 100 T1000 100" stroke="var(--primary)" strokeWidth="3" fill="none" />
-          <path d="M0 200 Q250 150 500 200 T1000 200" stroke="var(--purple)" strokeWidth="2" fill="none" />
-          <path d="M0 300 Q250 250 500 300 T1000 300" stroke="var(--green)" strokeWidth="2" fill="none" />
-          <path d="M0 400 Q250 350 500 400 T1000 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-          <path d="M0 500 Q250 450 500 500 T1000 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
-          <path d="M100 0 Q150 150 100 300 T100 600" stroke="var(--primary)" strokeWidth="2" fill="none" />
-          <path d="M900 0 Q850 150 900 300 T900 600" stroke="var(--purple)" strokeWidth="2" fill="none" />
+      <section className="relative overflow-hidden" style={{ background: "linear-gradient(160deg, #EEF3FB 0%, #F4F7FD 40%, #FAFBFF 70%, #ffffff 100%)" }}>
+
+        {/* ── Square grid background ── */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ opacity: 0.035 }}
+        >
+          <defs>
+            <pattern id="hero-grid" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
+              <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#112250" strokeWidth="1" />
+            </pattern>
+            {/* Larger accent grid */}
+            <pattern id="hero-grid-lg" x="0" y="0" width="192" height="192" patternUnits="userSpaceOnUse">
+              <path d="M 192 0 L 0 0 0 192" fill="none" stroke="#112250" strokeWidth="1.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hero-grid)" />
+          <rect width="100%" height="100%" fill="url(#hero-grid-lg)" />
         </svg>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8 md:pt-16 md:pb-12 flex flex-col items-center text-center relative z-10">
+        {/* ── Radial glow spots ── */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Top-center warm glow */}
+          <div
+            className="absolute"
+            style={{
+              top: "-10%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "700px",
+              height: "500px",
+              background: "radial-gradient(ellipse at center, rgba(17,34,80,0.07) 0%, transparent 70%)",
+            }}
+          />
+          {/* Bottom-left cool accent */}
+          <div
+            className="absolute"
+            style={{
+              bottom: "-5%",
+              left: "-5%",
+              width: "500px",
+              height: "400px",
+              background: "radial-gradient(ellipse at center, rgba(59,80,125,0.06) 0%, transparent 65%)",
+            }}
+          />
+          {/* Top-right warm accent */}
+          <div
+            className="absolute"
+            style={{
+              top: "-5%",
+              right: "-5%",
+              width: "450px",
+              height: "400px",
+              background: "radial-gradient(ellipse at center, rgba(231,226,206,0.25) 0%, transparent 65%)",
+            }}
+          />
+        </div>
 
-          {/* Floating doodles in hero */}
-          <div className="absolute top-10 left-10 animate-float opacity-20" style={{ animationDelay: '0s' }}>
-            <ButterflyDoodle size={40} />
-          </div>
-          <div className="absolute top-20 right-16 animate-float opacity-20" style={{ animationDelay: '1s' }}>
-            <EdelweissFlower size={50} />
-          </div>
-          <div className="absolute bottom-20 left-20 animate-float opacity-20" style={{ animationDelay: '2s' }}>
-            <ButterflyDoodle size={35} />
-          </div>
-          <div className="absolute bottom-32 right-10 animate-float opacity-20" style={{ animationDelay: '0.5s' }}>
-            <EdelweissFlower size={45} />
-          </div>
+        {/* ── Subtle diagonal shimmer lines ── */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          style={{ opacity: 0.04 }}
+          viewBox="0 0 1440 700"
+          preserveAspectRatio="none"
+        >
+          <line x1="-100" y1="200" x2="700" y2="-100" stroke="#112250" strokeWidth="1.5" />
+          <line x1="200" y1="800" x2="1100" y2="-100" stroke="#112250" strokeWidth="1" />
+          <line x1="700" y1="800" x2="1600" y2="-100" stroke="#3b507d" strokeWidth="1" />
+          <line x1="1100" y1="800" x2="1800" y2="200" stroke="#3b507d" strokeWidth="1" />
+        </svg>
+
+        {/* ── Main hero content ── */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10 md:pt-20 md:pb-16 flex flex-col items-center text-center relative z-10">
 
           {/* Trust badge */}
-
           <div
             className={`
-              inline-flex
-              items-center
-              gap-2
-              px-4
-              py-2
-              rounded-full
-              bg-white/90
-              backdrop-blur-sm
-              text-primary
-              text-xs
-              font-bold
-              mb-5
-              border
-              border-[#E5EAF2]
-              shadow-sm
+              inline-flex items-center gap-2
+              px-5 py-2 rounded-full
+              bg-white/80 backdrop-blur-md
+              text-primary text-xs font-bold
+              mb-6
+              border border-[#D8E3F0]
+              shadow-[0_2px_16px_rgba(17,34,80,0.08)]
               ${fadeUp("delay-0")}
             `}
           >
@@ -316,46 +354,31 @@ export default function HomePage({
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
             </span>
-
             Trusted by 120,000+ families worldwide
           </div>
 
           {/* Headline */}
-
           <AnimatedHeadline />
 
           {/* Decorative mini illustrations */}
-
-          <div
-            className={`flex items-center justify-center gap-4 mb-6 ${fadeUp(
-              "delay-[700ms]"
-            )}`}
-          >
-            <div
-              className="animate-bounce"
-              style={{ animationDelay: "0.2s" }}
-            >
-              <ButterflyDoodle size={32} />
+          <div className={`flex items-center justify-center gap-5 mb-5 ${fadeUp("delay-[700ms]")}`}>
+            <div className="animate-bounce" style={{ animationDelay: "0.2s" }}>
+              <ButterflyDoodle size={28} />
             </div>
-
             <div
-              className="animate-bounce"
-              style={{ animationDelay: "0.5s" }}
-            >
-              <EdelweissFlower size={32} />
+              className="w-px h-6 rounded-full"
+              style={{ background: "linear-gradient(to bottom, transparent, rgba(17,34,80,0.15), transparent)" }}
+            />
+            <div className="animate-bounce" style={{ animationDelay: "0.5s" }}>
+              <EdelweissFlower size={28} />
             </div>
           </div>
 
           {/* Description */}
-
           <p
             className={`
-              text-lg
-              md:text-xl
-              text-accent
-              leading-relaxed
-              mb-7
-              max-w-2xl
+              text-lg md:text-xl text-accent leading-relaxed
+              mb-8 max-w-xl
               ${fadeUp("delay-[750ms]")}
             `}
           >
@@ -368,72 +391,40 @@ export default function HomePage({
               SEARCH
           ================================================= */}
 
-          <div
-            className={`w-full max-w-2xl mb-4 ${fadeUp(
-              "delay-[900ms]"
-            )}`}
-          >
+          <div className={`w-full max-w-2xl mb-4 ${fadeUp("delay-[900ms]")}`}>
             <div
               className="
-                relative
-                flex
-                items-center
-                bg-white
-                border-2
-                border-[#E1E7F0]
+                relative flex items-center
+                bg-white/95 backdrop-blur-sm
+                border-2 border-[#DDE6F2]
                 rounded-2xl
-                shadow-[0_8px_30px_rgba(17,34,80,0.07)]
+                shadow-[0_8px_40px_rgba(17,34,80,0.09)]
                 focus-within:border-primary
-                focus-within:shadow-[0_12px_35px_rgba(17,34,80,0.12)]
-                transition-all
-                duration-300
+                focus-within:shadow-[0_12px_48px_rgba(17,34,80,0.15)]
+                transition-all duration-300
               "
             >
               <Search className="absolute left-4 w-5 h-5 text-taupe pointer-events-none" />
-
               <input
                 type="text"
                 value={query}
-                onChange={(e) =>
-                  handleSearch(e.target.value)
-                }
+                onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search a disease, symptom, or condition…"
                 className="
-                  w-full
-                  bg-transparent
-                  pl-12
-                  pr-36
-                  py-4
-                  text-primary
-                  placeholder-taupe
-                  text-base
-                  font-medium
-                  outline-none
-                  rounded-2xl
+                  w-full bg-transparent pl-12 pr-36 py-4
+                  text-primary placeholder-taupe
+                  text-base font-medium outline-none rounded-2xl
                 "
               />
-
               <button
                 onClick={() => onNav("directory")}
                 className="
-                  absolute
-                  right-2
-                  px-5
-                  py-2.5
-                  rounded-xl
-                  bg-primary
-                  text-ivory
-                  text-sm
-                  font-bold
-                  hover:bg-accent
-                  hover:scale-105
-                  hover:shadow-lg
-                  transition-all
-                  duration-200
-                  shadow
-                  flex
-                  items-center
-                  gap-1.5
+                  absolute right-2
+                  px-5 py-2.5 rounded-xl
+                  bg-primary text-ivory text-sm font-bold
+                  hover:bg-accent hover:scale-105 hover:shadow-lg
+                  transition-all duration-200 shadow
+                  flex items-center gap-1.5
                 "
               >
                 Explore
@@ -442,39 +433,22 @@ export default function HomePage({
             </div>
 
             {/* Search results */}
-
             {results.length > 0 && (
               <div className="mt-2 bg-white border border-[#E1E7F0] rounded-2xl shadow-xl overflow-hidden text-left">
                 {results.slice(0, 5).map((d) => (
                   <button
                     key={d.id}
-                    onClick={() => {
-                      handleSearch("");
-                      onDisease(d.id);
-                    }}
+                    onClick={() => { handleSearch(""); onDisease(d.id); }}
                     className="
-                      w-full
-                      flex
-                      items-center
-                      gap-3
-                      px-4
-                      py-3
-                      hover:bg-[#F4F7FB]
-                      transition-colors
-                      border-b
-                      border-[#E8ECF2]
-                      last:border-0
+                      w-full flex items-center gap-3
+                      px-4 py-3
+                      hover:bg-[#F4F7FB] transition-colors
+                      border-b border-[#E8ECF2] last:border-0
                     "
                   >
                     <d.icon className="w-4 h-4 text-accent shrink-0" />
-
-                    <span className="text-sm font-semibold text-primary">
-                      {d.name}
-                    </span>
-
-                    <span className="text-xs text-taupe ml-auto">
-                      {d.category}
-                    </span>
+                    <span className="text-sm font-semibold text-primary">{d.name}</span>
+                    <span className="text-xs text-taupe ml-auto">{d.category}</span>
                   </button>
                 ))}
               </div>
@@ -485,67 +459,32 @@ export default function HomePage({
               SUGGESTED SEARCHES
           ================================================= */}
 
-          <div
-            className={`flex flex-wrap justify-center gap-2 mb-7 ${fadeUp(
-              "delay-[1000ms]"
-            )}`}
-          >
+          <div className={`flex flex-wrap justify-center gap-2 mb-7 ${fadeUp("delay-[1000ms]")}`}>
             <span className="text-xs text-taupe font-medium self-center flex items-center gap-1">
               <Search className="w-3 h-3" />
               Try:
             </span>
-
             {suggestedSearches.map((s, i) => (
               <button
                 key={s}
                 onClick={() => handleSearch(s)}
                 className="
                   sound-effect-pop
-                  px-3
-                  py-1.5
-                  rounded-full
-                  bg-white
-                  border
-                  border-[#E1E7F0]
-                  text-xs
-                  font-semibold
-                  text-accent
-                  hover:bg-primary
-                  hover:border-primary
-                  hover:text-ivory
-                  transition-all
-                  duration-200
-                  shadow-sm
-                  flex
-                  items-center
-                  gap-1
+                  px-3 py-1.5 rounded-full
+                  bg-white/90 border border-[#E1E7F0]
+                  text-xs font-semibold text-accent
+                  hover:bg-primary hover:border-primary hover:text-ivory
+                  transition-all duration-200 shadow-sm
+                  flex items-center gap-1
                 "
               >
-                {
-                  [
-                    <BookOpen
-                      key="book"
-                      className="w-3 h-3"
-                    />,
-                    <Target
-                      key="target"
-                      className="w-3 h-3"
-                    />,
-                    <Zap
-                      key="zap"
-                      className="w-3 h-3"
-                    />,
-                    <Heart
-                      key="heart"
-                      className="w-3 h-3"
-                    />,
-                    <Users
-                      key="users"
-                      className="w-3 h-3"
-                    />,
-                  ][i % 5]
-                }
-
+                {[
+                  <BookOpen key="book" className="w-3 h-3" />,
+                  <Target key="target" className="w-3 h-3" />,
+                  <Zap key="zap" className="w-3 h-3" />,
+                  <Heart key="heart" className="w-3 h-3" />,
+                  <Users key="users" className="w-3 h-3" />,
+                ][i % 5]}
                 {s}
               </button>
             ))}
@@ -555,151 +494,68 @@ export default function HomePage({
               CTA BUTTONS
           ================================================= */}
 
-          <div
-            className={`flex flex-wrap justify-center gap-3 mb-8 ${fadeUp(
-              "delay-[1100ms]"
-            )}`}
-          >
+          <div className={`flex flex-wrap justify-center gap-3 mb-8 ${fadeUp("delay-[1100ms]")}`}>
             <button
               onClick={() => onNav("signin")}
               className="
-                sound-effect-chime
-                group
-                px-6
-                py-3
-                rounded-2xl
-                border-2
-                border-primary
-                text-primary
-                font-bold
-                hover:text-ivory
-                hover:scale-105
-                hover:shadow-lg
-                transition-all
-                duration-200
-                flex
-                items-center
-                gap-2
-                shadow-sm
-                relative
-                overflow-hidden
+                sound-effect-chime group
+                px-6 py-3 rounded-2xl
+                border-2 border-primary text-primary font-bold
+                hover:bg-primary hover:text-ivory hover:scale-105 hover:shadow-lg
+                transition-all duration-200
+                flex items-center gap-2 shadow-sm relative overflow-hidden
               "
             >
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <Users className="w-4 h-4 relative z-10" />
-
               Find Support
-
-              <ChevronRight
-                className="
-                  w-3.5
-                  h-3.5
-                  opacity-0
-                  -translate-x-1
-                  group-hover:opacity-100
-                  group-hover:translate-x-0
-                  transition-all
-                  duration-200
-                  relative z-10
-                "
-              />
+              <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 relative z-10" />
             </button>
 
             <button
               onClick={() => onNav("signup")}
               className="
-                sound-effect-chime
-                group
-                px-7
-                py-3
-                rounded-2xl
-                bg-primary
-                text-ivory
-                font-bold
-                hover:bg-accent
-                hover:scale-105
-                hover:shadow-lg
-                transition-all
-                duration-200
-                flex
-                items-center
-                gap-2
-                shadow-md
-                relative
-                overflow-hidden
+                sound-effect-chime group
+                px-7 py-3 rounded-2xl
+                bg-primary text-ivory font-bold
+                hover:bg-accent hover:scale-105 hover:shadow-xl
+                transition-all duration-200
+                flex items-center gap-2 shadow-md relative overflow-hidden
               "
+              style={{ boxShadow: "0 4px 24px rgba(17,34,80,0.25)" }}
             >
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <Sparkles className="w-4 h-4 relative z-10" />
-
               Get Started Free
-
-              <ChevronRight
-                className="
-                  w-3.5
-                  h-3.5
-                  opacity-0
-                  -translate-x-1
-                  group-hover:opacity-100
-                  group-hover:translate-x-0
-                  transition-all
-                  duration-200
-                  relative z-10
-                "
-              />
+              <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 relative z-10" />
             </button>
           </div>
 
           {/* =================================================
-              FLOATING DECORATIONS
+              FLOATING DOODLE DECORATIONS
           ================================================= */}
 
-          <div
-            className={`absolute inset-0 pointer-events-none ${fadeUp(
-              "delay-[1300ms]"
-            )}`}
-          >
-            <div
-              className="absolute top-20 left-10 animate-float"
-              style={{ animationDelay: "0s" }}
-            >
-              <ButterflyDoodle
-                size={40}
-                className="opacity-60"
-              />
+          <div className={`absolute inset-0 pointer-events-none ${fadeUp("delay-[1300ms]")}`}>
+            <div className="absolute top-16 left-8 animate-float" style={{ animationDelay: "0s" }}>
+              <ButterflyDoodle size={38} className="opacity-50" />
             </div>
-
-            <div
-              className="absolute top-32 right-16 animate-float"
-              style={{ animationDelay: "1s" }}
-            >
-              <EdelweissFlower
-                size={50}
-                className="opacity-50"
-              />
+            <div className="absolute top-28 right-14 animate-float" style={{ animationDelay: "1s" }}>
+              <EdelweissFlower size={46} className="opacity-45" />
             </div>
-
-            <div
-              className="absolute bottom-40 left-20 animate-float"
-              style={{ animationDelay: "2s" }}
-            >
-              <ButterflyDoodle
-                size={35}
-                className="opacity-40"
-              />
+            <div className="absolute bottom-36 left-16 animate-float" style={{ animationDelay: "2s" }}>
+              <ButterflyDoodle size={30} className="opacity-35" />
             </div>
-
-            <div
-              className="absolute bottom-32 right-10 animate-float"
-              style={{ animationDelay: "0.5s" }}
-            >
-              <EdelweissFlower
-                size={45}
-                className="opacity-50"
-              />
+            <div className="absolute bottom-24 right-8 animate-float" style={{ animationDelay: "0.5s" }}>
+              <EdelweissFlower size={42} className="opacity-40" />
             </div>
           </div>
         </div>
+
+        {/* ── Bottom fade-to-white ── */}
+        <div
+          className="absolute bottom-0 left-0 w-full h-16 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.9))" }}
+        />
       </section>
 
       {/* =====================================================

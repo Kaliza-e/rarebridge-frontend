@@ -57,7 +57,7 @@ export function ZebraWithButterfly({ size = 120, className = "" }: { size?: numb
       <rect x="40" y="90" width="8" height="20" rx="4" fill="var(--secondary)" />
       <rect x="55" y="90" width="8" height="20" rx="4" fill="var(--secondary)" />
       <rect x="70" y="90" width="8" height="20" rx="4" fill="var(--secondary)" />
-      
+
       {/* Butterfly */}
       <g className="animate-float" style={{ animationDelay: '0.5s' }}>
         {/* Left wing */}
@@ -72,7 +72,7 @@ export function ZebraWithButterfly({ size = 120, className = "" }: { size?: numb
         <path d="M98 33 Q95 30 96 28" stroke="var(--switch-background)" strokeWidth="1" fill="none" />
         <path d="M102 33 Q105 30 104 28" stroke="var(--switch-background)" strokeWidth="1" fill="none" />
       </g>
-      
+
       {/* Sparkles around butterfly */}
       <circle cx="88" cy="28" r="2" fill="var(--secondary)" className="animate-sparkle" />
       <circle cx="112" cy="30" r="1.5" fill="var(--primary)" className="animate-sparkle" style={{ animationDelay: '0.3s' }} />
@@ -199,7 +199,7 @@ export function useChimeSound() {
       }
 
       const now = ctx.currentTime;
-      
+
       // Create a very soft, gentle chime
       const frequencies = [523.25, 659.25]; // C5, E5 (softer chord)
       frequencies.forEach((freq, i) => {
@@ -348,10 +348,10 @@ export function FlyingZebra() {
   }, []);
 
   return (
-    <div 
+    <div
       className="fixed pointer-events-none z-50 transition-transform duration-100"
-      style={{ 
-        left: position.x, 
+      style={{
+        left: position.x,
         top: position.y,
         transform: direction === -1 ? 'scaleX(-1)' : 'scaleX(1)'
       }}
@@ -526,8 +526,8 @@ export function PatientJourney() {
         <div className="relative max-w-5xl mx-auto mb-14">
           {/* Connecting Line (Desktop) */}
           <div className="absolute top-8 left-0 w-full h-1 bg-taupe-20 -translate-y-1/2 rounded-full hidden md:block"></div>
-          <div 
-            className="absolute top-8 left-0 h-1 bg-accent -translate-y-1/2 rounded-full hidden md:block transition-all duration-700 ease-in-out" 
+          <div
+            className="absolute top-8 left-0 h-1 bg-accent -translate-y-1/2 rounded-full hidden md:block transition-all duration-700 ease-in-out"
             style={{ width: `${(activeStep / (JOURNEY_STEPS.length - 1)) * 100}%` }}
           ></div>
 
@@ -544,18 +544,17 @@ export function PatientJourney() {
                   className={`group relative flex flex-col items-center gap-4 transition-all duration-300 w-full md:w-32 focus:outline-none`}
                 >
                   {/* Icon Circle */}
-                  <div 
-                    className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 z-10 ${
-                      isActive 
-                        ? 'bg-accent text-white scale-110 shadow-lg ring-4 ring-white' 
-                        : isPast 
-                          ? 'bg-primary text-white hover:bg-primary-dark ring-4 ring-white' 
+                  <div
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 z-10 ${isActive
+                        ? 'bg-accent text-white scale-110 shadow-lg ring-4 ring-white'
+                        : isPast
+                          ? 'bg-primary text-white hover:bg-primary-dark ring-4 ring-white'
                           : 'bg-white text-taupe border-2 border-taupe-40 hover:border-accent hover:text-accent ring-4 ring-white'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-6 h-6" />
                   </div>
-                  
+
                   {/* Label */}
                   <div className="text-center w-full">
                     <span className={`block text-xs font-bold uppercase tracking-wider mb-1 transition-colors ${isActive ? 'text-accent' : isPast ? 'text-primary' : 'text-taupe'}`}>
@@ -597,16 +596,15 @@ export function PatientJourney() {
                 </p>
               </div>
             </div>
-            
+
             {/* Quick Navigation */}
             <div className="flex justify-center md:justify-start gap-2 mt-7 md:mt-6 md:ml-34">
               {JOURNEY_STEPS.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveStep(i)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    i === activeStep ? 'w-10 bg-accent' : 'w-2 bg-taupe hover:bg-accent/50'
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${i === activeStep ? 'w-10 bg-accent' : 'w-2 bg-taupe hover:bg-accent/50'
+                    }`}
                   aria-label={`Go to step ${i + 1}`}
                 />
               ))}
@@ -656,7 +654,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
       <div className="px-6 pb-6 pt-4">
         <p className="text-sm text-accent leading-relaxed mb-4">{disease.shortDesc}</p>
         <button className="flex items-center gap-1 text-sm font-bold text-primary group-hover:gap-2 transition-all">
-          View Disease 
+          View Disease
           <span className="group-hover:translate-x-1 transition-transform">→</span>
         </button>
       </div>

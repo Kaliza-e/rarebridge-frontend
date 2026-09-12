@@ -43,12 +43,6 @@ export default function SignUpPage({ onNav }: { onNav: (v: string) => void }) {
             className="inline-flex items-center gap-2 text-sm text-taupe hover:text-secondary transition-colors mb-14">
             <ArrowLeft className="w-4 h-4" /> Back to RareBridge
           </button>
-          <div className="inline-flex items-center gap-2 bg-white/95 rounded-2xl p-3 shadow-md mb-7">
-            <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm">
-              R
-            </div>
-            <span className="text-lg font-bold text-primary tracking-tight pr-2">RareBridge</span>
-          </div>
           <h2 className="font-black text-4xl text-ivory leading-[1.1] mb-5">
             Join 120,000+<br />families on<br />RareBridge
           </h2>
