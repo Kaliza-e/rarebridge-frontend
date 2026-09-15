@@ -7,11 +7,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-4 gap-6 mb-6">
           <div>
-            <div className="mb-2">
+            <div className="mb-2 w-fit rounded-lg bg-ivory p-2">
               <img
                 src="/logo-transparent.png"
                 alt="RareBridge"
-                className="h-28 md:h-32 w-auto object-contain brightness-0 invert"
+                className="h-28 md:h-32 w-auto object-contain"
               />
             </div>
             <p className="text-xs text-taupe leading-relaxed mb-3">Connecting families, researchers, and specialists with trusted rare disease information.</p>

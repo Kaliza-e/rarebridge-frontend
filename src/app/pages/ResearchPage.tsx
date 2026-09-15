@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DISEASES, FEATURES, fetchDiseasesFromAPI } from "../data";
-import { BookOpen, Microscope, FlaskConical, Users, ExternalLink } from "lucide-react";
+import { BookOpen, Microscope, FlaskConical, Users, ExternalLink, RefreshCw } from "lucide-react";
 import { ZebraMascot, ZebraDoodle } from "../components/common/Visuals";
 import { normalizeUrl, renderTextWithLinks } from "../utils/link-helper";
 
@@ -13,6 +13,16 @@ export default function ResearchPage() {
 
   const organizations = diseases.flatMap(d => (d as any).research || [])
     .reduce((acc: any[], item: any) => acc.find(x => x.name === item.name) ? acc : [...acc, item], []);
+  const [visibleOrganizations, setVisibleOrganizations] = useState<any[]>([]);
+
+  function shuffleOrganizations() {
+    const shuffled = [...organizations].sort(() => 0.5 - Math.random());
+    setVisibleOrganizations(shuffled.slice(0, 6));
+  }
+
+  useEffect(() => {
+    shuffleOrganizations();
+  }, [diseases]);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -81,10 +91,23 @@ export default function ResearchPage() {
       </div>
 
       <div className="mb-10">
-        <h2 className="font-black text-2xl text-primary mb-4">Featured research organizations</h2>
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="font-black text-2xl text-primary">Featured research organizations</h2>
+            <p className="mt-1 text-sm text-accent">Showing up to 6 organizations.</p>
+          </div>
+          <button
+            onClick={shuffleOrganizations}
+            disabled={organizations.length === 0}
+            className="inline-flex items-center justify-center gap-2 self-start rounded-2xl bg-primary px-4 py-2 text-xs font-bold text-secondary shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 sm:self-auto"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            Shuffle 6 Organizations
+          </button>
+        </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {organizations.length > 0 ? organizations.map(org => (
-            <div key={org.name} className="relative overflow-hidden rounded-3xl border border-secondary bg-white p-6 shadow-sm transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
+          {visibleOrganizations.length > 0 ? visibleOrganizations.map((org, index) => (
+            <div key={`${org.name}-${index}`} className="relative overflow-hidden rounded-3xl border border-secondary bg-white p-5 shadow-sm transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
               <div className="pointer-events-none absolute -right-8 top-6 h-20 w-20 rounded-full bg-primary-10 blur-2xl" />
               <div className="relative">
                 <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-taupe">
