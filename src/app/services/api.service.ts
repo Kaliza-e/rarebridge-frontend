@@ -1,4 +1,4 @@
-const API_BASE_URL = (import.meta.env.VITE_API_URL ?? 'https://rarebridge-backend-ul6y.onrender.com').replace(/\/+$/, '');
+const API_BASE_URL = (import.meta.env.VITE_API_URL).replace(/\/+$/, '');
 
 // ─── Structured Types (matching backend smart-parsed output) ──────────────────
 
