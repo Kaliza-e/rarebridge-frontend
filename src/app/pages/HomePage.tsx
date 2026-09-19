@@ -77,9 +77,6 @@ function AnimatedHeadline() {
         text-primary
         mb-6
       "
-      style={{
-        fontFamily: "'Comic Neue', cursive, sans-serif",
-      }}
     >
       {/* Understanding */}
       {line1.map((word) => {
@@ -662,9 +659,6 @@ export default function HomePage({
                 mb-5
                 leading-tight
               "
-              style={{
-                fontFamily: "'Comic Neue', cursive, sans-serif",
-              }}
             >
               Everything You Need,
 
@@ -764,10 +758,6 @@ export default function HomePage({
 
                     <h3
                       className="font-bold text-[#112250] text-lg mb-2.5"
-                      style={{
-                        fontFamily:
-                          "'Comic Neue', cursive, sans-serif",
-                      }}
                     >
                       {f.title}
                     </h3>
@@ -822,10 +812,6 @@ export default function HomePage({
 
               <h2
                 className="font-black text-3xl md:text-4xl text-primary"
-                style={{
-                  fontFamily:
-                    "'Comic Neue', cursive, sans-serif",
-                }}
               >
                 Featured Diseases
               </h2>
@@ -967,10 +953,6 @@ export default function HomePage({
 
             <h2
               className="font-black text-3xl md:text-4xl text-ivory mb-4"
-              style={{
-                fontFamily:
-                  "'Comic Neue', cursive, sans-serif",
-              }}
             >
               You Are Not Alone
             </h2>

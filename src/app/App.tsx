@@ -144,14 +144,14 @@ export default function App() {
 
   return (
     <div
-      className="relative min-h-screen overflow-hidden bg-ivory"
+      className="relative min-h-screen overflow-hidden bg-ivory text-primary"
       style={{
-        fontFamily: "'Comic Neue', cursive, sans-serif",
+        fontFamily: "'Nunito', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
       {/* Global styles */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
         .scrollbar-none::-webkit-scrollbar {
           display: none;
@@ -276,18 +276,6 @@ export default function App() {
         * {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
-
-          cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><ellipse cx="16" cy="20" rx="10" ry="7" fill="%234A5568"/><ellipse cx="16" cy="12" rx="7" ry="9" fill="white" stroke="%234A5568" stroke-width="1"/><circle cx="13" cy="10" r="2" fill="%232D3748"/><circle cx="19" cy="10" r="2" fill="%232D3748"/><circle cx="13.5" cy="9.5" r="0.8" fill="white"/><circle cx="19.5" cy="9.5" r="0.8" fill="white"/></svg>') 16 16, auto;
-        }
-
-        a,
-        button,
-        .cursor-pointer {
-          cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M16 8 Q20 4 24 8 Q28 12 24 16 Q20 20 16 16 Q12 20 8 16 Q4 12 8 8 Q12 4 16 8" fill="white" stroke="%234A5568" stroke-width="1.5"/><circle cx="16" cy="12" r="4" fill="%23ECC94B" opacity="0.9"/><circle cx="16" cy="12" r="2" fill="%23D69E2E"/></svg>') 16 16, pointer;
-        }
-
-        .flower-cursor {
-          cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M16 8 Q20 4 24 8 Q28 12 24 16 Q20 20 16 16 Q12 20 8 16 Q4 12 8 8 Q12 4 16 8" fill="white" stroke="%234A5568" stroke-width="1.5"/><circle cx="16" cy="12" r="4" fill="%23ECC94B" opacity="0.9"/><circle cx="16" cy="12" r="2" fill="%23D69E2E"/></svg>') 16 16, pointer;
         }
 
         ::selection {

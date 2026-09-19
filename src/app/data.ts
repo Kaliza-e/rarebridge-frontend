@@ -19,7 +19,7 @@ function extractEnvironmentalCauses(text: string): string {
 
 export const NAV_LINKS = ["Home", "About", "Explore Diseases", "Research", "Specialists", "Community"];
 
-export const SUGGESTED_SEARCHES = ["Amyloidosis", "Adrenocortical Carcinoma", "Alexander Disease", "Batten Disease", "Angiosarcoma", "ALS"];
+export const SUGGESTED_SEARCHES = ["Adrenoleukodystrophy", "Mesothelioma", "Amyloidosis", "Adrenocortical Carcinoma", "Alexander Disease", "Batten Disease", "Angiosarcoma", "ALS"];
 
 // Fallback data for when API is not available
 const FALLBACK_DISEASES = [
@@ -389,6 +389,151 @@ const FALLBACK_DISEASES = [
     ],
     specialists: [
       { name: "Neurologists", role: "Nervous system specialists", org: "ALS Clinics", location: "Various", specialization: "Motor neuron diseases", publications: 0 }
+    ]
+  },
+  {
+    id: "adrenoleukodystrophy",
+    name: "Adrenoleukodystrophy",
+    category: "Genetic · Neurological · Metabolic",
+    categoryBadges: ["Genetic", "Neurological", "Metabolic"],
+    icon: Brain,
+    color: "navy",
+    shortDesc: "Adrenoleukodystrophy (ALD) is a rare X-linked genetic disorder that causes a build-up of very long-chain fatty acids in the brain, nervous system, and adrenal glands, leading to progressive neurological damage.",
+    researchStatus: "Active Research",
+    inheritance: "X-Linked Recessive",
+    ageAppearance: "Childhood to adulthood",
+    severity: "Severe",
+    symptoms: [
+      "Behavioral changes and attention difficulties",
+      "Progressive learning disability",
+      "Vision loss",
+      "Seizures",
+      "Adrenal insufficiency (Addison's disease)",
+      "Spastic paraparesis (weakness and stiffness of legs)",
+      "Peripheral neuropathy",
+      "Impaired gait and balance",
+      "Hearing loss",
+      "Cognitive decline"
+    ],
+    overview: {
+      simple: "Adrenoleukodystrophy (ALD) is a rare X-linked genetic condition in which very long-chain fatty acids (VLCFAs) accumulate in the body because the ABCD1 gene that normally processes them is mutated. The build-up damages the protective myelin sheath around nerve cells in the brain and spinal cord, and also affects the adrenal glands. The most severe form, cerebral ALD, tends to affect boys aged 4–10 and progresses rapidly. Adult men often develop adrenomyeloneuropathy (AMN), a slower, milder form. Females who carry the gene can also be affected, typically showing milder AMN symptoms.",
+      medical: "ALD is caused by mutations in the ABCD1 gene on the X chromosome, encoding a peroxisomal ABC transporter responsible for VLCFA catabolism. Accumulation of saturated VLCFAs (C24:0, C26:0) leads to demyelination and adrenocortical insufficiency. The childhood cerebral form involves neuroinflammatory demyelination while adrenomyeloneuropathy involves non-inflammatory axonopathy."
+    },
+    causes: {
+      genetic: "Caused by mutations in the ABCD1 gene located on the X chromosome (Xq28). Because it is X-linked, males are more severely affected. Females who carry one mutated copy may have milder symptoms, especially in adulthood.",
+      environmental: "No environmental factors are known to cause ALD. However, head trauma or infections may accelerate progression in some cerebral ALD cases.",
+      unknown: "It is not fully understood why some individuals with ABCD1 mutations develop cerebral ALD while others develop the milder AMN form. Genetic modifiers and other as-yet-unknown factors are thought to play a role."
+    },
+    types: [
+      { stage: "Childhood (4–10 years)", type: "Cerebral ALD (boys)", symptoms: ["Rapid neurological decline", "Behavioral changes", "Seizures", "Vision and hearing loss"], severity: "Very Severe" },
+      { stage: "Adulthood (20s–40s)", type: "Adrenomyeloneuropathy (AMN)", symptoms: ["Progressive leg weakness", "Spasticity", "Bladder dysfunction", "Peripheral neuropathy"], severity: "Moderate–Severe" },
+      { stage: "Variable", type: "Female carriers", symptoms: ["Mild AMN symptoms", "Leg weakness", "Often later onset"], severity: "Mild–Moderate" },
+      { stage: "Any age", type: "Addison-only ALD", symptoms: ["Adrenal insufficiency only", "Fatigue", "Hyperpigmentation", "No neurological involvement"], severity: "Moderate" }
+    ],
+    diagnosis: [
+      { name: "VLCFA Blood Test", what: "Measures the level of very long-chain fatty acids in the blood.", how: "A blood sample is drawn and analyzed in a laboratory for elevated C26:0 and C24:0 levels.", result: "Elevated VLCFAs strongly indicate ALD and are present in nearly all affected males and about 80% of female carriers." },
+      { name: "ABCD1 Gene Mutation Analysis", what: "Genetic test to identify mutations in the ABCD1 gene.", how: "Blood or saliva sample is sent for targeted gene sequencing.", result: "Identifies the specific mutation, confirms the diagnosis, and enables family member screening." },
+      { name: "MRI of the Brain", what: "Imaging to detect myelin damage and white matter lesions in the brain.", how: "Patient undergoes an MRI scan, focusing on the posterior white matter regions.", result: "Characteristic symmetric demyelination in the posterior cerebral white matter (splenium of corpus callosum) supports cerebral ALD diagnosis; Loes score is used to grade severity." },
+      { name: "Adrenal Function Tests", what: "Tests to assess whether adrenal glands are producing adequate cortisol.", how: "Blood cortisol levels, ACTH stimulation test.", result: "Cortisol deficiency or poor ACTH response confirms adrenal insufficiency (Addison's disease)." },
+      { name: "Neuropsychological Testing", what: "Evaluates cognitive, behavioral, and learning function.", how: "Standardized tests administered by a neuropsychologist.", result: "Documents baseline and tracks changes over time; used to monitor disease progression." }
+    ],
+    lifestyle: {
+      therapies: [
+        "Hematopoietic stem cell transplantation (HSCT) – if caught early in cerebral ALD",
+        "Lorenzo's oil – may help slow VLCFA accumulation in asymptomatic males",
+        "Physical therapy for spasticity and mobility support",
+        "Occupational therapy for daily functioning",
+        "Speech and language therapy if communication is affected"
+      ],
+      nutrition: "Lorenzo's oil (a 4:1 mixture of oleic acid and erucic acid) is used in some cases to lower plasma VLCFA levels. A diet low in saturated fats may complement treatment. Nutritional support is important during cortisol replacement therapy.",
+      devices: ["Mobility aids (walkers, wheelchairs) for AMN", "Bladder management devices", "Communication aids if speech is affected", "Compression garments for spasticity management"],
+      caregiverTips: [
+        "Learn to recognize signs of adrenal crisis (life-threatening) and carry emergency hydrocortisone",
+        "Monitor for new neurological symptoms and schedule regular MRI surveillance",
+        "Connect with the ALD Connect patient registry and community",
+        "Coordinate care between neurologist, endocrinologist, and physical therapist",
+        "Genetic counseling for all family members, especially maternal relatives",
+        "Maintain consistent school support plans for affected boys"
+      ],
+      community: "The ALD Alliance and ALD Connect (aldn.org) provide patient registries, family support, and research updates. The Myelin Project and Alex's Lemonade Stand Foundation also support ALD research."
+    },
+    research: [
+      { name: "Kennedy Krieger Institute – Moser Center for Leukodystrophies", focus: "World-leading research and clinical care centre for ALD and other leukodystrophies. Conducts clinical trials including gene therapy.", why: "Home to pioneering VLCFA and ALD natural history research; treated Lorenzo Odone.", url: "https://www.kennedykrieger.org/patient-care/centers-and-programs/center-for-leukodystrophies" },
+      { name: "Massachusetts General Hospital – ALD Program", focus: "Clinical research on newborn screening, gene therapy (Lenti-D/elivaldogene autotemcel), and HSCT outcomes for ALD.", why: "Part of bluebird bio's ALD gene therapy trial sites; leading AMN natural history studies.", url: "https://www.massgeneral.org/neurology" },
+      { name: "bluebird bio – Elivaldogene Autotemcel (Skysona)", focus: "Gene therapy for early active cerebral ALD. FDA-approved in 2022 for boys aged 4–17 with early-stage cerebral ALD.", why: "First gene therapy approved for ALD; major therapeutic milestone.", url: "https://www.bluebirdbio.com/our-medicines/skysona" },
+      { name: "Minoryx Therapeutics – Leriglitazone", focus: "Investigational oral PPARγ agonist targeting neuroinflammation in AMN.", why: "In Phase 3 trials for AMN; potential to slow progression in adult patients.", url: "https://www.minoryx.com" },
+      { name: "ALD Connect Patient Registry", focus: "Patient-powered research network collecting natural history data to accelerate ALD clinical trials.", why: "Enables patients to connect with researchers and clinical trial opportunities.", url: "https://www.aldconnect.org" }
+    ],
+    faqs: [
+      { q: "What is Adrenoleukodystrophy?", a: "ALD is a rare X-linked genetic disorder caused by mutations in the ABCD1 gene, leading to accumulation of very long-chain fatty acids that damage the brain's myelin sheath and the adrenal glands." },
+      { q: "Who is affected by ALD?", a: "ALD primarily affects males. Boys aged 4–10 most commonly develop the most severe cerebral form. Adult men typically develop adrenomyeloneuropathy (AMN). Female carriers can also develop milder neurological symptoms, usually in adulthood." },
+      { q: "Is ALD curable?", a: "There is no universal cure. However, hematopoietic stem cell transplantation (HSCT) or gene therapy (Skysona) can halt neurological decline if performed early in the cerebral form. These do not help once significant neurological damage has occurred." },
+      { q: "How is ALD inherited?", a: "ALD is inherited in an X-linked pattern. The mutated ABCD1 gene is on the X chromosome, so mothers who carry one copy can pass it to their sons (who will be affected) or daughters (who will be carriers). Fathers with ALD pass the gene only to daughters." },
+      { q: "What is Lorenzo's oil?", a: "Lorenzo's oil is a 4:1 mixture of oleic acid and erucic acid that was developed by Augusto and Michaela Odone for their son Lorenzo. It can normalize VLCFA levels in the blood in asymptomatic males but does not reverse or halt neurological damage once symptoms appear." }
+    ],
+    myths: [
+      { myth: "ALD only affects boys.", fact: "While males are most severely affected, female carriers can also develop neurological symptoms — particularly adrenomyeloneuropathy (AMN) — often in adulthood, with leg weakness, spasticity, and bladder issues." },
+      { myth: "Lorenzo's oil is a cure for ALD.", fact: "Lorenzo's oil can reduce very long-chain fatty acid levels in the blood in asymptomatic males but does not stop or reverse neurological decline once the disease is progressing. It is not a cure." },
+      { myth: "ALD always progresses rapidly.", fact: "The speed of progression varies greatly by form. Cerebral ALD in boys can progress very rapidly (months to years), while adrenomyeloneuropathy (AMN) in adults usually progresses slowly over many years." },
+      { myth: "Adrenal insufficiency in ALD is harmless if treated.", fact: "While cortisol replacement treats the adrenal crisis risk, it does not address the underlying neurological disease. Adrenal insufficiency can still be life-threatening if left unrecognized during illness or stress." },
+      { myth: "Stem cell transplantation always works for ALD.", fact: "HSCT is only effective when performed in the early stages of cerebral ALD, while neurological damage is still minimal. Once significant demyelination has occurred, the risks of transplantation outweigh the benefits." }
+    ],
+    specialists: [
+      {
+        name: "Dr. Ali Fatemi",
+        profession: "Pediatric Neurologist",
+        specialization: "Leukodystrophies, Adrenoleukodystrophy, Neurogenetics",
+        organization: "Kennedy Krieger Institute / Johns Hopkins University",
+        location: "Baltimore, Maryland, USA",
+        contact: "https://www.kennedykrieger.org",
+        publications: "Over 100 publications on ALD and leukodystrophies; leads ALD clinical trials and international natural history studies.",
+        focus: "Pediatric Neurologist",
+        why: "Dr. Ali Fatemi"
+      },
+      {
+        name: "Dr. Florian Eichler",
+        profession: "Neurologist",
+        specialization: "Adrenoleukodystrophy, Leukodystrophies, Gene Therapy",
+        organization: "Massachusetts General Hospital / Harvard Medical School",
+        location: "Boston, Massachusetts, USA",
+        contact: "https://www.massgeneral.org",
+        publications: "Principal investigator on Skysona (elivaldogene autotemcel) gene therapy trials; extensive AMN natural history research.",
+        focus: "Neurologist",
+        why: "Dr. Florian Eichler"
+      },
+      {
+        name: "Dr. Gerald Raymond",
+        profession: "Neurologist",
+        specialization: "ALD, VLCFA metabolism, Leukodystrophies",
+        organization: "University of Minnesota / ALD Research Consortium",
+        location: "Minneapolis, Minnesota, USA",
+        contact: "https://www.umn.edu",
+        publications: "Co-developer of MRI Loes scoring system for ALD; extensive neuroimaging and natural history research.",
+        focus: "Neurologist",
+        why: "Dr. Gerald Raymond"
+      },
+      {
+        name: "Dr. Stephan Kemp",
+        profession: "Biochemist / Researcher",
+        specialization: "ABCD1 gene function, VLCFA metabolism, Peroxisomal disorders",
+        organization: "Amsterdam UMC – University of Amsterdam",
+        location: "Amsterdam, Netherlands",
+        contact: "https://www.amsterdamumc.org",
+        publications: "Leading molecular genetics research on ABCD1 mutations and the development of disease biomarkers for ALD.",
+        focus: "Biochemist / Researcher",
+        why: "Dr. Stephan Kemp"
+      },
+      {
+        name: "Dr. Hugo Moser",
+        profession: "Neurologist and Pioneer Researcher (legacy)",
+        specialization: "ALD – foundational research on VLCFA accumulation and diagnosis",
+        organization: "Kennedy Krieger Institute (historical)",
+        location: "Baltimore, Maryland, USA",
+        contact: "https://www.kennedykrieger.org",
+        publications: "Foundational work defining ALD's metabolic basis, the VLCFA blood test, and clinical spectrum. His center continues to be the world's reference for ALD care.",
+        focus: "Neurologist",
+        why: "Dr. Hugo Moser"
+      }
     ]
   }
 ];

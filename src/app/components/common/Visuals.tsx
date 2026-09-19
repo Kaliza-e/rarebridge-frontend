@@ -648,7 +648,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
           </div>
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-10 text-accent`}>{(disease as any).researchStatus || 'Research'}</span>
         </div>
-        <h3 className="font-black text-primary text-lg leading-tight" style={{ fontFamily: "'Comic Neue', cursive, sans-serif" }}>{disease.name}</h3>
+        <h3 className="font-black text-primary text-lg leading-tight">{disease.name}</h3>
         <p className="text-xs text-taupe mt-0.5 font-medium">{disease.category}</p>
       </div>
       <div className="px-6 pb-6 pt-4">

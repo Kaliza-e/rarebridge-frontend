@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
-  ChevronDown, Bot, Upload, Send, AlertCircle, Dna, FlaskConical,
+  ChevronDown, ChevronUp, Bot, Upload, Send, AlertCircle, Dna, FlaskConical,
   Baby, Activity, Shield, BookOpen, Globe, MapPin, Star, ExternalLink,
   CheckCircle, XCircle, Stethoscope, Pill, Heart, Users, FileText, Link2,
-  Download, Phone
+  Download, Phone, Info, FlaskRound
 } from "lucide-react";
 import { ZebraEmptyState, Accordion, ZebraMascot } from "../components/common/Visuals";
 import { apiService } from "../services/api.service";
@@ -294,34 +294,62 @@ function FaqsSection({ faqs }: { faqs: any[] }) {
 function FactsMythsSection({ items }: { items: any[] }) {
   if (!items || items.length === 0) return <ZebraEmptyState message="Facts & myths coming soon" sub="Content is being reviewed." />;
 
-  const myths = items.filter((m) => !m.isFact);
-  const facts = items.filter((m) => m.isFact);
+  // Build myth+fact pairs from various data shapes.
+  // Shape A (fallback data): { myth: string, fact: string }
+  // Shape B (API data): { isFact: boolean, statement: string, explanation?: string }
+  type Pair = { myth: string; fact: string };
+  const pairs: Pair[] = [];
+
+  if (items.length > 0 && "myth" in items[0]) {
+    // Shape A — each item already is a { myth, fact } pair
+    items.forEach((item: any) => {
+      pairs.push({ myth: item.myth, fact: item.fact });
+    });
+  } else {
+    // Shape B — separate isFact=false (myths) from isFact=true (facts) then zip them
+    const mythItems = items.filter((m: any) => !m.isFact);
+    const factItems = items.filter((m: any) => m.isFact);
+    const len = Math.max(mythItems.length, factItems.length);
+    for (let i = 0; i < len; i++) {
+      pairs.push({
+        myth: mythItems[i]?.statement ?? mythItems[i]?.myth ?? "",
+        fact: factItems[i]?.statement ?? factItems[i]?.explanation ?? factItems[i]?.fact ?? "",
+      });
+    }
+  }
 
   return (
     <SectionCard>
       <SectionHeader icon={AlertCircle} title="Facts vs Myths" iconBg="bg-primary" iconColor="text-secondary" />
-      <div className="space-y-3">
-        {[...myths, ...facts].map((item, i) => (
-          <div
-            key={i}
-            className={`rounded-2xl p-4 border-2 transition-all duration-200 hover:shadow-md ${item.isFact
-              ? "border-primary/20 bg-primary/5 hover:border-primary/40"
-              : "border-accent/20 bg-accent/5 hover:border-accent/40"
-              }`}
-          >
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 shrink-0">
-                <FactMythBadge isFact={item.isFact} />
-              </div>
-              <div>
-                <div className="font-bold text-primary text-sm mb-1 leading-snug">
-                  {renderTextWithLinks(item.statement || item.myth, { showIcon: false })}
+      <div className="space-y-5">
+        {pairs.map((pair, i) => (
+          <div key={i} className="rounded-2xl overflow-hidden border border-taupe-40 shadow-sm">
+            {/* MYTH row */}
+            {pair.myth && (
+              <div className="flex items-start gap-3 p-4 bg-accent/5 border-b border-taupe-40">
+                <div className="mt-0.5 shrink-0">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-ivory text-xs font-bold shadow-sm">
+                    <XCircle className="w-3.5 h-3.5" /> MYTH
+                  </span>
                 </div>
-                {item.explanation && item.explanation !== item.statement && (
-                  <div className="text-xs text-accent leading-relaxed">{renderTextWithLinks(item.explanation || item.fact)}</div>
-                )}
+                <div className="font-semibold text-primary text-sm leading-snug pt-1">
+                  {renderTextWithLinks(pair.myth, { showIcon: false })}
+                </div>
               </div>
-            </div>
+            )}
+            {/* FACT row — directly beneath its myth */}
+            {pair.fact && (
+              <div className="flex items-start gap-3 p-4 bg-primary/5">
+                <div className="mt-0.5 shrink-0">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-ivory text-xs font-bold shadow-sm">
+                    <CheckCircle className="w-3.5 h-3.5" /> FACT
+                  </span>
+                </div>
+                <div className="text-sm text-accent leading-relaxed pt-1">
+                  {renderTextWithLinks(pair.fact, { showIcon: false })}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -360,7 +388,7 @@ function SpecialistsSection({ specialists }: { specialists: Specialist[] }) {
             >
               <div className="flex items-start gap-4">
                 {/* Avatar */}
-                <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-ivory font-black text-sm shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-ivory font-bold text-sm shrink-0">
                   {initials}
                 </div>
 
@@ -712,6 +740,7 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
   const [disease, setDisease] = useState<Disease | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeSection, setActiveSection] = useState(0);
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [aiInput, setAiInput] = useState("");
   const [aiMessages, setAiMessages] = useState<{ role: "user" | "ai"; text: string }[]>([]);
@@ -780,11 +809,13 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
     ? disease.category.split(/[·,]/).map((c) => c.trim()).filter(Boolean)
     : ["Rare Disease"];
 
-  const shortDesc = disease.overview
-    ? disease.overview.length > 180
-      ? disease.overview.substring(0, 180) + "..."
-      : disease.overview
-    : "Comprehensive rare disease details and support resources.";
+  // Resolve overview text regardless of whether it's a string or { simple, medical } object
+  const overviewText: string = (() => {
+    const ov = disease.overview as any;
+    if (!ov) return "";
+    if (typeof ov === "string") return ov;
+    return ov.simple ?? ov.medical ?? JSON.stringify(ov);
+  })();
 
   const quickInfoCards = [
     { label: "Category", value: categoryBadges.join(" · "), icon: Dna },
@@ -794,7 +825,8 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
   ];
 
   const sectionDefs = [
-    { key: "Overview", label: "Overview", show: !!disease.overview },
+    // NOTE: "Overview" tab is intentionally removed — it now lives as an expandable
+    // section directly under the hero banner (see overviewOpen state above).
     { key: "Causes", label: "Causes", show: !!disease.causes && disease.causes !== "Information not available" },
     { key: "Symptoms", label: "Symptoms", show: Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0 },
     { key: "Diagnosis", label: "Diagnosis", show: Array.isArray(disease.diagnosis) && disease.diagnosis.length > 0 },
@@ -808,7 +840,7 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
         !!disease.lifestyleAndDailySupport.raw
       )
     },
-    { key: "Research", label: "Research", show: Array.isArray(disease.treatmentsAndPharma) && disease.treatmentsAndPharma.length > 0 },
+    { key: "Research", label: "Treatments & Research Directory", show: Array.isArray(disease.treatmentsAndPharma) && disease.treatmentsAndPharma.length > 0 },
     { key: "FAQ", label: "FAQ", show: Array.isArray(disease.faqs) && disease.faqs.length > 0 },
     { key: "Facts & Myths", label: "Facts & Myths", show: Array.isArray(disease.factsMyths) && disease.factsMyths.length > 0 },
     { key: "Specialists", label: "Specialists", show: Array.isArray(disease.specialists) && disease.specialists.length > 0 },
@@ -842,7 +874,7 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
         </button>
 
         {/* Hero banner */}
-        <div className="bg-primary rounded-3xl p-6 md:p-8 mb-6 relative overflow-hidden">
+        <div className="bg-primary rounded-3xl p-6 md:p-8 mb-4 relative overflow-hidden">
           <div className="relative">
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-md">
@@ -858,7 +890,7 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
               </span>
             </div>
             <div className="flex items-start justify-between gap-4 flex-wrap mb-2">
-              <h1 className="font-black text-2xl md:text-3xl text-ivory">{disease.name}</h1>
+              <h1 className="font-bold text-2xl md:text-3xl text-ivory">{disease.name}</h1>
               <button
                 onClick={() => downloadDiseaseAsPDF(disease)}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-ivory text-sm font-bold transition-all duration-200 border border-white/20 shrink-0"
@@ -867,9 +899,35 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
                 Download PDF
               </button>
             </div>
-            <p className="text-taupe text-sm max-w-2xl">{shortDesc}</p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+            {/* Seamless inline expandable overview */}
+            <div className="text-taupe text-sm max-w-3xl leading-relaxed mb-4">
+              {overviewText ? (
+                <p id="disease-overview-text">
+                  {overviewText.length > 220 && !overviewOpen
+                    ? overviewText.substring(0, 220) + "… "
+                    : overviewText + " "}
+                  {overviewText.length > 220 && (
+                    <button
+                      id="overview-toggle"
+                      onClick={() => setOverviewOpen((o) => !o)}
+                      aria-expanded={overviewOpen}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:text-white transition-colors underline underline-offset-2 ml-1 cursor-pointer"
+                    >
+                      {overviewOpen ? (
+                        <><ChevronUp className="w-3.5 h-3.5 inline" /> Hide full overview</>
+                      ) : (
+                        <><ChevronDown className="w-3.5 h-3.5 inline" /> Read full overview</>
+                      )}
+                    </button>
+                  )}
+                </p>
+              ) : (
+                <p>Comprehensive rare disease details and support resources.</p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
               {quickInfoCards.map((card) => (
                 <div key={card.label} className="bg-primary-dark rounded-xl p-3">
                   <div className="flex items-center gap-1.5 mb-1">
@@ -900,14 +958,6 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
         </div>
 
         {/* ── Section content ── */}
-
-        {/* Overview */}
-        {currentTab === "Overview" && (
-          <SectionCard>
-            <SectionHeader icon={BookOpen} title="Simple Explanation" iconBg="bg-secondary" iconColor="text-primary" />
-            <div className="text-accent leading-relaxed">{renderTextWithLinks(disease.overview)}</div>
-          </SectionCard>
-        )}
 
         {/* Causes */}
         {currentTab === "Causes" && (
@@ -988,6 +1038,27 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
         {currentTab === "Sources" && (
           <SourcesSection sources={disease.sources || []} />
         )}
+
+        {/* ── Medical Disclaimer ── */}
+        <div className="mt-10 rounded-3xl bg-primary overflow-hidden">
+          {/* top accent stripe */}
+          <div className="h-1 bg-gradient-to-r from-secondary via-accent to-secondary opacity-60" />
+          <div className="p-6 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 mt-0.5">
+              <Shield className="w-5 h-5 text-secondary" />
+            </div>
+            <div>
+              <p className="font-semibold text-sm text-secondary mb-1.5 tracking-wide uppercase">Medical Disclaimer</p>
+              <p className="text-xs text-taupe leading-relaxed">
+                The information provided on RareBridge is intended for general informational and educational purposes only.
+                It is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the guidance
+                of a qualified healthcare provider with any questions you may have regarding a medical condition. Never
+                disregard professional medical advice or delay seeking it because of information found on this platform.
+                RareBridge does not recommend or endorse any specific tests, physicians, procedures, or treatments.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* AI Chat button */}
@@ -1008,7 +1079,7 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
                   <Bot className="w-5 h-5 text-secondary" />
                 </div>
                 <div>
-                  <div className="font-black text-ivory text-sm">RareBridge AI</div>
+                  <div className="font-bold text-ivory text-sm">RareBridge AI</div>
                   <div className="text-taupe text-xs">Simplifying rare disease research</div>
                 </div>
               </div>

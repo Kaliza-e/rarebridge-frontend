@@ -91,7 +91,7 @@ export default function DirectoryPage({ onDisease }: { onDisease: (id: string) =
               </div>
               <span className="text-xs font-bold uppercase tracking-widest text-secondary/70">Disease Library</span>
             </div>
-            <h1 className="font-black text-2xl md:text-3xl text-ivory tracking-tight">Explore Diseases</h1>
+            <h1 className="font-bold text-2xl md:text-3xl text-ivory tracking-tight">Explore Diseases</h1>
             <p className="text-taupe text-sm max-w-xl mt-1">Browse our comprehensive library of rare conditions with plain-language explanations and expert-reviewed details.</p>
           </div>
         </div>
@@ -142,8 +142,8 @@ export default function DirectoryPage({ onDisease }: { onDisease: (id: string) =
                       key={f}
                       onClick={() => setCat(f)}
                       className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${cat === f
-                          ? "bg-primary text-ivory shadow-sm"
-                          : "bg-white border border-taupe-40 text-accent hover:border-primary hover:text-primary"
+                        ? "bg-primary text-ivory shadow-sm"
+                        : "bg-white border border-taupe-40 text-accent hover:border-primary hover:text-primary"
                         }`}
                     >
                       {f}
@@ -159,8 +159,8 @@ export default function DirectoryPage({ onDisease }: { onDisease: (id: string) =
                       key={f}
                       onClick={() => setStatus(f)}
                       className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${status === f
-                          ? "bg-primary text-ivory shadow-sm"
-                          : "bg-white border border-taupe-40 text-accent hover:border-primary hover:text-primary"
+                        ? "bg-primary text-ivory shadow-sm"
+                        : "bg-white border border-taupe-40 text-accent hover:border-primary hover:text-primary"
                         }`}
                     >
                       {f}
