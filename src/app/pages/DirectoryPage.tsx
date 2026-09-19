@@ -124,7 +124,7 @@ export default function DirectoryPage({ onDisease }: { onDisease: (id: string) =
               <SlidersHorizontal className="w-4 h-4" />
               Filters
               {hasActiveFilters && (
-                <span className="w-4 h-4 rounded-full bg-secondary text-primary text-[10px] font-black flex items-center justify-center">
+                <span className="w-4 h-4 rounded-full bg-secondary text-primary text-[10px] font-bold flex items-center justify-center">
                   {(cat !== "All" ? 1 : 0) + (status !== "All Status" ? 1 : 0)}
                 </span>
               )}
@@ -204,7 +204,7 @@ export default function DirectoryPage({ onDisease }: { onDisease: (id: string) =
         {/* ── Results count ── */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-sm text-taupe font-medium">
-            <span className="font-black text-primary text-base">{filtered.length}</span> disease{filtered.length !== 1 ? "s" : ""} found
+            <span className="font-bold text-primary text-base">{filtered.length}</span> disease{filtered.length !== 1 ? "s" : ""} found
           </p>
           {totalPages > 1 && (
             <div className="flex items-center gap-2">

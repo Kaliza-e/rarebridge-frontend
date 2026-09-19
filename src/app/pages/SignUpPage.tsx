@@ -87,7 +87,7 @@ export default function SignUpPage({ onNav }: { onNav: (v: string) => void }) {
                 </div>
                 <span className="text-2xl font-bold text-primary tracking-tight">RareBridge</span>
               </div>
-              <h1 className="font-black text-2xl text-primary mb-1.5">Create your account</h1>
+              <h1 className="font-bold text-2xl text-primary mb-1.5">Create your account</h1>
               <p className="text-sm text-accent">
                 Already have one?{" "}
                 <button onClick={() => onNav("signin")}

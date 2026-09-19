@@ -91,7 +91,7 @@ export default function ResearchPage() {
       <div className="mb-10">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="font-black text-2xl text-primary">Featured research organizations</h2>
+            <h2 className="font-bold text-2xl text-primary">Featured research organizations</h2>
             <p className="mt-1 text-sm text-accent">Showing up to 6 organizations.</p>
           </div>
           <button
@@ -134,7 +134,7 @@ export default function ResearchPage() {
 
       <div className="rounded-3xl bg-primary p-10 text-center text-secondary">
         <div className="max-w-3xl mx-auto">
-          <h2 className="font-black text-3xl mb-4">Research helps rare disease families feel less alone.</h2>
+          <h2 className="font-bold text-3xl mb-4">Research helps rare disease families feel less alone.</h2>
           <p className="text-sm leading-relaxed">We bring the latest science, trusted organizations, and clinical updates together so families can make informed decisions and connect with the right experts.</p>
         </div>
       </div>

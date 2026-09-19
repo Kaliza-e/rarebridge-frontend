@@ -55,7 +55,7 @@ function SectionHeader({
       <div className={`w-8 h-8 rounded-xl ${iconBg} flex items-center justify-center shrink-0`}>
         <Icon className={`w-4 h-4 ${iconColor}`} />
       </div>
-      <h2 className="font-black text-lg text-primary">{title}</h2>
+      <h2 className="font-bold text-lg text-primary">{title}</h2>
     </div>
   );
 }

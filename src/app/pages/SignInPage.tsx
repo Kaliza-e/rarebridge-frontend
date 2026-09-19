@@ -73,7 +73,7 @@ export default function SignInPage({ onNav }: { onNav: (v: string) => void }) {
 
             {/* Header */}
             <div className="mb-8">
-              <h1 className="font-black text-2xl text-primary mb-1.5">Sign in</h1>
+              <h1 className="font-bold text-2xl text-primary mb-1.5">Sign in</h1>
               <p className="text-sm text-accent">
                 No account?{" "}
                 <button onClick={() => onNav("signup")}

@@ -94,7 +94,7 @@ export default function AboutPage() {
             <div className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center mb-5">
               <BookOpen className="w-5 h-5 text-primary" />
             </div>
-            <h3 className="font-black text-xl text-primary mb-3">Our Mission</h3>
+            <h3 className="font-bold text-xl text-primary mb-3">Our Mission</h3>
             <p className="text-accent leading-relaxed">
               To make trusted rare disease information accessible to every family worldwide and accelerate their connections to care, specialists, and research.
             </p>
@@ -103,7 +103,7 @@ export default function AboutPage() {
             <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center mb-5">
               <Star className="w-5 h-5 text-secondary" />
             </div>
-            <h3 className="font-black text-xl text-primary mb-3">Our Vision</h3>
+            <h3 className="font-bold text-xl text-primary mb-3">Our Vision</h3>
             <p className="text-accent leading-relaxed">
               A world where every rare disease family finds fast answers, trusted specialists, and a welcoming community — from the moment of diagnosis onward.
             </p>
@@ -116,7 +116,7 @@ export default function AboutPage() {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-secondary text-xs font-bold uppercase tracking-widest mb-5">
               The Zebra
             </div>
-            <h2 className="font-black text-3xl md:text-4xl text-ivory mb-4">Why zebras?</h2>
+            <h2 className="font-bold text-3xl md:text-4xl text-ivory mb-4">Why zebras?</h2>
             <p className="text-taupe text-lg leading-relaxed mb-6">
               In medicine, students are taught: "When you hear hoofbeats, think horses — not zebras." It's a reminder that common conditions are more likely. But for the 300 million people living with rare diseases worldwide, <span className="text-secondary font-semibold">they are the zebra</span>.
             </p>
@@ -130,7 +130,7 @@ export default function AboutPage() {
         <div className="mb-16">
           <div className="text-center mb-10">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-widest mb-3">What We Stand For</span>
-            <h2 className="font-black text-3xl text-primary">Our Core Values</h2>
+            <h2 className="font-bold text-3xl text-primary">Our Core Values</h2>
           </div>
           <div className="grid sm:grid-cols-2 gap-5">
             {VALUES.map(v => (
@@ -151,17 +151,17 @@ export default function AboutPage() {
         <div className="mb-16">
           <div className="text-center mb-10">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-widest mb-3">People</span>
-            <h2 className="font-black text-3xl text-primary">The Team Behind RareBridge</h2>
+            <h2 className="font-bold text-3xl text-primary">The Team Behind RareBridge</h2>
           </div>
           <div className="grid sm:grid-cols-3 gap-5">
             {TEAM.map(t => (
               <div key={t.name} className="rounded-3xl border border-taupe-40/60 bg-white p-6 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300">
                 <div className="w-16 h-16 rounded-full bg-secondary mx-auto mb-4 flex items-center justify-center">
-                  <span className="font-black text-primary text-xl">
+                  <span className="font-bold text-primary text-xl">
                     {t.name.split(" ").map(n => n[0]).join("")}
                   </span>
                 </div>
-                <h4 className="font-black text-primary mb-1">{t.name}</h4>
+                <h4 className="font-bold text-primary mb-1">{t.name}</h4>
                 <p className="text-sm font-semibold text-accent mb-1.5">{t.role}</p>
                 <p className="text-xs text-taupe">{t.detail}</p>
               </div>
@@ -174,7 +174,7 @@ export default function AboutPage() {
           <div className="w-14 h-14 mx-auto mb-5 bg-white/15 rounded-2xl flex items-center justify-center">
             <Heart className="w-7 h-7 text-secondary" />
           </div>
-          <h2 className="font-black text-3xl md:text-4xl text-ivory mb-3">Join the Community</h2>
+          <h2 className="font-bold text-3xl md:text-4xl text-ivory mb-3">Join the Community</h2>
           <p className="text-secondary/80 text-lg mb-8 max-w-xl mx-auto">
             Whether you're a family, clinician, or researcher — RareBridge is built for you.
           </p>

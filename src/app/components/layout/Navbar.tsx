@@ -111,7 +111,7 @@ export default function Navbar({ onNav, activeView }: NavbarProps) {
             </button>
             <button
               onClick={() => handleNavigation("signup")}
-              className="mx-1.5 px-5 py-2.5 rounded-xl bg-primary text-ivory text-[15px] font-bold hover:bg-accent transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap"
+              className="mx-1.5 px-5 py-2.5 rounded-xl bg-primary text-ivory text-[15px] font-semibold hover:bg-accent transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap"
             >
               Get Started
             </button>
@@ -158,7 +158,7 @@ export default function Navbar({ onNav, activeView }: NavbarProps) {
                   w-full text-left flex items-center gap-3
                   px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-150
                   ${isActive
-                    ? "text-primary font-bold"
+                    ? "text-primary font-semibold"
                     : "text-accent hover:text-primary"
                   }
                 `}
@@ -180,7 +180,7 @@ export default function Navbar({ onNav, activeView }: NavbarProps) {
             </button>
             <button
               onClick={() => handleNavigation("signup")}
-              className="flex-1 py-3 rounded-xl bg-primary text-ivory text-[15px] font-bold hover:bg-accent transition-colors shadow-sm"
+              className="flex-1 py-3 rounded-xl bg-primary text-ivory text-[15px] font-semibold hover:bg-accent transition-colors shadow-sm"
             >
               Get Started
             </button>

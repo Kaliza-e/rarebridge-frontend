@@ -244,7 +244,7 @@ export default function SpecialistsPage() {
 
         {/* Footer CTA */}
         <div className="rounded-3xl bg-primary p-10 text-secondary text-center">
-          <h2 className="font-black text-2xl mb-4">Specialist care starts with a trusted referral.</h2>
+          <h2 className="font-bold text-2xl mb-4">Specialist care starts with a trusted referral.</h2>
           <p className="text-sm leading-relaxed max-w-3xl mx-auto">
             RareBridge helps families find the right specialist teams — from neurologists and geneticists
             to metabolic care providers and allied health professionals.

@@ -418,7 +418,7 @@ export function AIAssistant() {
               <Bot className="w-5 h-5 text-primary" />
             </div>
             <div className="flex-1">
-              <p className="font-black text-ivory text-sm leading-none">RareBridge AI</p>
+              <p className="font-bold text-ivory text-sm leading-none">RareBridge AI</p>
               <p className="text-taupe text-xs mt-0.5">Ask anything about rare diseases</p>
             </div>
             <button onClick={() => setOpen(false)} className="text-taupe hover:text-ivory transition-colors p-1">
@@ -516,7 +516,7 @@ export function PatientJourney() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 md:mb-14">
           <h2 className="text-xs font-bold text-accent tracking-[0.2em] uppercase mb-3">Diagnostic Journey</h2>
-          <h3 className="text-3xl md:text-4xl font-black text-primary mb-4 tracking-tight">Understanding the Path</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-primary mb-4 tracking-tight">Understanding the Path</h3>
           <p className="text-accent text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
             Navigating the complexities of a rare disease can be overwhelming. Here is a guide to what the journey often looks like, step by step.
           </p>
@@ -588,7 +588,7 @@ export function PatientJourney() {
                 <div className="inline-block px-4 py-1.5 bg-secondary/30 text-primary text-xs font-bold tracking-widest uppercase rounded-full mb-4">
                   Phase {activeStep + 1}
                 </div>
-                <h4 className="text-2xl md:text-3xl font-black text-primary mb-3 leading-tight">
+                <h4 className="text-2xl md:text-3xl font-bold text-primary mb-3 leading-tight">
                   {JOURNEY_STEPS[activeStep].label}
                 </h4>
                 <p className="text-accent text-base md:text-lg leading-relaxed">
@@ -640,7 +640,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
   const c = COLOR_MAP[disease.color] ?? COLOR_MAP.navy;
   const Icon = disease.icon as any;
   return (
-    <div className="group relative overflow-hidden rounded-3xl border-2 border-taupe-30 bg-white shadow-md transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-2xl hover:border-accent/60 hover:scale-105 cursor-pointer sound-effect-pop" onClick={onClick}>
+    <div className="group relative overflow-hidden rounded-3xl border border-taupe-40 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer" onClick={onClick}>
       <div className={`relative px-6 pt-6 pb-4`}>
         <div className="flex items-start justify-between mb-3">
           <div className={`w-12 h-12 rounded-2xl ${c.iconBg} flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6`}>
@@ -648,7 +648,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
           </div>
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-10 text-accent`}>{(disease as any).researchStatus || 'Research'}</span>
         </div>
-        <h3 className="font-black text-primary text-lg leading-tight">{disease.name}</h3>
+        <h3 className="font-bold text-primary text-lg leading-tight">{disease.name}</h3>
         <p className="text-xs text-taupe mt-0.5 font-medium">{disease.category}</p>
       </div>
       <div className="px-6 pb-6 pt-4">

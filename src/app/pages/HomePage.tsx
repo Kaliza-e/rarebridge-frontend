@@ -63,7 +63,7 @@ function AnimatedHeadline() {
   let idx = 0;
 
   return (
-    <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] tracking-tight text-primary mb-6">
+    <h1 className="font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.12] tracking-tight text-primary mb-5">
       {line1.map((word) => {
         const i = idx++;
         return (
@@ -440,8 +440,8 @@ export default function HomePage({
                   <div className="pointer-events-none absolute -right-12 -top-12 w-32 h-32 rounded-full bg-secondary/40 opacity-0 group-hover:opacity-100 blur-2xl transition-all duration-500" />
 
                   <div className="relative z-10">
-                    <div className="w-12 h-12 rounded-2xl bg-secondary/30 border border-taupe/40 flex items-center justify-center mb-5 group-hover:bg-primary group-hover:text-ivory transition-colors duration-300">
-                      <Icon className="w-5 h-5 text-primary group-hover:text-ivory transition-colors duration-300" />
+                    <div className="w-12 h-12 rounded-2xl bg-secondary/30 border border-taupe/40 flex items-center justify-center mb-5 text-primary group-hover:bg-secondary/50 transition-colors duration-300">
+                      <Icon className="w-5 h-5" />
                     </div>
                     <h3 className="font-bold text-primary text-lg mb-2">{f.title}</h3>
                     <p className="text-sm text-accent leading-relaxed">{f.desc}</p>

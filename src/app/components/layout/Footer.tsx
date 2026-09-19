@@ -57,7 +57,7 @@ export default function Footer() {
             },
           ].map((col) => (
             <div key={col.title}>
-              <h4 className="font-bold text-secondary text-xs uppercase tracking-widest mb-4">
+              <h4 className="font-semibold text-secondary text-xs uppercase tracking-widest mb-4">
                 {col.title}
               </h4>
               <ul className="space-y-2.5">

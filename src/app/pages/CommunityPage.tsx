@@ -51,7 +51,7 @@ export default function CommunityPage() {
 
       <div className="relative overflow-hidden rounded-3xl border border-secondary bg-white p-8 shadow-sm">
         <div className="pointer-events-none absolute -right-8 bottom-8 h-24 w-24 rounded-full bg-secondary-20 blur-2xl" />
-        <h2 className="font-black text-2xl text-primary mb-4">Connect with others</h2>
+        <h2 className="font-bold text-2xl text-primary mb-4">Connect with others</h2>
         <p className="text-accent leading-relaxed mb-6">Whether you are caring for a child, living with a rare disease, or supporting a family member, community connections make the journey easier.</p>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl bg-ivory p-5 transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
