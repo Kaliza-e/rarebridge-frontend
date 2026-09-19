@@ -45,10 +45,8 @@ export default function ResearchPage() {
       </svg>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="relative overflow-hidden rounded-3xl bg-secondary-20 p-10 mb-12">
-        <div className="absolute left-6 bottom-6 opacity-10 pointer-events-none"><ZebraDoodle className="w-56 h-36" /></div>
-        <div className="absolute right-6 top-6 opacity-10 pointer-events-none"><ZebraMascot size={140} /></div>
         <div className="relative text-center">
-          <h1 className="font-black text-3xl text-primary mb-4">Research & Organizations</h1>
+          <h1 className="font-bold text-2xl md:text-3xl text-primary mb-4">Research & Organizations</h1>
           <p className="text-accent max-w-3xl mx-auto">Discover the latest rare disease research, breakthroughs, and organizations helping to advance diagnosis, treatment, and care.</p>
         </div>
       </div>

@@ -22,8 +22,8 @@ export default function SignInPage({ onNav }: { onNav: (v: string) => void }) {
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-secondary opacity-10 blur-[90px]" />
           <div className="absolute bottom-0 right-0 w-72 h-72 rounded-full bg-accent opacity-10 blur-[80px]" />
-          <div className="absolute bottom-4 right-10 opacity-[0.06] pointer-events-none">
-            <ZebraMascot size={220} />
+          <div className="absolute bottom-4 right-10 opacity-20 pointer-events-none">
+            <ZebraMascot size={40} />
           </div>
         </div>
 
@@ -38,7 +38,7 @@ export default function SignInPage({ onNav }: { onNav: (v: string) => void }) {
             </div>
             <span className="text-lg font-bold text-primary tracking-tight pr-2">RareBridge</span>
           </div>
-          <h2 className="font-black text-4xl text-ivory leading-[1.1] mb-5">
+          <h2 className="font-bold text-2xl md:text-3xl text-ivory leading-tight mb-4">
             Welcome back<br />to RareBridge
           </h2>
           <p className="text-taupe leading-relaxed text-base max-w-xs">

@@ -59,8 +59,8 @@ export default function AboutPage() {
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full bg-secondary opacity-10 blur-[120px]" />
           <div className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full bg-accent opacity-5 blur-[80px]" />
-          <div className="absolute right-10 top-1/2 -translate-y-1/2 opacity-5 pointer-events-none">
-            <ZebraMascot size={220} />
+          <div className="absolute right-10 top-1/2 -translate-y-1/2 opacity-20 pointer-events-none">
+            <ZebraMascot size={40} />
           </div>
           {/* Floating doodles */}
           <div className="absolute top-16 left-12 animate-float" style={{ animationDelay: '0s' }}>
@@ -77,7 +77,7 @@ export default function AboutPage() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-secondary text-xs font-bold uppercase tracking-widest mb-6">
             <Star className="w-3 h-3" /> Our Story
           </div>
-          <h1 className="font-black text-4xl md:text-5xl lg:text-6xl text-ivory tracking-tight leading-[1.1] mb-5">
+          <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl text-ivory tracking-tight leading-tight mb-5">
             Built for families.<br />
             <span className="text-secondary">Powered by science.</span>
           </h1>
@@ -112,12 +112,6 @@ export default function AboutPage() {
 
         {/* ── Why Zebras ── */}
         <div className="relative overflow-hidden rounded-3xl bg-primary p-10 md:p-12 mb-16">
-          <div className="pointer-events-none absolute -right-6 -bottom-6 opacity-[0.07]">
-            <ZebraMascot size={180} />
-          </div>
-          <div className="pointer-events-none absolute -left-8 top-8 opacity-[0.05]">
-            <ZebraDoodle className="w-52 h-36" />
-          </div>
           <div className="relative max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-secondary text-xs font-bold uppercase tracking-widest mb-5">
               The Zebra
@@ -177,9 +171,6 @@ export default function AboutPage() {
 
         {/* ── CTA ── */}
         <div className="relative overflow-hidden rounded-3xl p-10 md:p-12 text-center" style={{ background: "linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)" }}>
-          <div className="pointer-events-none absolute -bottom-4 right-10 opacity-10">
-            <ZebraMascot size={130} />
-          </div>
           <div className="w-14 h-14 mx-auto mb-5 bg-white/15 rounded-2xl flex items-center justify-center">
             <Heart className="w-7 h-7 text-secondary" />
           </div>

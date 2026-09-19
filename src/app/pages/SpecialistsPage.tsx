@@ -188,14 +188,8 @@ export default function SpecialistsPage() {
 
         {/* Hero banner */}
         <div className="relative overflow-hidden rounded-3xl bg-ivory p-10 mb-10 border border-secondary">
-          <div className="absolute left-6 top-6 opacity-10 pointer-events-none">
-            <ZebraMascot size={120} />
-          </div>
-          <div className="absolute right-6 bottom-6 opacity-20 pointer-events-none">
-            <ZebraDoodle className="w-48 h-32" />
-          </div>
           <div className="relative text-center">
-            <h1 className="font-black text-3xl text-primary mb-3">Featured Specialists Directory</h1>
+            <h1 className="font-bold text-2xl md:text-3xl text-primary mb-3">Featured Specialists Directory</h1>
             <p className="text-accent max-w-2xl mx-auto text-sm leading-relaxed">
               Connect with expert medical teams, geneticists, and specialists. Showing 6 featured specialist contacts across rare diseases.
             </p>

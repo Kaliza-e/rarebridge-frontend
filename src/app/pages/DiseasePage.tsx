@@ -890,7 +890,7 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
               </span>
             </div>
             <div className="flex items-start justify-between gap-4 flex-wrap mb-2">
-              <h1 className="font-bold text-2xl md:text-3xl text-ivory">{disease.name}</h1>
+              <h1 className="font-bold text-2xl md:text-3xl text-ivory tracking-tight">{disease.name}</h1>
               <button
                 onClick={() => downloadDiseaseAsPDF(disease)}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-ivory text-sm font-bold transition-all duration-200 border border-white/20 shrink-0"

@@ -39,15 +39,12 @@ function AnimatedHeadline() {
   const line3 = ["Starts", "Here"];
 
   const allWords = [...line1, ...line2, ...line3];
-
   const [visible, setVisible] = useState<number[]>([]);
 
   useEffect(() => {
     const timers = allWords.map((_, i) =>
       window.setTimeout(() => {
-        setVisible((prev) =>
-          prev.includes(i) ? prev : [...prev, i]
-        );
+        setVisible((prev) => (prev.includes(i) ? prev : [...prev, i]));
       }, 100 + i * 120)
     );
 
@@ -57,31 +54,18 @@ function AnimatedHeadline() {
   }, []);
 
   const wordClass = (i: number) =>
-    `inline-block transition-all duration-500 ease-out ${visible.includes(i)
-      ? "opacity-100 translate-y-0 blur-0"
-      : "opacity-0 translate-y-6 blur-sm"
+    `inline-block transition-all duration-500 ease-out ${
+      visible.includes(i)
+        ? "opacity-100 translate-y-0 blur-0"
+        : "opacity-0 translate-y-6 blur-sm"
     }`;
 
   let idx = 0;
 
   return (
-    <h1
-      className="
-        font-black
-        text-4xl
-        sm:text-5xl
-        md:text-6xl
-        lg:text-7xl
-        leading-[1.05]
-        tracking-tight
-        text-primary
-        mb-6
-      "
-    >
-      {/* Understanding */}
+    <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] tracking-tight text-primary mb-6">
       {line1.map((word) => {
         const i = idx++;
-
         return (
           <span key={word} className={wordClass(i)}>
             {word}
@@ -91,15 +75,12 @@ function AnimatedHeadline() {
 
       <br />
 
-      {/* Rare Diseases */}
       {line2.map((word, wi) => {
         const i = idx++;
-
         return (
           <span
             key={word}
-            className={`${wordClass(i)} mr-3 ${wi === 0 ? "text-accent" : ""
-              }`}
+            className={`${wordClass(i)} mr-3 ${wi === 0 ? "text-accent" : ""}`}
           >
             {word}
           </span>
@@ -108,10 +89,8 @@ function AnimatedHeadline() {
 
       <br />
 
-      {/* Starts Here */}
       {line3.map((word) => {
         const i = idx++;
-
         return (
           <span key={word} className={`${wordClass(i)} mr-3`}>
             {word}
@@ -133,12 +112,8 @@ export default function HomePage({
   onNav: (v: string) => void;
   onDisease: (id: string) => void;
 }) {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Disease[]>([]);
   const [diseases, setDiseases] = useState<Disease[]>([]);
-  const [suggestedSearches, setSuggestedSearches] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [heroVisible, setHeroVisible] = useState(false);
 
   /* -------------------------------------------------------
@@ -150,12 +125,9 @@ export default function HomePage({
       try {
         const apiDiseases = await fetchDiseasesFromAPI();
         setDiseases(apiDiseases as Disease[]);
-        // Set suggested searches from actual disease names
-        setSuggestedSearches(apiDiseases.slice(0, 4).map(d => d.name));
       } catch (error) {
-        console.error('Failed to load diseases from API, using fallback:', error);
+        console.error("Failed to load diseases from API, using fallback:", error);
         setDiseases(DISEASES);
-        setSuggestedSearches(SUGGESTED_SEARCHES);
       } finally {
         setLoading(false);
       }
@@ -175,41 +147,10 @@ export default function HomePage({
     return () => clearTimeout(timer);
   }, []);
 
-  /* -------------------------------------------------------
-     Search
-  ------------------------------------------------------- */
-
-  function handleSearch(q: string) {
-    setQuery(q);
-
-    setResults(
-      q.trim().length > 1
-        ? diseases.filter(
-          (d) =>
-            d.name
-              .toLowerCase()
-              .includes(q.toLowerCase()) ||
-            d.category
-              .toLowerCase()
-              .includes(q.toLowerCase())
-        )
-        : []
-    );
-  }
-
-  /* -------------------------------------------------------
-     Fade animation helper
-  ------------------------------------------------------- */
-
   const fadeUp = (delay: string) =>
-    `transition-all duration-700 ${delay} ${heroVisible
-      ? "opacity-100 translate-y-0"
-      : "opacity-0 translate-y-8"
+    `transition-all duration-700 ${delay} ${
+      heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
     }`;
-
-  /* -------------------------------------------------------
-     Feature icons
-  ------------------------------------------------------- */
 
   const featureIcons = [
     BookOpen,
@@ -219,10 +160,6 @@ export default function HomePage({
     Trophy,
     Sparkles,
   ];
-
-  /* -------------------------------------------------------
-     Ribbon icons
-  ------------------------------------------------------- */
 
   const ribbonIcons = [
     <ZebraMascot key="zebra" size={24} />,
@@ -236,89 +173,72 @@ export default function HomePage({
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Left side curvy lines */}
+    <div className="min-h-screen relative overflow-hidden bg-ivory text-primary">
+      {/* Curved background SVG side accents */}
       <svg className="fixed left-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
         <path d="M20 0 Q50 100 20 200 T20 400 T20 600 T20 800 T20 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
         <path d="M40 0 Q70 150 40 300 T40 600 T40 900 T40 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
         <path d="M60 0 Q90 200 60 400 T60 800 T60 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-        <path d="M10 100 Q40 150 10 200 T10 300 T10 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-        <path d="M80 200 Q50 250 80 300 T80 400 T80 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
       </svg>
-
-      {/* Right side curvy lines */}
       <svg className="fixed right-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
         <path d="M80 0 Q50 100 80 200 T80 400 T80 600 T80 800 T80 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
         <path d="M60 0 Q30 150 60 300 T60 600 T60 900 T60 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
         <path d="M40 0 Q10 200 40 400 T40 800 T40 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-        <path d="M90 100 Q60 150 90 200 T90 300 T90 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-        <path d="M20 200 Q50 250 20 300 T20 400 T20 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
       </svg>
 
       {/* =====================================================
-          HERO
+          1. CENTERED HERO SECTION WITH AMBIENT GLOWS
       ===================================================== */}
 
-      <section className="relative overflow-hidden" style={{ background: "linear-gradient(160deg, #EEF3FB 0%, #F4F7FD 40%, #FAFBFF 70%, #ffffff 100%)" }}>
-
-        {/* ── Square grid background ── */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ opacity: 0.035 }}
-        >
-          <defs>
-            <pattern id="hero-grid" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
-              <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#112250" strokeWidth="1" />
-            </pattern>
-            {/* Larger accent grid */}
-            <pattern id="hero-grid-lg" x="0" y="0" width="192" height="192" patternUnits="userSpaceOnUse">
-              <path d="M 192 0 L 0 0 0 192" fill="none" stroke="#112250" strokeWidth="1.5" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hero-grid)" />
-          <rect width="100%" height="100%" fill="url(#hero-grid-lg)" />
-        </svg>
-
-        {/* ── Radial glow spots ── */}
+      <section
+        className="relative overflow-hidden border-b border-taupe/20"
+        style={{
+          background:
+            "linear-gradient(160deg, #EEF3FB 0%, #F4F7FD 40%, #FAFBFF 70%, #ffffff 100%)",
+        }}
+      >
+        {/* Ambient Radial Glow Spots */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Top-center warm glow */}
           <div
-            className="absolute"
+            className="absolute animate-pulse"
             style={{
-              top: "-10%",
+              top: "-15%",
               left: "50%",
               transform: "translateX(-50%)",
-              width: "700px",
-              height: "500px",
-              background: "radial-gradient(ellipse at center, rgba(17,34,80,0.07) 0%, transparent 70%)",
+              width: "750px",
+              height: "550px",
+              background:
+                "radial-gradient(ellipse at center, rgba(17,34,80,0.12) 0%, rgba(231,226,206,0.2) 40%, transparent 70%)",
+              filter: "blur(40px)",
             }}
           />
-          {/* Bottom-left cool accent */}
           <div
-            className="absolute"
+            className="absolute animate-float"
             style={{
               bottom: "-5%",
-              left: "-5%",
-              width: "500px",
-              height: "400px",
-              background: "radial-gradient(ellipse at center, rgba(59,80,125,0.06) 0%, transparent 65%)",
-            }}
-          />
-          {/* Top-right warm accent */}
-          <div
-            className="absolute"
-            style={{
-              top: "-5%",
-              right: "-5%",
+              left: "5%",
               width: "450px",
               height: "400px",
-              background: "radial-gradient(ellipse at center, rgba(231,226,206,0.25) 0%, transparent 65%)",
+              background:
+                "radial-gradient(ellipse at center, rgba(59,80,125,0.1) 0%, transparent 70%)",
+              filter: "blur(50px)",
+            }}
+          />
+          <div
+            className="absolute animate-float"
+            style={{
+              top: "10%",
+              right: "5%",
+              width: "400px",
+              height: "350px",
+              background:
+                "radial-gradient(ellipse at center, rgba(231,226,206,0.35) 0%, transparent 65%)",
+              filter: "blur(40px)",
             }}
           />
         </div>
 
-        {/* ── Subtle diagonal shimmer lines ── */}
+        {/* Diagonal Shimmer Grid Lines */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
           style={{ opacity: 0.04 }}
@@ -328,357 +248,176 @@ export default function HomePage({
           <line x1="-100" y1="200" x2="700" y2="-100" stroke="#112250" strokeWidth="1.5" />
           <line x1="200" y1="800" x2="1100" y2="-100" stroke="#112250" strokeWidth="1" />
           <line x1="700" y1="800" x2="1600" y2="-100" stroke="#3b507d" strokeWidth="1" />
-          <line x1="1100" y1="800" x2="1800" y2="200" stroke="#3b507d" strokeWidth="1" />
         </svg>
 
-        {/* ── Main hero content ── */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10 md:pt-20 md:pb-16 flex flex-col items-center text-center relative z-10">
-
-          {/* Trust badge */}
+        {/* Main Centered Hero Content */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-14 md:pt-20 md:pb-20 flex flex-col items-center text-center relative z-10">
+          
+          {/* Trust Badge */}
           <div
             className={`
               inline-flex items-center gap-2
               px-5 py-2 rounded-full
-              bg-white/80 backdrop-blur-md
+              bg-white/90 backdrop-blur-md
               text-primary text-xs font-bold
               mb-6
               border border-[#D8E3F0]
-              shadow-[0_2px_16px_rgba(17,34,80,0.08)]
+              shadow-[0_4px_20px_rgba(17,34,80,0.08)]
               ${fadeUp("delay-0")}
             `}
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-50" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
             </span>
             Trusted by 120,000+ families worldwide
           </div>
 
-          {/* Headline */}
+          {/* Animated Headline */}
           <AnimatedHeadline />
 
-          {/* Decorative mini illustrations */}
-          <div className={`flex items-center justify-center gap-5 mb-5 ${fadeUp("delay-[700ms]")}`}>
+          {/* Decorative Mini Floating Doodles */}
+          <div className={`flex items-center justify-center gap-6 mb-6 ${fadeUp("delay-[700ms]")}`}>
             <div className="animate-bounce" style={{ animationDelay: "0.2s" }}>
-              <ButterflyDoodle size={28} />
+              <ButterflyDoodle size={32} />
             </div>
             <div
               className="w-px h-6 rounded-full"
-              style={{ background: "linear-gradient(to bottom, transparent, rgba(17,34,80,0.15), transparent)" }}
+              style={{
+                background:
+                  "linear-gradient(to bottom, transparent, rgba(17,34,80,0.2), transparent)",
+              }}
             />
             <div className="animate-bounce" style={{ animationDelay: "0.5s" }}>
-              <EdelweissFlower size={28} />
+              <EdelweissFlower size={32} />
             </div>
           </div>
 
-          {/* Description */}
+          {/* Centered Description */}
           <p
             className={`
-              text-lg md:text-xl text-accent leading-relaxed
+              text-base md:text-xl text-accent leading-relaxed
               mb-8 max-w-xl
               ${fadeUp("delay-[750ms]")}
             `}
           >
-            RareBridge helps families understand rare diseases,
-            discover trusted information, connect with specialists,
-            and find supportive communities.
+            RareBridge helps families understand rare diseases, discover trusted information, connect with specialists, and find supportive communities.
           </p>
 
-          {/* =================================================
-              SEARCH
-          ================================================= */}
-
-          <div className={`w-full max-w-2xl mb-4 ${fadeUp("delay-[900ms]")}`}>
-            <div
-              className="
-                relative flex items-center
-                bg-white/95 backdrop-blur-sm
-                border-2 border-[#DDE6F2]
-                rounded-2xl
-                shadow-[0_8px_40px_rgba(17,34,80,0.09)]
-                focus-within:border-primary
-                focus-within:shadow-[0_12px_48px_rgba(17,34,80,0.15)]
-                transition-all duration-300
-              "
-            >
-              <Search className="absolute left-4 w-5 h-5 text-taupe pointer-events-none" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Search a disease, symptom, or condition…"
-                className="
-                  w-full bg-transparent pl-12 pr-36 py-4
-                  text-primary placeholder-taupe
-                  text-base font-medium outline-none rounded-2xl
-                "
-              />
-              <button
-                onClick={() => onNav("directory")}
-                className="
-                  absolute right-2
-                  px-5 py-2.5 rounded-xl
-                  bg-primary text-ivory text-sm font-bold
-                  hover:bg-accent hover:scale-105 hover:shadow-lg
-                  transition-all duration-200 shadow
-                  flex items-center gap-1.5
-                "
-              >
-                Explore
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Search results */}
-            {results.length > 0 && (
-              <div className="mt-2 bg-white border border-[#E1E7F0] rounded-2xl shadow-xl overflow-hidden text-left">
-                {results.slice(0, 5).map((d) => (
-                  <button
-                    key={d.id}
-                    onClick={() => { handleSearch(""); onDisease(d.id); }}
-                    className="
-                      w-full flex items-center gap-3
-                      px-4 py-3
-                      hover:bg-[#F4F7FB] transition-colors
-                      border-b border-[#E8ECF2] last:border-0
-                    "
-                  >
-                    <d.icon className="w-4 h-4 text-accent shrink-0" />
-                    <span className="text-sm font-semibold text-primary">{d.name}</span>
-                    <span className="text-xs text-taupe ml-auto">{d.category}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* =================================================
-              SUGGESTED SEARCHES
-          ================================================= */}
-
-          <div className={`flex flex-wrap justify-center gap-2 mb-7 ${fadeUp("delay-[1000ms]")}`}>
-            <span className="text-xs text-taupe font-medium self-center flex items-center gap-1">
-              <Search className="w-3 h-3" />
-              Try:
-            </span>
-            {suggestedSearches.map((s, i) => (
-              <button
-                key={s}
-                onClick={() => handleSearch(s)}
-                className="
-                  sound-effect-pop
-                  px-3 py-1.5 rounded-full
-                  bg-white/90 border border-[#E1E7F0]
-                  text-xs font-semibold text-accent
-                  hover:bg-primary hover:border-primary hover:text-ivory
-                  transition-all duration-200 shadow-sm
-                  flex items-center gap-1
-                "
-              >
-                {[
-                  <BookOpen key="book" className="w-3 h-3" />,
-                  <Target key="target" className="w-3 h-3" />,
-                  <Zap key="zap" className="w-3 h-3" />,
-                  <Heart key="heart" className="w-3 h-3" />,
-                  <Users key="users" className="w-3 h-3" />,
-                ][i % 5]}
-                {s}
-              </button>
-            ))}
-          </div>
-
-          {/* =================================================
-              CTA BUTTONS
-          ================================================= */}
-
-          <div className={`flex flex-wrap justify-center gap-3 mb-8 ${fadeUp("delay-[1100ms]")}`}>
+          {/* Centered Action Buttons with Shimmer & Glow */}
+          <div className={`flex flex-wrap justify-center gap-4 ${fadeUp("delay-[900ms]")}`}>
             <button
-              onClick={() => onNav("signin")}
+              onClick={() => onNav("directory")}
               className="
-                sound-effect-chime group
-                px-6 py-3 rounded-2xl
-                border-2 border-primary text-primary font-bold
-                hover:bg-primary hover:text-ivory hover:scale-105 hover:shadow-lg
-                transition-all duration-200
-                flex items-center gap-2 shadow-sm relative overflow-hidden
-              "
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              <Users className="w-4 h-4 relative z-10" />
-              Find Support
-              <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 relative z-10" />
-            </button>
-
-            <button
-              onClick={() => onNav("signup")}
-              className="
-                sound-effect-chime group
-                px-7 py-3 rounded-2xl
-                bg-primary text-ivory font-bold
+                group
+                px-7 py-3.5 rounded-2xl
+                bg-primary text-ivory font-bold text-sm md:text-base
                 hover:bg-accent hover:scale-105 hover:shadow-xl
                 transition-all duration-200
                 flex items-center gap-2 shadow-md relative overflow-hidden
               "
-              style={{ boxShadow: "0 4px 24px rgba(17,34,80,0.25)" }}
+              style={{ boxShadow: "0 6px 28px rgba(17,34,80,0.25)" }}
             >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              <Sparkles className="w-4 h-4 relative z-10" />
-              Get Started Free
-              <ChevronRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 relative z-10" />
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <BookOpen className="w-4 h-4 relative z-10" />
+              Explore Diseases
+              <ArrowRight className="w-4 h-4 relative z-10" />
+            </button>
+
+            <button
+              onClick={() => onNav("signin")}
+              className="
+                group
+                px-7 py-3.5 rounded-2xl
+                bg-white border-2 border-primary text-primary font-bold text-sm md:text-base
+                hover:bg-secondary/40 hover:border-primary hover:scale-105 hover:shadow-md
+                transition-all duration-200
+                flex items-center gap-2 shadow-sm relative overflow-hidden
+              "
+            >
+              <Users className="w-4 h-4 relative z-10" />
+              Find Support
+              <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
 
-          {/* =================================================
-              FLOATING DOODLE DECORATIONS
-          ================================================= */}
-
-          <div className={`absolute inset-0 pointer-events-none ${fadeUp("delay-[1300ms]")}`}>
-            <div className="absolute top-16 left-8 animate-float" style={{ animationDelay: "0s" }}>
-              <ButterflyDoodle size={38} className="opacity-50" />
+          {/* Floating Background Doodles */}
+          <div className={`absolute inset-0 pointer-events-none ${fadeUp("delay-[1100ms]")}`}>
+            <div className="absolute top-16 left-6 animate-float" style={{ animationDelay: "0s" }}>
+              <ButterflyDoodle size={36} className="opacity-40" />
             </div>
-            <div className="absolute top-28 right-14 animate-float" style={{ animationDelay: "1s" }}>
-              <EdelweissFlower size={46} className="opacity-45" />
-            </div>
-            <div className="absolute bottom-36 left-16 animate-float" style={{ animationDelay: "2s" }}>
-              <ButterflyDoodle size={30} className="opacity-35" />
-            </div>
-            <div className="absolute bottom-24 right-8 animate-float" style={{ animationDelay: "0.5s" }}>
+            <div className="absolute top-24 right-10 animate-float" style={{ animationDelay: "1s" }}>
               <EdelweissFlower size={42} className="opacity-40" />
+            </div>
+            <div className="absolute bottom-16 left-12 animate-float" style={{ animationDelay: "2s" }}>
+              <ButterflyDoodle size={28} className="opacity-30" />
+            </div>
+            <div className="absolute bottom-12 right-6 animate-float" style={{ animationDelay: "0.5s" }}>
+              <EdelweissFlower size={36} className="opacity-35" />
             </div>
           </div>
         </div>
-
-        {/* ── Bottom fade-to-white ── */}
-        <div
-          className="absolute bottom-0 left-0 w-full h-16 pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.9))" }}
-        />
       </section>
 
       {/* =====================================================
-          ANIMATED STATS RIBBON
+          2. ANIMATED STATS RIBBON
       ===================================================== */}
 
-      <section className="relative z-20 w-full overflow-hidden bg-[#112250] py-4 select-none shadow-sm">
-        {/* Left fade */}
-
+      <section className="relative z-20 w-full overflow-hidden bg-[#112250] py-4 select-none shadow-md">
         <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-[#112250] to-transparent z-10" />
-
-        {/* Right fade */}
-
         <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-[#112250] to-transparent z-10" />
 
-        {/* Scrolling track */}
-
         <div className="flex w-max animate-ribbon gap-0">
-          {[...STATS, ...STATS, ...STATS, ...STATS].map(
-            (s, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-8 px-10"
-              >
-                <div className="flex items-center gap-3">
-                  {ribbonIcons[i % ribbonIcons.length]}
-
-                  <span className="font-black text-2xl text-[#F5F7FA] tracking-tight">
-                    {s.value}
-                  </span>
-
-                  <span className="text-xs font-bold text-[#B8C3D6] uppercase tracking-widest whitespace-nowrap">
-                    {s.label}
-                  </span>
-                </div>
-
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8EA2C2] opacity-60" />
+          {[...STATS, ...STATS, ...STATS, ...STATS].map((s, i) => (
+            <div key={i} className="flex items-center gap-8 px-10">
+              <div className="flex items-center gap-3">
+                {ribbonIcons[i % ribbonIcons.length]}
+                <span className="font-bold text-2xl text-[#F5F7FA] tracking-tight">
+                  {s.value}
+                </span>
+                <span className="text-xs font-bold text-[#B8C3D6] uppercase tracking-widest whitespace-nowrap">
+                  {s.label}
+                </span>
               </div>
-            )
-          )}
+              <span className="w-1.5 h-1.5 rounded-full bg-[#8EA2C2] opacity-60" />
+            </div>
+          ))}
         </div>
       </section>
 
       {/* =====================================================
-          BREATHING SPACE
+          3. PATIENT JOURNEY SECTION
       ===================================================== */}
 
-      <div className="h-3 md:h-5 bg-white" />
-
-      {/* =====================================================
-          PATIENT JOURNEY
-      ===================================================== */}
-
-      <section className="bg-[#F7F9FC] py-12 md:py-16 relative overflow-hidden">
-        {/* Subtle glow effects */}
+      <section className="bg-[#F7F9FC] py-14 md:py-20 relative overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
         <PatientJourney />
       </section>
 
       {/* =====================================================
-          EVERYTHING YOU NEED
+          4. PLATFORM FEATURES ("EVERYTHING YOU NEED")
       ===================================================== */}
 
-      <section className="bg-[#F7F9FC] py-24 md:py-28 relative overflow-hidden">
-        {/* Subtle glow effects */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
-
+      <section className="bg-ivory py-20 md:py-28 relative overflow-hidden border-t border-taupe/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
-          {/* Section heading */}
-
+          
           <div className="max-w-2xl mx-auto text-center mb-14">
-            <span
-              className="
-                inline-flex
-                items-center
-                gap-2
-                px-3.5
-                py-1.5
-                rounded-full
-                bg-[#EAF0F8]
-                text-[#112250]
-                text-[11px]
-                font-bold
-                uppercase
-                tracking-[0.16em]
-                mb-5
-              "
-            >
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/50 text-primary text-xs font-bold uppercase tracking-widest mb-4 border border-taupe/40">
               <Sparkles className="w-3.5 h-3.5" />
-
               Platform
             </span>
-
-            <h2
-              className="
-                font-black
-                text-3xl
-                md:text-4xl
-                lg:text-5xl
-                text-[#112250]
-                mb-5
-                leading-tight
-              "
-            >
-              Everything You Need,
-
-              <span className="block text-[#50658A]">
-                In One Place
-              </span>
+            <h2 className="font-bold text-3xl md:text-4xl text-primary mb-4 leading-snug">
+              Everything You Need, <span className="block text-accent font-medium">In One Place</span>
             </h2>
-
-            <p className="text-[#718096] max-w-xl mx-auto text-base md:text-lg leading-relaxed">
-              From diagnosis support to research breakthroughs —
-              RareBridge is your trusted companion at every step.
+            <p className="text-accent text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+              From diagnosis support to research breakthroughs — RareBridge is your trusted companion at every step.
             </p>
           </div>
 
-          {/* Feature cards */}
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {FEATURES.map((f, i) => {
-              const Icon =
-                featureIcons[i % featureIcons.length];
+              const Icon = featureIcons[i % featureIcons.length];
 
               return (
                 <div
@@ -687,86 +426,25 @@ export default function HomePage({
                     group
                     relative
                     overflow-hidden
-                    rounded-[24px]
-                    border
-                    border-[#E5EAF2]
+                    rounded-3xl
+                    border border-taupe/40
                     bg-white
-                    p-6
-                    md:p-7
-                    shadow-[0_4px_20px_rgba(17,34,80,0.05)]
-                    transition-all
-                    duration-300
-                    hover:-translate-y-1
-                    hover:border-[#C9D5E7]
-                    hover:shadow-[0_12px_30px_rgba(17,34,80,0.10)]
+                    p-7
+                    shadow-sm
+                    transition-all duration-300
+                    hover:-translate-y-1.5
+                    hover:border-primary/40
+                    hover:shadow-xl
                   "
                 >
-                  {/* Decorative glow */}
-
-                  <div
-                    className="
-                      pointer-events-none
-                      absolute
-                      -right-12
-                      -top-12
-                      w-32
-                      h-32
-                      rounded-full
-                      bg-[#EAF0F8]
-                      opacity-60
-                      blur-2xl
-                      transition-all
-                      duration-500
-                      group-hover:opacity-100
-                    "
-                  />
+                  <div className="pointer-events-none absolute -right-12 -top-12 w-32 h-32 rounded-full bg-secondary/40 opacity-0 group-hover:opacity-100 blur-2xl transition-all duration-500" />
 
                   <div className="relative z-10">
-
-                    {/* Icon */}
-
-                    <div
-                      className="
-                        w-12
-                        h-12
-                        rounded-2xl
-                        bg-[#EEF3F9]
-                        border
-                        border-[#E1E8F2]
-                        flex
-                        items-center
-                        justify-center
-                        mb-5
-                        transition-all
-                        duration-300
-                        group-hover:border-[#112250]
-                      "
-                    >
-                      <Icon
-                        className="
-                          w-5
-                          h-5
-                          text-[#112250]
-                          transition-colors
-                          duration-300
-                          group-hover:text-white
-                        "
-                      />
+                    <div className="w-12 h-12 rounded-2xl bg-secondary/30 border border-taupe/40 flex items-center justify-center mb-5 group-hover:bg-primary group-hover:text-ivory transition-colors duration-300">
+                      <Icon className="w-5 h-5 text-primary group-hover:text-ivory transition-colors duration-300" />
                     </div>
-
-                    {/* Title */}
-
-                    <h3
-                      className="font-bold text-[#112250] text-lg mb-2.5"
-                    >
-                      {f.title}
-                    </h3>
-
-                    {/* Description */}
-
-                    <p className="text-sm text-[#718096] leading-6">
-                      {f.desc}
-                    </p>
+                    <h3 className="font-bold text-primary text-lg mb-2">{f.title}</h3>
+                    <p className="text-sm text-accent leading-relaxed">{f.desc}</p>
                   </div>
                 </div>
               );
@@ -776,73 +454,31 @@ export default function HomePage({
       </section>
 
       {/* =====================================================
-          FEATURED DISEASES
+          5. FEATURED DISEASES SECTION
       ===================================================== */}
 
-      <section className="bg-white py-24 relative overflow-hidden">
-        {/* Subtle glow effects */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
-
+      <section className="bg-white py-20 md:py-24 relative overflow-hidden border-t border-taupe/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
+          
           <div className="flex items-end justify-between mb-10">
-
             <div>
-              <span
-                className="
-                  inline-flex
-                  items-center
-                  gap-1.5
-                  px-3
-                  py-1
-                  rounded-full
-                  bg-[#EAF0F8]
-                  text-primary
-                  text-xs
-                  font-bold
-                  uppercase
-                  tracking-widest
-                  mb-3
-                "
-              >
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/40 text-primary text-xs font-bold uppercase tracking-widest mb-3">
                 <BookOpen className="w-3 h-3" />
                 Directory
               </span>
-
-              <h2
-                className="font-black text-3xl md:text-4xl text-primary"
-              >
+              <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl text-primary">
                 Featured Diseases
               </h2>
-
-              <p className="text-taupe mt-1.5 font-medium">
+              <p className="text-accent mt-1 text-sm md:text-base font-medium">
                 Explore conditions in our database
               </p>
             </div>
 
             <button
               onClick={() => onNav("directory")}
-              className="
-                hidden
-                sm:flex
-                items-center
-                gap-1.5
-                text-sm
-                font-bold
-                text-primary
-                border
-                border-[#DDE4EE]
-                rounded-xl
-                px-4
-                py-2
-                hover:bg-[#F4F7FB]
-                transition-all
-                duration-200
-              "
+              className="hidden sm:flex items-center gap-1.5 text-sm font-bold text-primary border border-taupe/40 rounded-xl px-4 py-2 hover:bg-ivory transition-all duration-200"
             >
               View all
-
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -850,18 +486,12 @@ export default function HomePage({
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (
               <div className="col-span-full text-center py-12">
-                <div className="inline-flex items-center gap-2 text-taupe">
-                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm font-medium">Loading diseases...</span>
-                </div>
+                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                <span className="text-sm text-taupe font-medium">Loading diseases...</span>
               </div>
             ) : diseases.length > 0 ? (
               diseases.slice(0, 6).map((d) => (
-                <DiseaseCard
-                  key={d.id}
-                  disease={d}
-                  onClick={() => onDisease(d.id)}
-                />
+                <DiseaseCard key={d.id} disease={d} onClick={() => onDisease(d.id)} />
               ))
             ) : (
               <div className="col-span-full text-center py-12">
@@ -873,59 +503,39 @@ export default function HomePage({
       </section>
 
       {/* =====================================================
-          ZEBRA MESSAGE
+          6. ZEBRA MASCOT MESSAGE
       ===================================================== */}
 
       <section className="bg-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 relative overflow-hidden">
-        {/* Sparkle effects */}
-        <div className="absolute top-4 left-10 w-2 h-2 bg-primary rounded-full animate-ping opacity-30" />
-        <div className="absolute top-8 right-16 w-1.5 h-1.5 bg-accent rounded-full animate-ping opacity-40" style={{ animationDelay: '0.5s' }} />
-        <div className="absolute bottom-4 left-1/3 w-2 h-2 bg-secondary rounded-full animate-ping opacity-30" style={{ animationDelay: '1s' }} />
-
-        <div className="flex items-center justify-center gap-6 py-8 border-y border-[#E8ECF2] relative z-10">
-
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#D9E0EA]" />
-
-          <div className="flex items-center gap-3 text-taupe text-center">
-            <ZebraMascot size={32} />
-
-            <span className="text-sm font-semibold max-w-xl">
-              The zebra symbolizes rare diseases — when you
-              hear hoofbeats, think zebras.
+        <div className="flex items-center justify-center gap-6 py-8 border-y border-taupe/20 relative z-10">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-taupe/30" />
+          <div className="flex items-center gap-3 text-accent text-center">
+            <ZebraMascot size={28} />
+            <span className="text-xs md:text-sm font-semibold max-w-xl">
+              The zebra symbolizes rare diseases — when you hear hoofbeats, think zebras.
             </span>
-
-            <ZebraMascot
-              size={32}
-              className="scale-x-[-1]"
-            />
+            <ZebraMascot size={28} className="scale-x-[-1]" />
           </div>
-
-          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#D9E0EA]" />
+          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-taupe/30" />
         </div>
       </section>
 
       {/* =====================================================
-          FINAL CTA
+          7. FINAL CALL-TO-ACTION SECTION
       ===================================================== */}
 
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
-        {/* Sparkle effects */}
-        <div className="absolute top-10 left-20 w-2 h-2 bg-primary rounded-full animate-ping opacity-20" />
-        <div className="absolute top-16 right-32 w-1.5 h-1.5 bg-accent rounded-full animate-ping opacity-30" style={{ animationDelay: '0.3s' }} />
-        <div className="absolute bottom-20 left-1/4 w-2 h-2 bg-secondary rounded-full animate-ping opacity-20" style={{ animationDelay: '0.6s' }} />
-        <div className="absolute bottom-32 right-16 w-1.5 h-1.5 bg-primary rounded-full animate-ping opacity-25" style={{ animationDelay: '0.9s' }} />
-
+      <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-ivory">
         <div
           className="
             max-w-4xl
             mx-auto
             relative
             overflow-hidden
-            rounded-[28px]
+            rounded-[32px]
             p-10
             md:p-16
             text-center
-            shadow-[0_20px_60px_rgba(17,34,80,0.18)]
+            shadow-2xl
             relative z-10
           "
           style={{
@@ -933,91 +543,58 @@ export default function HomePage({
               "linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)",
           }}
         >
-
-          {/* Zebra decoration */}
-
-          <div className="absolute -bottom-6 right-8 opacity-10">
-            <ZebraMascot size={140} />
-          </div>
-
-          {/* Glow */}
-
-          <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-white/5 blur-2xl" />
-
-          {/* Icon */}
-
-          <div className="relative z-10">
-            <div className="w-14 h-14 mx-auto mb-6 bg-white/15 rounded-2xl flex items-center justify-center">
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <div className="w-14 h-14 mx-auto mb-6 bg-white/15 rounded-2xl flex items-center justify-center border border-white/20">
               <Heart className="w-7 h-7 text-secondary" />
             </div>
 
-            <h2
-              className="font-black text-3xl md:text-4xl text-ivory mb-4"
-            >
+            <h2 className="font-bold text-3xl md:text-4xl text-ivory mb-4 leading-snug">
               You Are Not Alone
             </h2>
 
-            <p className="text-secondary/80 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
-              Thousands of families are walking the same road.
-              RareBridge is here to help you find answers,
-              specialists, and community.
+            <p className="text-secondary/90 text-base md:text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+              Thousands of families are walking the same road. RareBridge is here to help you find answers, specialists, and community.
             </p>
 
-            {/* CTA buttons */}
-
             <div className="flex flex-wrap gap-4 justify-center">
-
               <button
                 onClick={() => onNav("signup")}
                 className="
-                  px-8
-                  py-3
+                  px-8 py-3.5
                   rounded-2xl
                   bg-secondary
                   text-primary
-                  font-bold
+                  font-bold text-sm md:text-base
                   hover:bg-white
-                  transition-all
-                  duration-200
+                  transition-all duration-200
                   shadow-lg
-                  flex
-                  items-center
-                  gap-2
+                  flex items-center gap-2
                 "
               >
                 <Zap className="w-4 h-4" />
-
                 Get Started Free
               </button>
 
               <button
                 onClick={() => onNav("specialists")}
                 className="
-                  px-8
-                  py-3
+                  px-8 py-3.5
                   rounded-2xl
-                  border-2
-                  border-white/30
+                  border-2 border-white/30
                   text-ivory
-                  font-bold
+                  font-bold text-sm md:text-base
                   hover:bg-white/10
-                  transition-all
-                  duration-200
-                  flex
-                  items-center
-                  gap-2
+                  transition-all duration-200
+                  flex items-center gap-2
                 "
               >
                 <Users className="w-4 h-4" />
-
                 Talk to a Specialist
               </button>
-
             </div>
           </div>
         </div>
       </section>
-
     </div>
   );
 }

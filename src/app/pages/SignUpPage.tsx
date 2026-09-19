@@ -33,8 +33,8 @@ export default function SignUpPage({ onNav }: { onNav: (v: string) => void }) {
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-secondary opacity-10 blur-[90px]" />
           <div className="absolute bottom-0 right-0 w-72 h-72 rounded-full bg-accent opacity-10 blur-[80px]" />
-          <div className="absolute bottom-4 right-10 opacity-[0.06] pointer-events-none">
-            <ZebraMascot size={220} />
+          <div className="absolute bottom-4 right-10 opacity-20 pointer-events-none">
+            <ZebraMascot size={40} />
           </div>
         </div>
 
@@ -43,7 +43,7 @@ export default function SignUpPage({ onNav }: { onNav: (v: string) => void }) {
             className="inline-flex items-center gap-2 text-sm text-taupe hover:text-secondary transition-colors mb-14">
             <ArrowLeft className="w-4 h-4" /> Back to RareBridge
           </button>
-          <h2 className="font-black text-4xl text-ivory leading-[1.1] mb-5">
+          <h2 className="font-bold text-2xl md:text-3xl text-ivory leading-tight mb-4">
             Join 120,000+<br />families on<br />RareBridge
           </h2>
           <p className="text-taupe leading-relaxed text-base max-w-xs">

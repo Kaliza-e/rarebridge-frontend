@@ -24,10 +24,8 @@ export default function CommunityPage() {
       </svg>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="relative overflow-hidden rounded-3xl bg-secondary p-10 mb-10 border border-taupe-40">
-        <div className="absolute left-6 top-6 opacity-10 pointer-events-none"><ZebraDoodle className="w-48 h-32" /></div>
-        <div className="absolute right-6 bottom-6 opacity-10 pointer-events-none"><ZebraMascot size={140} /></div>
         <div className="relative text-center">
-          <h1 className="font-black text-3xl text-primary mb-4">Community Support</h1>
+          <h1 className="font-bold text-2xl md:text-3xl text-primary mb-4">Community Support</h1>
           <p className="text-accent max-w-3xl mx-auto">Discover groups, forums, and family networks built for rare disease journeys.</p>
         </div>
       </div>
