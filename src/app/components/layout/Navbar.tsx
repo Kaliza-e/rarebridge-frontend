@@ -104,7 +104,7 @@ export default function Navbar({ onNav, activeView }: NavbarProps) {
 
             {/* Auth buttons */}
             <button
-              onClick={() => handleNavigation("signin")}
+              onClick={() => handleNavigation(" ")}
               className="px-4 py-2.5 text-[15px] font-semibold text-primary hover:bg-ivory transition-all duration-200 rounded-xl whitespace-nowrap"
             >
               Sign In

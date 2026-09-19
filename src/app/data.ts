@@ -625,6 +625,7 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
         location: spec.location || "",
         contact: spec.contact || null,
         publications: (spec as any).publications || "",
+        sources: spec.sources || [],
         focus: spec.focus || "",
         why: spec.why || spec.name
       })) || []

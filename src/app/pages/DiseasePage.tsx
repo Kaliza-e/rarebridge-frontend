@@ -915,9 +915,9 @@ export default function DiseasePage({ diseaseId, onBack }: { diseaseId: string; 
                       className="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:text-white transition-colors underline underline-offset-2 ml-1 cursor-pointer"
                     >
                       {overviewOpen ? (
-                        <><ChevronUp className="w-3.5 h-3.5 inline" /> Hide full overview</>
+                        <><ChevronUp className="w-3.5 h-3.5 inline" /> Read less</>
                       ) : (
-                        <><ChevronDown className="w-3.5 h-3.5 inline" /> Read full overview</>
+                        <><ChevronDown className="w-3.5 h-3.5 inline" /> Read more</>
                       )}
                     </button>
                   )}

@@ -546,10 +546,10 @@ export function PatientJourney() {
                   {/* Icon Circle */}
                   <div
                     className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 z-10 ${isActive
-                        ? 'bg-accent text-white scale-110 shadow-lg ring-4 ring-white'
-                        : isPast
-                          ? 'bg-primary text-white hover:bg-primary-dark ring-4 ring-white'
-                          : 'bg-white text-taupe border-2 border-taupe-40 hover:border-accent hover:text-accent ring-4 ring-white'
+                      ? 'bg-accent text-white scale-110 shadow-lg ring-4 ring-white'
+                      : isPast
+                        ? 'bg-primary text-white hover:bg-primary-dark ring-4 ring-white'
+                        : 'bg-white text-taupe border-2 border-taupe-40 hover:border-accent hover:text-accent ring-4 ring-white'
                       }`}
                   >
                     <Icon className="w-6 h-6" />

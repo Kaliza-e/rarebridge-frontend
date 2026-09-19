@@ -18,7 +18,7 @@ export default function DirectoryPage({ onDisease }: { onDisease: (id: string) =
       setLoading(true);
       try {
         const apiDiseases = await fetchDiseasesFromAPI(query, cat === "All" ? undefined : cat);
-        setDiseases(apiDiseases);
+        setDiseases(apiDiseases as any);
         setCurrentPage(1); // Reset to page 1 when data changes
       } catch (error) {
         console.error('Failed to load diseases:', error);
