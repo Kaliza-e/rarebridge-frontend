@@ -1,600 +1,488 @@
-import React, { useEffect, useState } from "react";
-import {
-  Search,
-  ArrowRight,
-  BookOpen,
-  Sparkles,
-  Trophy,
-  Target,
-  Zap,
-  Users,
-  ChevronRight,
-  Heart,
-} from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   DISEASES,
-  SUGGESTED_SEARCHES,
-  STATS,
-  FEATURES,
   fetchDiseasesFromAPI,
   type Disease,
 } from "../data";
 
 import {
-  ZebraMascot,
-  ButterflyDoodle,
-  EdelweissFlower,
   DiseaseCard,
-  PatientJourney,
+  EdelweissFlower,
+  OrganicWavyLine,
 } from "../components/common/Visuals";
 
-/* =========================================================
-   ANIMATED HEADLINE
-========================================================= */
+import {
+  BookOpen,
+  Stethoscope,
+  Microscope,
+  HeartHandshake,
+  Sparkles,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
+  BrainCircuit,
+  Users,
+} from "lucide-react";
 
-function AnimatedHeadline() {
-  const line1 = ["Understanding"];
-  const line2 = ["Rare", "Diseases"];
-  const line3 = ["Starts", "Here"];
+interface HomePageProps {
+  onNav: (view: string) => void;
+  onDisease: (id: string) => void;
+}
 
-  const allWords = [...line1, ...line2, ...line3];
-  const [visible, setVisible] = useState<number[]>([]);
+const HERO_SLIDES = [
+  {
+    tag: "A Warm Safe Place for Rare Families",
+    title: "Understanding rare conditions with clarity, care & hope.",
+    subtitle: "Plain-language medical guides, world-class specialist directories, and compassionate family support for children, parents, and caregivers.",
+    image: "/rarebridge_zebra_with_book.png",
+    alt: "Friendly Zebra mascot sitting with open book",
+    badge: "100% Free & Family-Centered",
+  },
+  {
+    tag: "Plain-Language Medical Education",
+    title: "Simplifying complex genetic reports into everyday guidance.",
+    subtitle: "Our zebra mascot helps families break down ORPHA codes, symptoms, and inheritance patterns into clear, encouraging steps.",
+    image: "/rarebridge_hero_child.png",
+    alt: "Child playing with friendly zebra friend",
+    badge: "Sourced from Certified Geneticists",
+  },
+  {
+    tag: "Caregiver & Family Network",
+    title: "Connecting parents & caregivers through real experience.",
+    subtitle: "You are never alone. Join parent support circles, practical caregiver wellness guides, and peer advocacy networks.",
+    image: "/rarebridge_family_photo.png",
+    alt: "RareBridge supportive family illustration",
+    badge: "Compassionate Support Circles",
+  },
+];
+
+export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
+  const [diseases, setDiseases] = useState<Disease[]>(DISEASES);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Hero Image Carousel State
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   useEffect(() => {
-    const timers = allWords.map((_, i) =>
-      window.setTimeout(() => {
-        setVisible((prev) => (prev.includes(i) ? prev : [...prev, i]));
-      }, 100 + i * 120)
-    );
+    let isMounted = true;
+
+    const loadDiseases = async () => {
+      try {
+        setIsLoading(true);
+        const result = await fetchDiseasesFromAPI();
+        if (isMounted && Array.isArray(result) && result.length > 0) {
+          setDiseases(result as Disease[]);
+        }
+      } catch (error) {
+        console.error("Unable to load diseases:", error);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+
+    loadDiseases();
 
     return () => {
-      timers.forEach(clearTimeout);
+      isMounted = false;
     };
   }, []);
 
-  const wordClass = (i: number) =>
-    `inline-block transition-all duration-500 ease-out ${
-      visible.includes(i)
-        ? "opacity-100 translate-y-0 blur-0"
-        : "opacity-0 translate-y-6 blur-sm"
-    }`;
+  // Auto-advance hero carousel every 6 seconds
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [isAutoPlaying]);
 
-  let idx = 0;
+  const handleNextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+  };
+
+  const handlePrevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  };
+
+  const featuredDiseases = diseases.slice(0, 3);
+  const activeSlide = HERO_SLIDES[currentSlide];
 
   return (
-    <h1 className="font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.12] tracking-tight text-primary mb-5">
-      {line1.map((word) => {
-        const i = idx++;
-        return (
-          <span key={word} className={wordClass(i)}>
-            {word}
-          </span>
-        );
-      })}
+    <main className="relative min-h-screen overflow-hidden bg-transparent text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
+      <OrganicWavyLine side="left" />
+      <OrganicWavyLine side="right" />
 
-      <br />
-
-      {line2.map((word, wi) => {
-        const i = idx++;
-        return (
-          <span
-            key={word}
-            className={`${wordClass(i)} mr-3 ${wi === 0 ? "text-accent" : ""}`}
-          >
-            {word}
-          </span>
-        );
-      })}
-
-      <br />
-
-      {line3.map((word) => {
-        const i = idx++;
-        return (
-          <span key={word} className={`${wordClass(i)} mr-3`}>
-            {word}
-          </span>
-        );
-      })}
-    </h1>
-  );
-}
-
-/* =========================================================
-   HOME PAGE
-========================================================= */
-
-export default function HomePage({
-  onNav,
-  onDisease,
-}: {
-  onNav: (v: string) => void;
-  onDisease: (id: string) => void;
-}) {
-  const [diseases, setDiseases] = useState<Disease[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [heroVisible, setHeroVisible] = useState(false);
-
-  /* -------------------------------------------------------
-     Fetch diseases from API on mount
-  ------------------------------------------------------- */
-
-  useEffect(() => {
-    async function loadDiseases() {
-      try {
-        const apiDiseases = await fetchDiseasesFromAPI();
-        setDiseases(apiDiseases as Disease[]);
-      } catch (error) {
-        console.error("Failed to load diseases from API, using fallback:", error);
-        setDiseases(DISEASES);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadDiseases();
-  }, []);
-
-  /* -------------------------------------------------------
-     Hero entrance animation
-  ------------------------------------------------------- */
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setHeroVisible(true);
-    }, 60);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const fadeUp = (delay: string) =>
-    `transition-all duration-700 ${delay} ${
-      heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-    }`;
-
-  const featureIcons = [
-    BookOpen,
-    Search,
-    Users,
-    Target,
-    Trophy,
-    Sparkles,
-  ];
-
-  const ribbonIcons = [
-    <ZebraMascot key="zebra" size={24} />,
-    <ButterflyDoodle key="butterfly" size={24} />,
-    <EdelweissFlower key="flower" size={24} />,
-    <Heart key="heart" className="w-6 h-6" />,
-    <Users key="users" className="w-6 h-6" />,
-    <Trophy key="trophy" className="w-6 h-6" />,
-    <Sparkles key="sparkles" className="w-6 h-6" />,
-    <Target key="target" className="w-6 h-6" />,
-  ];
-
-  return (
-    <div className="min-h-screen relative overflow-hidden bg-ivory text-primary">
-      {/* Curved background SVG side accents */}
-      <svg className="fixed left-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
-        <path d="M20 0 Q50 100 20 200 T20 400 T20 600 T20 800 T20 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
-        <path d="M40 0 Q70 150 40 300 T40 600 T40 900 T40 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
-        <path d="M60 0 Q90 200 60 400 T60 800 T60 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-      </svg>
-      <svg className="fixed right-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
-        <path d="M80 0 Q50 100 80 200 T80 400 T80 600 T80 800 T80 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
-        <path d="M60 0 Q30 150 60 300 T60 600 T60 900 T60 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
-        <path d="M40 0 Q10 200 40 400 T40 800 T40 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-      </svg>
-
-      {/* =====================================================
-          1. CENTERED HERO SECTION WITH AMBIENT GLOWS
-      ===================================================== */}
-
-      <section
-        className="relative overflow-hidden border-b border-taupe/20"
-        style={{
-          background:
-            "linear-gradient(160deg, #EEF3FB 0%, #F4F7FD 40%, #FAFBFF 70%, #ffffff 100%)",
-        }}
-      >
-        {/* Ambient Radial Glow Spots */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div
-            className="absolute animate-pulse"
-            style={{
-              top: "-15%",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "750px",
-              height: "550px",
-              background:
-                "radial-gradient(ellipse at center, rgba(17,34,80,0.12) 0%, rgba(231,226,206,0.2) 40%, transparent 70%)",
-              filter: "blur(40px)",
-            }}
-          />
-          <div
-            className="absolute animate-float"
-            style={{
-              bottom: "-5%",
-              left: "5%",
-              width: "450px",
-              height: "400px",
-              background:
-                "radial-gradient(ellipse at center, rgba(59,80,125,0.1) 0%, transparent 70%)",
-              filter: "blur(50px)",
-            }}
-          />
-          <div
-            className="absolute animate-float"
-            style={{
-              top: "10%",
-              right: "5%",
-              width: "400px",
-              height: "350px",
-              background:
-                "radial-gradient(ellipse at center, rgba(231,226,206,0.35) 0%, transparent 65%)",
-              filter: "blur(40px)",
-            }}
-          />
+      {/* ================= HERO SECTION ================= */}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
+        {/* Zebra Reading Book Hero Background Backdrop */}
+        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 opacity-20 max-w-lg hidden lg:block z-0">
+          <img src="/rarebridge_zebra_with_book.png" alt="Zebra Reading Book Background" className="h-auto w-full object-contain" />
         </div>
 
-        {/* Diagonal Shimmer Grid Lines */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          style={{ opacity: 0.04 }}
-          viewBox="0 0 1440 700"
-          preserveAspectRatio="none"
-        >
-          <line x1="-100" y1="200" x2="700" y2="-100" stroke="#112250" strokeWidth="1.5" />
-          <line x1="200" y1="800" x2="1100" y2="-100" stroke="#112250" strokeWidth="1" />
-          <line x1="700" y1="800" x2="1600" y2="-100" stroke="#3b507d" strokeWidth="1" />
-        </svg>
+        {/* Ambient blobs matching site canvas */}
+        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
 
-        {/* Main Centered Hero Content */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-14 md:pt-20 md:pb-20 flex flex-col items-center text-center relative z-10">
-          
-          {/* Trust Badge */}
-          <div
-            className={`
-              inline-flex items-center gap-2
-              px-5 py-2 rounded-full
-              bg-white/90 backdrop-blur-md
-              text-primary text-xs font-bold
-              mb-6
-              border border-[#D8E3F0]
-              shadow-[0_4px_20px_rgba(17,34,80,0.08)]
-              ${fadeUp("delay-0")}
-            `}
-          >
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-50" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
-            </span>
-            Trusted by 120,000+ families worldwide
-          </div>
-
-          {/* Animated Headline */}
-          <AnimatedHeadline />
-
-          {/* Decorative Mini Floating Doodles */}
-          <div className={`flex items-center justify-center gap-6 mb-6 ${fadeUp("delay-[700ms]")}`}>
-            <div className="animate-bounce" style={{ animationDelay: "0.2s" }}>
-              <ButterflyDoodle size={32} />
-            </div>
-            <div
-              className="w-px h-6 rounded-full"
-              style={{
-                background:
-                  "linear-gradient(to bottom, transparent, rgba(17,34,80,0.2), transparent)",
-              }}
-            />
-            <div className="animate-bounce" style={{ animationDelay: "0.5s" }}>
-              <EdelweissFlower size={32} />
-            </div>
-          </div>
-
-          {/* Centered Description */}
-          <p
-            className={`
-              text-base md:text-xl text-accent leading-relaxed
-              mb-8 max-w-xl
-              ${fadeUp("delay-[750ms]")}
-            `}
-          >
-            RareBridge helps families understand rare diseases, discover trusted information, connect with specialists, and find supportive communities.
-          </p>
-
-          {/* Centered Action Buttons with Shimmer & Glow */}
-          <div className={`flex flex-wrap justify-center gap-4 ${fadeUp("delay-[900ms]")}`}>
-            <button
-              onClick={() => onNav("directory")}
-              className="
-                group
-                px-7 py-3.5 rounded-2xl
-                bg-primary text-ivory font-bold text-sm md:text-base
-                hover:bg-accent hover:scale-105 hover:shadow-xl
-                transition-all duration-200
-                flex items-center gap-2 shadow-md relative overflow-hidden
-              "
-              style={{ boxShadow: "0 6px 28px rgba(17,34,80,0.25)" }}
-            >
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-              <BookOpen className="w-4 h-4 relative z-10" />
-              Explore Diseases
-              <ArrowRight className="w-4 h-4 relative z-10" />
-            </button>
-
-            <button
-              onClick={() => onNav("signin")}
-              className="
-                group
-                px-7 py-3.5 rounded-2xl
-                bg-white border-2 border-primary text-primary font-bold text-sm md:text-base
-                hover:bg-secondary/40 hover:border-primary hover:scale-105 hover:shadow-md
-                transition-all duration-200
-                flex items-center gap-2 shadow-sm relative overflow-hidden
-              "
-            >
-              <Users className="w-4 h-4 relative z-10" />
-              Find Support
-              <ChevronRight className="w-4 h-4 relative z-10 group-hover:translate-x-0.5 transition-transform" />
-            </button>
-          </div>
-
-          {/* Floating Background Doodles */}
-          <div className={`absolute inset-0 pointer-events-none ${fadeUp("delay-[1100ms]")}`}>
-            <div className="absolute top-16 left-6 animate-float" style={{ animationDelay: "0s" }}>
-              <ButterflyDoodle size={36} className="opacity-40" />
-            </div>
-            <div className="absolute top-24 right-10 animate-float" style={{ animationDelay: "1s" }}>
-              <EdelweissFlower size={42} className="opacity-40" />
-            </div>
-            <div className="absolute bottom-16 left-12 animate-float" style={{ animationDelay: "2s" }}>
-              <ButterflyDoodle size={28} className="opacity-30" />
-            </div>
-            <div className="absolute bottom-12 right-6 animate-float" style={{ animationDelay: "0.5s" }}>
-              <EdelweissFlower size={36} className="opacity-35" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          2. ANIMATED STATS RIBBON
-      ===================================================== */}
-
-      <section className="relative z-20 w-full overflow-hidden bg-[#112250] py-4 select-none shadow-md">
-        <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-[#112250] to-transparent z-10" />
-        <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-[#112250] to-transparent z-10" />
-
-        <div className="flex w-max animate-ribbon gap-0">
-          {[...STATS, ...STATS, ...STATS, ...STATS].map((s, i) => (
-            <div key={i} className="flex items-center gap-8 px-10">
-              <div className="flex items-center gap-3">
-                {ribbonIcons[i % ribbonIcons.length]}
-                <span className="font-bold text-2xl text-[#F5F7FA] tracking-tight">
-                  {s.value}
+        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:items-center lg:px-8">
+          {/* Left: Copy panel */}
+          <div className="lg:col-span-7">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.4 }}
+              >
+                <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
+                  {activeSlide.tag}
                 </span>
-                <span className="text-xs font-bold text-[#B8C3D6] uppercase tracking-widest whitespace-nowrap">
-                  {s.label}
-                </span>
-              </div>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#8EA2C2] opacity-60" />
-            </div>
-          ))}
-        </div>
-      </section>
 
-      {/* =====================================================
-          3. PATIENT JOURNEY SECTION
-      ===================================================== */}
+                <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
+                  {activeSlide.title}
+                </h1>
 
-      <section className="bg-[#F7F9FC] py-14 md:py-20 relative overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
-        <PatientJourney />
-      </section>
+                <p className="font-sans mt-3 max-w-xl text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium">
+                  {activeSlide.subtitle}
+                </p>
 
-      {/* =====================================================
-          4. PLATFORM FEATURES ("EVERYTHING YOU NEED")
-      ===================================================== */}
-
-      <section className="bg-ivory py-20 md:py-28 relative overflow-hidden border-t border-taupe/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
-          <div className="max-w-2xl mx-auto text-center mb-14">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/50 text-primary text-xs font-bold uppercase tracking-widest mb-4 border border-taupe/40">
-              <Sparkles className="w-3.5 h-3.5" />
-              Platform
-            </span>
-            <h2 className="font-bold text-3xl md:text-4xl text-primary mb-4 leading-snug">
-              Everything You Need, <span className="block text-accent font-medium">In One Place</span>
-            </h2>
-            <p className="text-accent text-base md:text-lg max-w-xl mx-auto leading-relaxed">
-              From diagnosis support to research breakthroughs — RareBridge is your trusted companion at every step.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map((f, i) => {
-              const Icon = featureIcons[i % featureIcons.length];
-
-              return (
-                <div
-                  key={f.title}
-                  className="
-                    group
-                    relative
-                    overflow-hidden
-                    rounded-3xl
-                    border border-taupe/40
-                    bg-white
-                    p-7
-                    shadow-sm
-                    transition-all duration-300
-                    hover:-translate-y-1.5
-                    hover:border-primary/40
-                    hover:shadow-xl
-                  "
-                >
-                  <div className="pointer-events-none absolute -right-12 -top-12 w-32 h-32 rounded-full bg-secondary/40 opacity-0 group-hover:opacity-100 blur-2xl transition-all duration-500" />
-
-                  <div className="relative z-10">
-                    <div className="w-12 h-12 rounded-2xl bg-secondary/30 border border-taupe/40 flex items-center justify-center mb-5 text-primary group-hover:bg-secondary/50 transition-colors duration-300">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <h3 className="font-bold text-primary text-lg mb-2">{f.title}</h3>
-                    <p className="text-sm text-accent leading-relaxed">{f.desc}</p>
-                  </div>
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => onNav("directory")}
+                    className="inline-flex items-center gap-2.5 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                  >
+                    <BookOpen className="h-5 w-5 text-white" />
+                    <span>Browse Disease Library</span>
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => onNav("community")}
+                    className="inline-flex items-center gap-2.5 rounded-2xl border-2 border-[#112250] bg-transparent px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#112250]/10 transition-all"
+                  >
+                    <Users className="h-5 w-5 text-[#112250]" />
+                    <span>Join Caregiver Community</span>
+                  </motion.button>
                 </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Right: Integrated Hero Image Container */}
+          <div className="relative mx-auto w-full max-w-md lg:max-w-none lg:col-span-5">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-2 sm:aspect-[5/4]">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={currentSlide}
+                  src={activeSlide.image}
+                  alt={activeSlide.alt}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="h-full w-full rounded-[2rem] object-cover"
+                />
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= IMPACT & KNOWLEDGE RIBBON ================= */}
+      <section className="relative py-8 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                number: "7,000+",
+                label: "Rare Conditions",
+                subtext: "Plain-language medical guides",
+                icon: BookOpen,
+                bg: "bg-[#112250]",
+                text: "text-white",
+              },
+              {
+                number: "2,400+",
+                label: "Verified Specialists",
+                subtext: "Top metabolic & genetic experts",
+                icon: Stethoscope,
+                bg: "bg-white border-2 border-[#E7E2CE]",
+                text: "text-[#112250]",
+              },
+              {
+                number: "850+",
+                label: "Research Trials",
+                subtext: "Gene therapy & pipeline updates",
+                icon: Microscope,
+                bg: "bg-white border-2 border-[#E7E2CE]",
+                text: "text-[#112250]",
+              },
+              {
+                number: "120K+",
+                label: "Families Supported",
+                subtext: "Compassionate peer advocacy",
+                icon: HeartHandshake,
+                bg: "bg-[#3B507D]",
+                text: "text-white",
+              },
+            ].map((stat, i) => {
+              const IconComp = stat.icon;
+              return (
+                <motion.div
+                  key={i}
+                  whileHover={{ y: -3, scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`rounded-2xl p-5 border-2 border-[#E7E2CE] transition-all duration-200 cursor-pointer ${stat.bg} ${stat.text}`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="rounded-xl bg-[#E7E2CE]/30 p-2 text-[#E7E2CE]">
+                      <IconComp className="h-5 w-5 text-current" />
+                    </div>
+                    <EdelweissFlower size={20} />
+                  </div>
+                  <h3 className="font-heading font-black text-3xl tracking-tight">{stat.number}</h3>
+                  <p className="font-heading font-bold text-sm mt-1">{stat.label}</p>
+                  <p className="font-sans text-xs opacity-80 mt-0.5">{stat.subtext}</p>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* =====================================================
-          5. FEATURED DISEASES SECTION
-      ===================================================== */}
+      {/* ================= THE 4 PILLARS OF RAREBRIDGE ================= */}
+      <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/60 px-4 py-1 text-xs font-bold text-[#112250] mb-3">
+            <Sparkles className="h-3.5 w-3.5 text-[#3B507D]" />
+            <span>Designed for Families & Children</span>
+          </div>
+          <h2 className="font-heading font-black text-3xl sm:text-4xl text-[#112250]">
+            Everything your family needs, in one friendly space
+          </h2>
+          <p className="font-sans text-base text-[#3B507D] font-medium mt-2">
+            No medical jargon wall. Just reliable, easy-to-understand guidance created with empathy.
+          </p>
+        </div>
 
-      <section className="bg-white py-20 md:py-24 relative overflow-hidden border-t border-taupe/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
-          <div className="flex items-end justify-between mb-10">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+          {/* Card 1 */}
+          <motion.div
+            whileHover={{ y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            className="rounded-2xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            onClick={() => onNav("directory")}
+          >
             <div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/40 text-primary text-xs font-bold uppercase tracking-widest mb-3">
-                <BookOpen className="w-3 h-3" />
-                Directory
-              </span>
-              <h2 className="font-bold text-2xl md:text-3xl lg:text-4xl text-primary">
-                Featured Diseases
-              </h2>
-              <p className="text-accent mt-1 text-sm md:text-base font-medium">
-                Explore conditions in our database
+              <div className="rounded-xl bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+                <BookOpen className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading font-extrabold text-xl text-[#112250]">Disease Library</h3>
+              <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                7,000+ conditions simplified with symptoms, genetic causes, and plain-language summaries.
               </p>
             </div>
-
-            <button
-              onClick={() => onNav("directory")}
-              className="hidden sm:flex items-center gap-1.5 text-sm font-bold text-primary border border-taupe/40 rounded-xl px-4 py-2 hover:bg-ivory transition-all duration-200"
-            >
-              View all
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {loading ? (
-              <div className="col-span-full text-center py-12">
-                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                <span className="text-sm text-taupe font-medium">Loading diseases...</span>
-              </div>
-            ) : diseases.length > 0 ? (
-              diseases.slice(0, 6).map((d) => (
-                <DiseaseCard key={d.id} disease={d} onClick={() => onDisease(d.id)} />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-taupe font-medium">No diseases available</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          6. ZEBRA MASCOT MESSAGE
-      ===================================================== */}
-
-      <section className="bg-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 relative overflow-hidden">
-        <div className="flex items-center justify-center gap-6 py-8 border-y border-taupe/20 relative z-10">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent to-taupe/30" />
-          <div className="flex items-center gap-3 text-accent text-center">
-            <ZebraMascot size={28} />
-            <span className="text-xs md:text-sm font-semibold max-w-xl">
-              The zebra symbolizes rare diseases — when you hear hoofbeats, think zebras.
-            </span>
-            <ZebraMascot size={28} className="scale-x-[-1]" />
-          </div>
-          <div className="flex-1 h-px bg-gradient-to-l from-transparent to-taupe/30" />
-        </div>
-      </section>
-
-      {/* =====================================================
-          7. FINAL CALL-TO-ACTION SECTION
-      ===================================================== */}
-
-      <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-ivory">
-        <div
-          className="
-            max-w-4xl
-            mx-auto
-            relative
-            overflow-hidden
-            rounded-[32px]
-            p-10
-            md:p-16
-            text-center
-            shadow-2xl
-            relative z-10
-          "
-          style={{
-            background:
-              "linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)",
-          }}
-        >
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <div className="w-14 h-14 mx-auto mb-6 bg-white/15 rounded-2xl flex items-center justify-center border border-white/20">
-              <Heart className="w-7 h-7 text-secondary" />
+            <div className="mt-6 flex items-center justify-between border-t border-[#F5F4F0] pt-3">
+              <span className="font-bold text-xs text-[#112250] uppercase tracking-wider">Explore Library</span>
+              <ArrowRight className="h-4 w-4 text-[#112250]" />
             </div>
+          </motion.div>
 
-            <h2 className="font-bold text-3xl md:text-4xl text-ivory mb-4 leading-snug">
-              You Are Not Alone
+          {/* Card 2 */}
+          <motion.div
+            whileHover={{ y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            className="rounded-2xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            onClick={() => onNav("specialists")}
+          >
+            <div>
+              <div className="rounded-xl bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+                <Stethoscope className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading font-extrabold text-xl text-[#112250]">Find Specialists</h3>
+              <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                Direct connections to top pediatric geneticists, metabolic doctors, and specialized hospitals.
+              </p>
+            </div>
+            <div className="mt-6 flex items-center justify-between border-t border-[#F5F4F0] pt-3">
+              <span className="font-bold text-xs text-[#112250] uppercase tracking-wider">Find Experts</span>
+              <ArrowRight className="h-4 w-4 text-[#112250]" />
+            </div>
+          </motion.div>
+
+          {/* Card 3 */}
+          <motion.div
+            whileHover={{ y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            className="rounded-2xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            onClick={() => onNav("research")}
+          >
+            <div>
+              <div className="rounded-xl bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+                <Microscope className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading font-extrabold text-xl text-[#112250]">Research & Trials</h3>
+              <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                Stay updated on groundbreaking enzyme therapies, gene editing, and active clinical trials.
+              </p>
+            </div>
+            <div className="mt-6 flex items-center justify-between border-t border-[#F5F4F0] pt-3">
+              <span className="font-bold text-xs text-[#112250] uppercase tracking-wider">View Trials</span>
+              <ArrowRight className="h-4 w-4 text-[#112250]" />
+            </div>
+          </motion.div>
+
+          {/* Card 4 */}
+          <motion.div
+            whileHover={{ y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            className="rounded-2xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            onClick={() => onNav("community")}
+          >
+            <div>
+              <div className="rounded-xl bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+                <Users className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading font-extrabold text-xl text-[#112250]">Caregiver Community</h3>
+              <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                Connect with parents and caregivers sharing real experiences, emotional support, and advice.
+              </p>
+            </div>
+            <div className="mt-6 flex items-center justify-between border-t border-[#F5F4F0] pt-3">
+              <span className="font-bold text-xs text-[#112250] uppercase tracking-wider">Join Circle</span>
+              <ArrowRight className="h-4 w-4 text-[#112250]" />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ================= FEATURED CONDITIONS SECTION ================= */}
+      <section className="py-14 bg-white border-y border-[#E7E2CE]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
+                Knowledge Base
+              </span>
+              <h2 className="font-heading font-black text-3xl text-[#112250] mt-1">
+                Featured Rare Diseases
+              </h2>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => onNav("directory")}
+              className="inline-flex items-center gap-2 rounded-2xl bg-[#F5F4F0] px-5 py-2.5 text-sm font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors self-start"
+            >
+              <span>View All Conditions</span>
+              <ArrowRight className="h-4 w-4" />
+            </motion.button>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredDiseases.map((disease) => (
+              <DiseaseCard
+                key={disease.id}
+                disease={disease}
+                onClick={() => onDisease(disease.id)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= FAMILY & CAREGIVER STORY BANNER ================= */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="relative rounded-2xl p-8 sm:p-12 text-white overflow-hidden border-2 border-[#E7E2CE]">
+          {/* Background Image & Overlay */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/rarebridge_family_photo.png"
+              alt="RareBridge supportive family background"
+              className="h-full w-full object-cover object-center opacity-35"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#112250] via-[#112250]/90 to-[#112250]/50" />
+          </div>
+
+          <div className="absolute top-4 right-6 opacity-70 pointer-events-none z-10">
+            <EdelweissFlower size={56} />
+          </div>
+
+          <div className="relative z-10 max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-[#E7E2CE] mb-4 backdrop-blur-xs">
+              <HeartHandshake className="h-4 w-4 text-[#E7E2CE]" />
+              <span>You Are Not Alone</span>
+            </div>
+            <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl leading-tight text-white drop-shadow-xs">
+              Built by families, for families affected by rare conditions.
             </h2>
-
-            <p className="text-secondary/90 text-base md:text-lg mb-8 max-w-xl mx-auto leading-relaxed">
-              Thousands of families are walking the same road. RareBridge is here to help you find answers, specialists, and community.
+            <p className="font-sans text-base sm:text-lg text-[#D6E0F5] mt-4 leading-relaxed font-medium">
+              Receiving a rare diagnosis can feel overwhelming. RareBridge brings together medical truth, hopeful science, and empathetic families to ensure no caregiver walks this journey in the dark.
             </p>
 
-            <div className="flex flex-wrap gap-4 justify-center">
-              <button
-                onClick={() => onNav("signup")}
-                className="
-                  px-8 py-3.5
-                  rounded-2xl
-                  bg-secondary
-                  text-primary
-                  font-bold text-sm md:text-base
-                  hover:bg-white
-                  transition-all duration-200
-                  shadow-lg
-                  flex items-center gap-2
-                "
+            <div className="mt-8 flex flex-wrap gap-4">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => onNav("about")}
+                className="rounded-2xl bg-[#E7E2CE] px-6 py-3.5 text-sm font-black text-[#112250] hover:bg-white transition-all"
               >
-                <Zap className="w-4 h-4" />
-                Get Started Free
-              </button>
-
-              <button
-                onClick={() => onNav("specialists")}
-                className="
-                  px-8 py-3.5
-                  rounded-2xl
-                  border-2 border-white/30
-                  text-ivory
-                  font-bold text-sm md:text-base
-                  hover:bg-white/10
-                  transition-all duration-200
-                  flex items-center gap-2
-                "
+                Our Story & Mission
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => onNav("community")}
+                className="rounded-2xl border-2 border-white/20 bg-white/10 px-6 py-3.5 text-sm font-bold text-white hover:bg-white/20 backdrop-blur-sm transition-all"
               >
-                <Users className="w-4 h-4" />
-                Talk to a Specialist
-              </button>
+                Connect with Families
+              </motion.button>
             </div>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* ================= RAREBRIDGE AI ZEBRA HELPER BANNER ================= */}
+      <section className="pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="rounded-2xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-6">
+            <img
+              src="/rarebridge_zebra_reading.png"
+              alt="Friendly Zebra Mascot reading a book"
+              className="h-24 w-24 object-contain animate-float shrink-0"
+            />
+            <div>
+              <span className="font-callout text-xs font-bold uppercase tracking-wider text-[#3B507D]">
+                Child-Friendly AI Assistant
+              </span>
+              <h3 className="font-heading font-black text-2xl text-[#112250] mt-0.5">
+                Have questions about a genetic report or symptom?
+              </h3>
+              <p className="font-sans text-sm text-[#3B507D] font-medium mt-1">
+                Ask our friendly AI mascot to break down complex medical terms into simple, comforting language.
+              </p>
+            </div>
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => onNav("directory")}
+            className="rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2"
+          >
+            <BrainCircuit className="h-5 w-5 text-[#E7E2CE]" />
+            <span>Ask Zebra Assistant</span>
+          </motion.button>
+        </div>
+      </section>
+    </main>
   );
-}
+};
+
+export default HomePage;

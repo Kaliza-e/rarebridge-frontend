@@ -4,24 +4,24 @@ import Navbar from "./components/layout/Navbar";
 import MobileNav from "./components/layout/MobileNav";
 import Footer from "./components/layout/Footer";
 
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage"
 import DirectoryPage from "./pages/DirectoryPage";
 import DiseasePage from "./pages/DiseasePage";
 import AboutPage from "./pages/AboutPage";
 import ResearchPage from "./pages/ResearchPage";
 import SpecialistsPage from "./pages/SpecialistsPage";
 import CommunityPage from "./pages/CommunityPage";
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
 
 import {
   BackgroundParticles,
+  ZebraCursor,
   usePopSound,
   useChimeSound,
   useSparkleSound,
   AIAssistant,
 } from "./components/common/Visuals";
-
-import SignInPage from "./pages/SignInPage";
-import SignUpPage from "./pages/SignUpPage";
 
 import { DISEASES, type Disease } from "./data";
 
@@ -142,16 +142,36 @@ export default function App() {
     });
   }
 
+  // Accessibility Text-Size Control State ('default' | 'larger' | 'largest')
+  const [textSize, setTextSize] = useState<"default" | "larger" | "largest">(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("rb_text_size_preference");
+      if (saved === "larger" || saved === "largest" || saved === "default") {
+        return saved;
+      }
+    }
+    return "default";
+  });
+
+  useEffect(() => {
+    const scaleMap = {
+      default: "100%",
+      larger: "112.5%",
+      largest: "125%",
+    };
+    document.documentElement.style.fontSize = scaleMap[textSize];
+    try {
+      localStorage.setItem("rb_text_size_preference", textSize);
+    } catch (e) {
+      // Ignore storage errors
+    }
+  }, [textSize]);
+
   return (
-    <div
-      className="relative min-h-screen overflow-hidden bg-ivory text-primary"
-      style={{
-        fontFamily: "'Baloo 2', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-      }}
-    >
+    <div className="relative min-h-screen overflow-hidden bg-[#F8F7F2] text-[#112250] font-body">
       {/* Global styles */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,800&display=swap');
 
         .scrollbar-none::-webkit-scrollbar {
           display: none;
@@ -284,13 +304,19 @@ export default function App() {
         }
       `}</style>
 
+      {/* Custom Zebra Cursor & Companion Trail */}
+      <ZebraCursor />
+
       {/* Decorative background */}
       <BackgroundParticles />
 
       {/* Navbar */}
-      {view !== "signin" && view !== "signup" && (
-        <Navbar onNav={handleNav} activeView={view} />
-      )}
+      <Navbar
+        onNav={handleNav}
+        activeView={view}
+        textSize={textSize}
+        setTextSize={setTextSize}
+      />
 
       {/* Main content */}
       <main className="pb-20 md:pb-0">
@@ -301,25 +327,21 @@ export default function App() {
           />
         )}
 
-        {view === "signin" && (
-          <SignInPage onNav={handleNav} />
-        )}
-
-        {view === "signup" && (
-          <SignUpPage onNav={handleNav} />
-        )}
-
         {view === "directory" && (
           <DirectoryPage onDisease={handleDisease} />
         )}
 
-        {view === "about" && <AboutPage />}
+        {view === "about" && <AboutPage onNav={handleNav} />}
 
         {view === "research" && <ResearchPage />}
 
         {view === "specialists" && <SpecialistsPage />}
 
         {view === "community" && <CommunityPage />}
+
+        {view === "signin" && <SignInPage onNav={handleNav} />}
+
+        {view === "signup" && <SignUpPage onNav={handleNav} />}
 
         {view === "disease" && selectedDisease && (
           <DiseasePage
@@ -333,16 +355,12 @@ export default function App() {
       <AIAssistant />
 
       {/* Bottom navigation and footer */}
-      {view !== "signin" && view !== "signup" && (
-        <>
-          <MobileNav
-            onNav={handleNav}
-            activeView={view}
-          />
+      <MobileNav
+        onNav={handleNav}
+        activeView={view}
+      />
 
-          <Footer />
-        </>
-      )}
+      <Footer onNav={handleNav} />
     </div>
   );
 }

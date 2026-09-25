@@ -1,193 +1,372 @@
-import React from "react";
-import { ZebraMascot, ZebraDoodle, ButterflyDoodle, EdelweissFlower } from "../components/common/Visuals";
-import { Heart, Shield, Users, Microscope, BookOpen, Star, ArrowRight } from "lucide-react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { EdelweissFlower, OrganicWavyLine, ZebraMascot } from "../components/common/Visuals";
+import SectionDivider from "../components/common/SectionDivider";
+import {
+  Heart,
+  ShieldCheck,
+  Users,
+  Microscope,
+  Sparkles,
+  ArrowRight,
+  CheckCircle2,
+  X,
+  Target,
+  Globe,
+  Award,
+} from "lucide-react";
+import { fadeUpVariants, staggerContainerVariants, modalPanelVariants, overlayBackdropVariants } from "../utils/animations";
+
+interface AboutPageProps {
+  onNav?: (view: string) => void;
+}
 
 const VALUES = [
   {
     icon: Heart,
-    title: "Family First",
-    desc: "Every feature is designed with the lived experience of rare disease families in mind — clear language, no jargon, real answers.",
+    title: "Family-Centered Care",
+    desc: "Clear, compassionate answers created for children, parents, and caregivers navigating rare conditions.",
   },
   {
-    icon: Shield,
-    title: "Medically Reviewed",
-    desc: "All content is curated and reviewed by medical professionals and sourced from leading research institutions and journals.",
+    icon: ShieldCheck,
+    title: "Medical Integrity",
+    desc: "Vetted research and clinical information sourced directly from medical geneticists and scientific registries.",
   },
   {
     icon: Users,
-    title: "Community Driven",
-    desc: "We connect families, caregivers, and advocates so no one has to face a rare disease diagnosis alone.",
+    title: "Supportive Community",
+    desc: "Connecting families with peer mentors, local support circles, and specialized advocacy groups.",
   },
   {
     icon: Microscope,
-    title: "Research Connected",
-    desc: "We track the latest gene therapy breakthroughs, clinical trials, and pipeline news so families stay informed.",
+    title: "Hope & Research Progress",
+    desc: "Real-time updates on active enzyme therapies, gene editing, and clinical trial opportunities.",
   },
 ];
 
 const TEAM = [
-  { name: "Salma Ibrahim", role: "Chief Executive Officer", detail: "Experience in Research and rare diseases" },
-  { name: "Idara", role: "Head of Research", detail: "Rare Disease Advocate · Former NIH Fellow" },
-  { name: "Kaliza Esther", role: "Technical Lead", detail: "Lead for the technical background of rarebridge" },
-  { name: "Ishema Shoulamite", role: "Technical Team", detail: "Lead for the technical background of rarebridge" },
-
+  {
+    name: "Salma Ibrahim",
+    role: "Chief Executive Officer",
+    detail: "Rare Disease Advocate & Researcher",
+    bio: "Pioneered plain-language genetic reporting standards and led community outreach initiatives for rare disease families across 40+ medical centers.",
+    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    name: "Idara",
+    role: "Head of Research",
+    detail: "Genetics Specialist · Former NIH Fellow",
+    bio: "Specializes in metabolic disorder research and ORPHA code categorization. Passionate about empowering families with clear science.",
+    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    name: "Kaliza Esther",
+    role: "Technical Lead",
+    detail: "Platform Architecture & AI Systems",
+    bio: "Architected RareBridge's child-friendly AI Zebra assistant and secure patient data integration workflows.",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+  },
+  {
+    name: "Ishema Shoulamite",
+    role: "Technical Team",
+    detail: "Frontend & Clinical Data Systems",
+    bio: "Focuses on high-accessibility user experience, text-resizing tools, and responsive family-first UI design.",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
+  },
 ];
 
-export default function AboutPage() {
+const MILESTONES = [
+  {
+    year: "2023",
+    title: "Platform Conception",
+    description: "Founded by rare disease parents and genetic researchers seeking to replace jargon with hope.",
+  },
+  {
+    year: "2024",
+    title: "ORPHA & Specialist Integration",
+    description: "Mapped 7,000+ rare conditions and connected top university medical centers.",
+  },
+  {
+    year: "2025",
+    title: "Child-Friendly AI Launch",
+    description: "Introduced Zebra AI Assistant to break down complex medical reports for families.",
+  },
+  {
+    year: "2026",
+    title: "Global Caregiver Expansion",
+    description: "Reached 120,000+ families with peer support circles and clinical trial tracking.",
+  },
+];
+
+export default function AboutPage({ onNav }: AboutPageProps) {
+  const [selectedMember, setSelectedMember] = useState<typeof TEAM[0] | null>(null);
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Left side curvy lines */}
-      <svg className="fixed left-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
-        <path d="M20 0 Q50 100 20 200 T20 400 T20 600 T20 800 T20 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
-        <path d="M40 0 Q70 150 40 300 T40 600 T40 900 T40 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
-        <path d="M60 0 Q90 200 60 400 T60 800 T60 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-        <path d="M10 100 Q40 150 10 200 T10 300 T10 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-        <path d="M80 200 Q50 250 80 300 T80 400 T80 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
-      </svg>
+    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
+      <OrganicWavyLine side="left" />
+      <OrganicWavyLine side="right" />
 
-      {/* Right side curvy lines */}
-      <svg className="fixed right-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
-        <path d="M80 0 Q50 100 80 200 T80 400 T80 600 T80 800 T80 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
-        <path d="M60 0 Q30 150 60 300 T60 600 T60 900 T60 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
-        <path d="M40 0 Q10 200 40 400 T40 800 T40 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-        <path d="M90 100 Q60 150 90 200 T90 300 T90 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-        <path d="M20 200 Q50 250 20 300 T20 400 T20 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
-      </svg>
+      {/* ================= HERO BANNER ================= */}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
+        {/* Background ambient blobs matching Homepage */}
+        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
 
-      {/* ── Hero banner ── */}
-      <div className="relative overflow-hidden bg-primary">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full bg-secondary opacity-10 blur-[120px]" />
-          <div className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full bg-accent opacity-5 blur-[80px]" />
-          <div className="absolute right-10 top-1/2 -translate-y-1/2 opacity-20 pointer-events-none">
-            <ZebraMascot size={40} />
-          </div>
-          {/* Floating doodles */}
-          <div className="absolute top-16 left-12 animate-float" style={{ animationDelay: '0s' }}>
-            <ButterflyDoodle size={40} className="opacity-30" />
-          </div>
-          <div className="absolute top-32 right-32 animate-float" style={{ animationDelay: '1.2s' }}>
-            <EdelweissFlower size={50} className="opacity-25" />
-          </div>
-          <div className="absolute bottom-20 left-1/3 animate-float" style={{ animationDelay: '0.6s' }}>
-            <ButterflyDoodle size={35} className="opacity-20" />
-          </div>
-        </div>
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-secondary text-xs font-bold uppercase tracking-widest mb-6">
-            <Star className="w-3 h-3" /> Our Story
-          </div>
-          <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl text-ivory tracking-tight leading-tight mb-5">
-            Built for families.<br />
-            <span className="text-secondary">Powered by science.</span>
-          </h1>
-          <p className="text-taupe text-lg md:text-xl max-w-2xl leading-relaxed">
-            RareBridge connects families, clinicians, and researchers with clear, medically reviewed information about rare diseases — so no one has to face a diagnosis alone.
-          </p>
-        </div>
-      </div>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-7"
+            >
+              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
+                Our Purpose & Mission
+              </span>
 
-      {/* ── Mission + Vision ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid md:grid-cols-2 gap-6 mb-16">
-          <div className="group rounded-3xl border border-taupe-40/60 bg-white p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-            <div className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center mb-5">
-              <BookOpen className="w-5 h-5 text-primary" />
-            </div>
-            <h3 className="font-bold text-xl text-primary mb-3">Our Mission</h3>
-            <p className="text-accent leading-relaxed">
-              To make trusted rare disease information accessible to every family worldwide and accelerate their connections to care, specialists, and research.
-            </p>
-          </div>
-          <div className="group rounded-3xl border border-taupe-40/60 bg-white p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-            <div className="w-11 h-11 rounded-2xl bg-primary flex items-center justify-center mb-5">
-              <Star className="w-5 h-5 text-secondary" />
-            </div>
-            <h3 className="font-bold text-xl text-primary mb-3">Our Vision</h3>
-            <p className="text-accent leading-relaxed">
-              A world where every rare disease family finds fast answers, trusted specialists, and a welcoming community — from the moment of diagnosis onward.
-            </p>
-          </div>
-        </div>
+              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
+                Connecting Knowledge, Families & Care
+              </h1>
 
-        {/* ── Why Zebras ── */}
-        <div className="relative overflow-hidden rounded-3xl bg-primary p-10 md:p-12 mb-16">
-          <div className="relative max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-secondary text-xs font-bold uppercase tracking-widest mb-5">
-              The Zebra
-            </div>
-            <h2 className="font-bold text-3xl md:text-4xl text-ivory mb-4">Why zebras?</h2>
-            <p className="text-taupe text-lg leading-relaxed mb-6">
-              In medicine, students are taught: "When you hear hoofbeats, think horses — not zebras." It's a reminder that common conditions are more likely. But for the 300 million people living with rare diseases worldwide, <span className="text-secondary font-semibold">they are the zebra</span>.
-            </p>
-            <p className="text-taupe leading-relaxed">
-              RareBridge brings that same mindset to every search, every specialist listing, and every support connection — because rare diseases deserve to be seen.
-            </p>
-          </div>
-        </div>
+              <p className="font-sans mt-3 max-w-xl text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium">
+                RareBridge was created to replace intimidating medical jargon with plain-language guidance, direct specialist connections, and a warm community for parents and children.
+              </p>
 
-        {/* ── Values ── */}
-        <div className="mb-16">
-          <div className="text-center mb-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-widest mb-3">What We Stand For</span>
-            <h2 className="font-bold text-3xl text-primary">Our Core Values</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-5">
-            {VALUES.map(v => (
-              <div key={v.title} className="group flex gap-5 rounded-3xl border border-taupe-40/60 bg-white p-7 hover:shadow-md hover:border-primary/20 transition-all duration-300">
-                <div className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors duration-300">
-                  <v.icon className="w-5 h-5 text-primary group-hover:text-secondary transition-colors duration-300" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-primary mb-1.5">{v.title}</h4>
-                  <p className="text-sm text-accent leading-relaxed">{v.desc}</p>
-                </div>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <button
+                  onClick={() => onNav?.("directory")}
+                  className="inline-flex items-center gap-2.5 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                >
+                  <span>Browse Conditions</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => onNav?.("community")}
+                  className="inline-flex items-center gap-2.5 rounded-2xl border-2 border-[#112250] bg-transparent px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#112250]/10 transition-all"
+                >
+                  <span>Join Support Community</span>
+                </button>
               </div>
-            ))}
-          </div>
-        </div>
+            </motion.div>
 
-        {/* ── Team ── */}
-        <div className="mb-16">
-          <div className="text-center mb-10">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-primary text-xs font-bold uppercase tracking-widest mb-3">People</span>
-            <h2 className="font-bold text-3xl text-primary">The Team Behind RareBridge</h2>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-5">
-            {TEAM.map(t => (
-              <div key={t.name} className="rounded-3xl border border-taupe-40/60 bg-white p-6 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-300">
-                <div className="w-16 h-16 rounded-full bg-secondary mx-auto mb-4 flex items-center justify-center">
-                  <span className="font-bold text-primary text-xl">
-                    {t.name.split(" ").map(n => n[0]).join("")}
+            {/* Right Card Graphic */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="lg:col-span-5"
+            >
+              <div className="relative mx-auto max-w-md lg:max-w-none">
+                <div className="relative overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-8 text-[#112250] shadow-xl">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="rounded-2xl bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
+                      <Target className="h-6 w-6 text-[#112250]" />
+                    </div>
+                    <EdelweissFlower size={36} />
+                  </div>
+
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                    <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
+                    100% Free & Open Access
                   </span>
+
+                  <h3 className="font-heading font-black text-2xl text-[#112250]">
+                    Built for Families First
+                  </h3>
+                  <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                    Combining certified genetic research with empathetic peer networks so no caregiver walks alone.
+                  </p>
+
+                  <div className="mt-6 space-y-2.5 border-t border-[#E7E2CE] pt-4 text-xs font-bold text-[#112250]">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <span>7,000+ Rare Diseases documented</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <span>Zero medical jargon barriers</span>
+                    </div>
+                  </div>
                 </div>
-                <h4 className="font-bold text-primary mb-1">{t.name}</h4>
-                <p className="text-sm font-semibold text-accent mb-1.5">{t.role}</p>
-                <p className="text-xs text-taupe">{t.detail}</p>
               </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider variant="wave" className="-mt-1 text-[#F5F4F0]" />
+
+      {/* ================= OUR CORE VALUES ================= */}
+      <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
+        <div className="mb-12 text-center max-w-xl mx-auto">
+          <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
+            Guiding Principles
+          </span>
+          <h2 className="mt-1 font-heading text-3xl font-black text-[#112250] sm:text-4xl">
+            What RareBridge Stands For
+          </h2>
+          <p className="font-sans text-sm text-[#3B507D] font-medium mt-2">
+            A family-first approach to rare disease education and compassionate support.
+          </p>
+        </div>
+
+        <motion.div
+          variants={staggerContainerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {VALUES.map((val, i) => {
+            const IconComp = val.icon;
+            return (
+              <motion.div
+                key={i}
+                variants={fadeUpVariants}
+                whileHover={{ y: -6, scale: 1.01 }}
+                className="rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 shadow-sm hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F5F4F0] text-[#112250] mb-4 shadow-xs">
+                    <IconComp className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-heading text-lg font-black text-[#112250]">{val.title}</h3>
+                  <p className="mt-2 text-xs text-[#3B507D] font-medium leading-relaxed">{val.desc}</p>
+                </div>
+                <div className="mt-6 pt-3 border-t border-[#F5F4F0] flex justify-end">
+                  <EdelweissFlower size={20} />
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </section>
+
+      {/* ================= TEAM SECTION ================= */}
+      <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+        <div className="rounded-3xl bg-white p-8 sm:p-12 border-2 border-[#E7E2CE] shadow-sm">
+          <div className="mb-10 text-center max-w-xl mx-auto">
+            <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
+              Leadership & Care
+            </span>
+            <h2 className="mt-1 font-heading text-3xl font-black text-[#112250]">
+              Our Dedicated Team
+            </h2>
+            <p className="font-sans text-sm text-[#3B507D] font-medium mt-1">
+              Researchers, clinicians, and software engineers passionate about supporting rare families.
+            </p>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {TEAM.map((member, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -6 }}
+                onClick={() => setSelectedMember(member)}
+                className="group cursor-pointer overflow-hidden rounded-3xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 text-center hover:bg-white hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <img
+                    src={member.avatar}
+                    alt={member.name}
+                    className="mx-auto h-24 w-24 rounded-full object-cover border-4 border-white shadow-[0_0_15px_rgba(231,226,206,0.6)] mb-3 group-hover:scale-105 transition-transform"
+                  />
+                  <h3 className="font-heading font-black text-[#112250] text-lg">{member.name}</h3>
+                  <p className="text-xs font-bold text-[#3B507D] mt-0.5">{member.role}</p>
+                  <p className="mt-2 text-xs text-[#3B507D]/80 font-medium">{member.detail}</p>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-[#E7E2CE] text-xs font-bold text-[#112250] group-hover:text-[#3B507D] flex items-center justify-center gap-1">
+                  <span>View Bio</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* ── CTA ── */}
-        <div className="relative overflow-hidden rounded-3xl p-10 md:p-12 text-center" style={{ background: "linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)" }}>
-          <div className="w-14 h-14 mx-auto mb-5 bg-white/15 rounded-2xl flex items-center justify-center">
-            <Heart className="w-7 h-7 text-secondary" />
-          </div>
-          <h2 className="font-bold text-3xl md:text-4xl text-ivory mb-3">Join the Community</h2>
-          <p className="text-secondary/80 text-lg mb-8 max-w-xl mx-auto">
-            Whether you're a family, clinician, or researcher — RareBridge is built for you.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <button className="inline-flex items-center gap-2 px-7 py-3 rounded-2xl bg-secondary text-primary font-bold hover:bg-white transition-all duration-200 shadow-lg">
-              Get Started Free <ArrowRight className="w-4 h-4" />
-            </button>
-            <button className="px-7 py-3 rounded-2xl border-2 border-white/30 text-ivory font-bold hover:bg-white/10 transition-all duration-200">
-              Learn More
-            </button>
-          </div>
+      {/* ================= PLATFORM ROADMAP MILESTONES ================= */}
+      <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+        <div className="mb-10 text-center max-w-xl mx-auto">
+          <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
+            Impact & Journey
+          </span>
+          <h2 className="mt-1 font-heading text-3xl font-black text-[#112250]">
+            Our Milestone Roadmap
+          </h2>
         </div>
-      </div>
-    </div>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {MILESTONES.map((ms, idx) => (
+            <div
+              key={idx}
+              className="relative rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 shadow-sm hover:border-[#112250] hover:shadow-[0_10px_30px_rgba(17,34,80,0.1)] transition-all"
+            >
+              <span className="font-heading font-black text-3xl text-[#112250] opacity-30 block mb-2">
+                {ms.year}
+              </span>
+              <h3 className="font-heading font-black text-lg text-[#112250]">{ms.title}</h3>
+              <p className="mt-2 text-xs text-[#3B507D] font-medium leading-relaxed">
+                {ms.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================= MEMBER BIO MODAL ================= */}
+      <AnimatePresence>
+        {selectedMember && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <motion.div
+              variants={overlayBackdropVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              onClick={() => setSelectedMember(null)}
+              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+            />
+
+            <motion.div
+              variants={modalPanelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="relative w-full max-w-lg rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto text-center"
+            >
+              <button
+                onClick={() => setSelectedMember(null)}
+                className="absolute top-5 right-5 rounded-xl bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <img
+                src={selectedMember.avatar}
+                alt={selectedMember.name}
+                className="mx-auto h-28 w-28 rounded-full object-cover border-4 border-[#E7E2CE] shadow-md mb-4"
+              />
+
+              <h3 className="font-heading font-black text-2xl text-[#112250]">{selectedMember.name}</h3>
+              <p className="text-sm font-bold text-[#3B507D]">{selectedMember.role}</p>
+              <p className="text-xs font-semibold text-[#3B507D]/80 mt-0.5">{selectedMember.detail}</p>
+
+              <p className="mt-4 text-xs leading-relaxed text-[#112250] bg-[#F5F4F0] p-4 rounded-2xl border border-[#E7E2CE] font-medium text-left">
+                {selectedMember.bio}
+              </p>
+
+              <button
+                onClick={() => setSelectedMember(null)}
+                className="mt-6 w-full rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
+              >
+                Close Profile
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </main>
   );
 }

@@ -1,248 +1,371 @@
 import React, { useState, useEffect } from "react";
-import { Search, SlidersHorizontal, X, BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
-import { DISEASES, CATEGORY_FILTERS, STATUS_FILTERS, fetchDiseasesFromAPI } from "../data";
-import { ZebraEmptyState, DiseaseCard, ButterflyDoodle, EdelweissFlower } from "../components/common/Visuals";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  DISEASES,
+  CATEGORY_FILTERS,
+  STATUS_FILTERS,
+  fetchDiseasesFromAPI,
+  type Disease,
+} from "../data";
 
-export default function DirectoryPage({ onDisease }: { onDisease: (id: string) => void }) {
+import {
+  ZebraEmptyState,
+  DiseaseCard,
+  EdelweissFlower,
+  OrganicWavyLine,
+} from "../components/common/Visuals";
+
+import { SectionDivider } from "../components/common/SectionDivider";
+import {
+  Search,
+  Sparkles,
+  BookOpen,
+  Filter,
+  X,
+  Stethoscope,
+  Microscope,
+  BrainCircuit,
+  ArrowRight,
+  ChevronRight,
+  Layers,
+  CheckCircle2,
+} from "lucide-react";
+import { fadeUpVariants, staggerContainerVariants } from "../utils/animations";
+
+type DirectoryPageProps = {
+  onDisease: (id: string) => void;
+};
+
+const SEARCH_SUGGESTIONS = [
+  "MPS I",
+  "Alagille Syndrome",
+  "Fabry Disease",
+  "Gaucher Disease",
+  "Phelan-McDermid",
+  "Enzyme Deficiency",
+  "Metabolic",
+];
+
+export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState("All");
   const [status, setStatus] = useState("All Status");
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [diseases, setDiseases] = useState(DISEASES);
+  const [diseases, setDiseases] = useState<Disease[]>(DISEASES);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
   const itemsPerPage = 6;
 
   useEffect(() => {
+    let cancelled = false;
+
     async function loadDiseases() {
       setLoading(true);
       try {
-        const apiDiseases = await fetchDiseasesFromAPI(query, cat === "All" ? undefined : cat);
-        setDiseases(apiDiseases as any);
-        setCurrentPage(1); // Reset to page 1 when data changes
+        const apiDiseases = await fetchDiseasesFromAPI(
+          query,
+          cat === "All" ? undefined : cat
+        );
+
+        if (!cancelled) {
+          setDiseases(apiDiseases as typeof DISEASES);
+        }
       } catch (error) {
-        console.error('Failed to load diseases:', error);
-        setDiseases(DISEASES);
+        console.error("Failed to load diseases:", error);
+        if (!cancelled) {
+          setDiseases(DISEASES);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
+
     loadDiseases();
+
+    return () => {
+      cancelled = true;
+    };
   }, [query, cat]);
 
-  const filtered = diseases.filter(d => {
-    const q = query.toLowerCase();
-    const matchQ = !q || d.name.toLowerCase().includes(q) || d.category.toLowerCase().includes(q);
-    const matchC = cat === "All" || d.categoryBadges?.includes(cat);
-    const matchS = status === "All Status" || (d as any).researchStatus === status;
+  const filtered = diseases.filter((d) => {
+    const q = query.trim().toLowerCase();
+
+    const matchQ =
+      !q ||
+      String(d.name || "").toLowerCase().includes(q) ||
+      String(d.category || "").toLowerCase().includes(q) ||
+      (Boolean(d.shortDesc) && String(d.shortDesc).toLowerCase().includes(q)) ||
+      (Boolean(d.orphaCode) && String(d.orphaCode).toLowerCase().includes(q));
+
+    const matchC =
+      cat === "All" || (d as any).categoryBadges?.includes(cat) || d.category === cat;
+
+    const matchS =
+      status === "All Status" || (d as any).researchStatus === status;
+
     return matchQ && matchC && matchS;
   });
 
-  // Pagination logic
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filtered.slice(startIndex, endIndex);
+  const safeCurrentPage = Math.min(currentPage, Math.max(totalPages, 1));
+  const startIndex = (safeCurrentPage - 1) * itemsPerPage;
+  const currentItems = filtered.slice(startIndex, startIndex + itemsPerPage);
 
-  // Reset to page 1 if current page exceeds total pages
   useEffect(() => {
-    if (currentPage > totalPages && totalPages > 0) {
-      setCurrentPage(1);
-    }
-  }, [currentPage, totalPages]);
-
-  const hasActiveFilters = cat !== "All" || status !== "All Status";
+    setCurrentPage(1);
+  }, [query, cat, status]);
 
   function clearFilters() {
     setCat("All");
     setStatus("All Status");
+    setQuery("");
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Left side curvy lines */}
-      <svg className="fixed left-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
-        <path d="M20 0 Q50 100 20 200 T20 400 T20 600 T20 800 T20 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
-        <path d="M40 0 Q70 150 40 300 T40 600 T40 900 T40 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
-        <path d="M60 0 Q90 200 60 400 T60 800 T60 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-        <path d="M10 100 Q40 150 10 200 T10 300 T10 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-        <path d="M80 200 Q50 250 80 300 T80 400 T80 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
-      </svg>
+    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
+      <OrganicWavyLine side="left" />
+      <OrganicWavyLine side="right" />
 
-      {/* Right side curvy lines */}
-      <svg className="fixed right-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
-        <path d="M80 0 Q50 100 80 200 T80 400 T80 600 T80 800 T80 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
-        <path d="M60 0 Q30 150 60 300 T60 600 T60 900 T60 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
-        <path d="M40 0 Q10 200 40 400 T40 800 T40 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-        <path d="M90 100 Q60 150 90 200 T90 300 T90 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-        <path d="M20 200 Q50 250 20 300 T20 400 T20 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
-      </svg>
-      {/* ── Page header ── */}
-      <div className="relative overflow-hidden bg-primary py-6 sm:py-8">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-secondary opacity-10 blur-[80px]" />
-          <div className="absolute top-0 right-0 w-[200px] h-[200px] rounded-full bg-accent opacity-5 blur-[60px]" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <div className="w-7 h-7 rounded-xl bg-secondary/20 flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-secondary" />
-              </div>
-              <span className="text-xs font-bold uppercase tracking-widest text-secondary/70">Disease Library</span>
-            </div>
-            <h1 className="font-bold text-2xl md:text-3xl text-ivory tracking-tight">Explore Diseases</h1>
-            <p className="text-taupe text-sm max-w-xl mt-1">Browse our comprehensive library of rare conditions with plain-language explanations and expert-reviewed details.</p>
-          </div>
-        </div>
-      </div>
+      {/* ================= HERO BANNER ================= */}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
+        {/* Background ambient blobs matching Homepage */}
+        <div className="pointer-events-none absolute -top-20 -right-12 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-7">
+              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
+                Comprehensive Knowledge Base
+              </span>
 
-        {/* ── Search + filter bar ── */}
-        <div className="bg-white rounded-3xl border border-taupe-40/60 shadow-sm overflow-hidden mb-8">
-          {/* Search row */}
-          <div className="flex items-center gap-3 px-5 py-4 border-b border-taupe-40/40">
-            <Search className="w-5 h-5 text-taupe shrink-0" />
-            <input
-              className="flex-1 bg-transparent text-primary placeholder-taupe text-base font-medium outline-none"
-              placeholder="Search by name, category, or symptom…"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-            />
-            {query && (
-              <button onClick={() => setQuery("")} className="p-1 rounded-lg hover:bg-secondary transition-colors">
-                <X className="w-4 h-4 text-taupe" />
-              </button>
-            )}
-            <div className="w-px h-6 bg-taupe-40/40" />
-            <button
-              onClick={() => setFiltersOpen(o => !o)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-semibold transition-all duration-200 ${filtersOpen || hasActiveFilters ? "bg-primary text-ivory" : "bg-secondary text-primary hover:bg-primary hover:text-ivory"
-                }`}
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              Filters
-              {hasActiveFilters && (
-                <span className="w-4 h-4 rounded-full bg-secondary text-primary text-[10px] font-bold flex items-center justify-center">
-                  {(cat !== "All" ? 1 : 0) + (status !== "All Status" ? 1 : 0)}
-                </span>
-              )}
-            </button>
-          </div>
+              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
+                Rare Disease Library & Medical Guides
+              </h1>
 
-          {/* Expandable filter panel */}
-          {filtersOpen && (
-            <div className="px-5 py-5 bg-ivory/50 flex flex-wrap gap-8">
-              <div>
-                <p className="text-xs text-taupe mb-3 font-bold uppercase tracking-widest">Category</p>
-                <div className="flex flex-wrap gap-2">
-                  {CATEGORY_FILTERS.map(f => (
+              <p className="font-sans mt-3 text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium max-w-2xl">
+                Explore 7,000+ conditions simplified into plain language with symptoms, genetic causes, approved treatments, and active trial updates.
+              </p>
+
+              {/* Search Box */}
+              <div className="mt-8 max-w-2xl">
+                <div className="relative flex items-center rounded-2xl border-2 border-[#E7E2CE] bg-white p-2 focus-within:border-[#112250] transition-all">
+                  <Search className="ml-3 h-5 w-5 text-[#3B507D] shrink-0" />
+                  <input
+                    type="search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search by condition name, symptom, or ORPHA code..."
+                    className="w-full bg-transparent px-3 py-2 text-sm text-[#112250] outline-none placeholder:text-[#3B507D]/60 font-medium sm:text-base"
+                  />
+                  {query && (
                     <button
-                      key={f}
-                      onClick={() => setCat(f)}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${cat === f
-                        ? "bg-primary text-ivory shadow-sm"
-                        : "bg-white border border-taupe-40 text-accent hover:border-primary hover:text-primary"
-                        }`}
+                      onClick={() => setQuery("")}
+                      className="mr-2 rounded-xl bg-[#F5F4F0] p-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                      aria-label="Clear search query"
                     >
-                      {f}
+                      <X className="h-4 w-4" />
                     </button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <p className="text-xs text-taupe mb-3 font-bold uppercase tracking-widest">Research Status</p>
-                <div className="flex flex-wrap gap-2">
-                  {STATUS_FILTERS.map(f => (
-                    <button
-                      key={f}
-                      onClick={() => setStatus(f)}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${status === f
-                        ? "bg-primary text-ivory shadow-sm"
-                        : "bg-white border border-taupe-40 text-accent hover:border-primary hover:text-primary"
-                        }`}
-                    >
-                      {f}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {hasActiveFilters && (
-                <div className="flex items-end">
+                  )}
                   <button
-                    onClick={clearFilters}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-accent hover:text-primary transition-colors"
+                    onClick={() => {}}
+                    className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-[#112250] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0"
                   >
-                    <X className="w-3.5 h-3.5" /> Clear filters
+                    <span>Search</span>
                   </button>
                 </div>
+              </div>
+            </div>
+
+            {/* Right Card / Graphic */}
+            <div className="lg:col-span-5">
+              <div className="relative mx-auto max-w-md lg:max-w-none">
+                <div className="absolute -inset-4 -z-10 rounded-[3rem] bg-gradient-to-br from-[#E7E2CE] via-[#F5F4F0] to-[#3B507D]/15" />
+                <div className="relative overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="rounded-2xl bg-[#112250] p-3 text-white">
+                      <BookOpen className="h-6 w-6 text-[#E7E2CE]" />
+                    </div>
+                    <EdelweissFlower size={36} />
+                  </div>
+
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                    <Sparkles className="h-3.5 w-3.5 text-[#3B507D]" />
+                    Verified Medical Data
+                  </span>
+
+                  <h3 className="font-heading font-black text-2xl text-[#112250]">
+                    7,000+ Conditions
+                  </h3>
+                  <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                    Reviewed by pediatric geneticists and metabolic specialists to ensure medical clarity for families.
+                  </p>
+
+                  <div className="mt-6 space-y-2.5 border-t border-[#F5F4F0] pt-4 text-xs font-bold text-[#112250]">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <span>Plain-language medical breakdowns</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <span>Gene Therapy & Clinical Trial updates</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider variant="wave" className="-mt-1 text-[#F5F4F0]" />
+
+      {/* ================= FILTERS & LISTING SECTION ================= */}
+      <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        {/* Category Pills & Status Select */}
+        <div className="mb-8 rounded-3xl border-2 border-[#E7E2CE] bg-white p-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            {/* Categories scrollable */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-callout mr-2 text-xs font-bold uppercase tracking-wider text-[#3B507D] flex items-center gap-1.5">
+                <Filter className="h-4 w-4" />
+                Category:
+              </span>
+              {CATEGORY_FILTERS.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setCat(category)}
+                  className={`px-3 py-1.5 text-xs font-semibold transition-all ${
+                    cat === category
+                      ? "border-b-2 border-[#112250] text-[#112250] bg-transparent font-bold"
+                      : "border-b-2 border-transparent text-[#3B507D] bg-transparent hover:text-[#112250] hover:border-[#E7E2CE]"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {/* Status Select & Reset */}
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="rounded-2xl border-2 border-[#E7E2CE] bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] outline-none hover:border-[#112250] transition-colors"
+              >
+                {STATUS_FILTERS.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+
+              {(cat !== "All" || status !== "All Status" || query) && (
+                <button
+                  onClick={clearFilters}
+                  className="rounded-2xl border border-[#D4183D]/30 bg-[#FDE8E8] px-3.5 py-2 text-xs font-bold text-[#D4183D] hover:bg-[#D4183D] hover:text-white transition-all"
+                >
+                  Clear filters
+                </button>
               )}
             </div>
-          )}
-        </div>
-
-        {/* ── Active filter chips ── */}
-        {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-2 mb-6">
-            <span className="text-xs text-taupe font-medium">Active:</span>
-            {cat !== "All" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                {cat}
-                <button onClick={() => setCat("All")}><X className="w-3 h-3" /></button>
-              </span>
-            )}
-            {status !== "All Status" && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                {status}
-                <button onClick={() => setStatus("All Status")}><X className="w-3 h-3" /></button>
-              </span>
-            )}
           </div>
-        )}
-
-        {/* ── Results count ── */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-sm text-taupe font-medium">
-            <span className="font-bold text-primary text-base">{filtered.length}</span> disease{filtered.length !== 1 ? "s" : ""} found
-          </p>
-          {totalPages > 1 && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="p-2 rounded-lg border border-taupe-40 hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-              >
-                <ChevronLeft className="w-4 h-4 text-primary" />
-              </button>
-              <span className="text-sm font-medium text-primary">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="p-2 rounded-lg border border-taupe-40 hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-              >
-                <ChevronRight className="w-4 h-4 text-primary" />
-              </button>
-            </div>
-          )}
         </div>
 
-        {/* ── Grid ── */}
-        {currentItems.length > 0 ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentItems.map(d => (
-              <DiseaseCard key={d.id} disease={d} onClick={() => onDisease(d.id)} />
+        {/* Results Counter */}
+        <div className="mb-6 flex items-center justify-between px-1">
+          <p className="font-sans text-sm font-bold text-[#3B507D]">
+            Showing <strong className="text-[#112250] font-black">{filtered.length}</strong> conditions cataloged
+          </p>
+        </div>
+
+        {/* DISEASE CARDS GRID WITH STAGGER ANIMATIONS & GLOW HOVER */}
+        {loading ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div
+                key={n}
+                className="h-64 animate-pulse rounded-3xl bg-white border-2 border-[#E7E2CE]"
+              />
             ))}
           </div>
+        ) : currentItems.length > 0 ? (
+          <motion.div
+            variants={staggerContainerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {currentItems.map((disease) => (
+              <motion.div
+                key={disease.id}
+                variants={fadeUpVariants}
+                whileHover={{ y: -6, scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                className="h-full rounded-3xl transition-all"
+              >
+                <DiseaseCard
+                  disease={disease}
+                  onClick={() => onDisease(disease.id)}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
         ) : (
-          <ZebraEmptyState
-            message="No diseases found"
-            sub="Try adjusting your filters or search terms"
-          />
+          <div className="rounded-3xl border-2 border-[#E7E2CE] bg-white p-8 sm:p-12 text-center">
+            <ZebraEmptyState
+              message="No conditions match your search criteria"
+              sub="Try broadening your keywords or clearing selected category filters."
+            />
+            <button
+              onClick={clearFilters}
+              className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors"
+            >
+              <span>Reset All Filters</span>
+            </button>
+          </div>
         )}
-      </div>
-    </div>
+
+        {/* PAGINATION */}
+        {totalPages > 1 && (
+          <div className="mt-12 flex items-center justify-center gap-2">
+            <button
+              disabled={safeCurrentPage === 1}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors"
+              aria-label="Previous Page"
+            >
+              ←
+            </button>
+
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`flex h-11 min-w-[2.75rem] items-center justify-center rounded-2xl border-2 px-3 text-sm font-black transition-all ${
+                  safeCurrentPage === page
+                    ? "border-[#112250] bg-[#112250] text-white shadow-md shadow-[#112250]/20"
+                    : "border-[#E7E2CE] bg-white text-[#112250] hover:bg-[#F5F4F0]"
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+
+            <button
+              disabled={safeCurrentPage === totalPages}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors"
+              aria-label="Next Page"
+            >
+              →
+            </button>
+          </div>
+        )}
+      </section>
+    </main>
   );
 }

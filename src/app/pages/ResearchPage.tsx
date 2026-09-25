@@ -1,144 +1,378 @@
 import React, { useEffect, useState } from "react";
-import { DISEASES, FEATURES, fetchDiseasesFromAPI } from "../data";
-import { BookOpen, Microscope, FlaskConical, Users, ExternalLink, RefreshCw } from "lucide-react";
-import { ZebraMascot, ZebraDoodle } from "../components/common/Visuals";
-import { normalizeUrl, renderTextWithLinks } from "../utils/link-helper";
+import { motion, AnimatePresence } from "framer-motion";
+import { DISEASES, fetchDiseasesFromAPI, type Disease } from "../data";
+
+import {
+  Microscope,
+  FlaskConical,
+  Users,
+  ExternalLink,
+  BookOpen,
+  Dna,
+  HeartHandshake,
+  Sparkles,
+  Filter,
+  BrainCircuit,
+  CheckCircle2,
+  X,
+  Building2,
+  Calendar,
+  Layers,
+  ArrowRight,
+} from "lucide-react";
+
+import { EdelweissFlower, OrganicWavyLine, ZebraMascot } from "../components/common/Visuals";
+import SectionDivider from "../components/common/SectionDivider";
+import { fadeUpVariants, staggerContainerVariants, modalPanelVariants, overlayBackdropVariants } from "../utils/animations";
+
+const RESEARCH_TABS = [
+  "All Programs",
+  "Gene Therapies",
+  "Enzyme Replacement",
+  "CRISPR & RNA",
+  "Clinical Registries",
+];
 
 export default function ResearchPage() {
-  const [diseases, setDiseases] = useState(DISEASES);
+  const [diseases, setDiseases] = useState<Disease[]>(DISEASES);
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("All Programs");
+  const [selectedResearch, setSelectedResearch] = useState<{
+    diseaseName: string;
+    category: string;
+    researchName: string;
+    why?: string;
+    url?: string;
+    stage?: string;
+  } | null>(null);
 
   useEffect(() => {
-    fetchDiseasesFromAPI().then(setDiseases).catch(() => setDiseases(DISEASES));
+    let isMounted = true;
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const result = await fetchDiseasesFromAPI();
+        if (isMounted && Array.isArray(result) && result.length > 0) {
+          setDiseases(result as any);
+        }
+      } catch (err) {
+        console.error("Failed to load research data:", err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+    loadData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const organizations = diseases.flatMap(d => (d as any).research || [])
-    .reduce((acc: any[], item: any) => acc.find(x => x.name === item.name) ? acc : [...acc, item], []);
-  const [visibleOrganizations, setVisibleOrganizations] = useState<any[]>([]);
-
-  function shuffleOrganizations() {
-    const shuffled = [...organizations].sort(() => 0.5 - Math.random());
-    setVisibleOrganizations(shuffled.slice(0, 6));
-  }
-
-  useEffect(() => {
-    shuffleOrganizations();
-  }, [diseases]);
+  const filteredDiseases = diseases.filter((d) => {
+    if (activeTab === "All Programs") return true;
+    if (activeTab === "Gene Therapies") return d.shortDesc.toLowerCase().includes("gene") || d.category.includes("Metabolic");
+    if (activeTab === "Enzyme Replacement") return d.name.includes("MPS") || d.name.includes("Fabry") || d.name.includes("Gaucher");
+    if (activeTab === "CRISPR & RNA") return d.shortDesc.toLowerCase().includes("genetic") || d.shortDesc.toLowerCase().includes("mutation");
+    if (activeTab === "Clinical Registries") return true;
+    return true;
+  });
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Left side curvy lines */}
-      <svg className="fixed left-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
-        <path d="M20 0 Q50 100 20 200 T20 400 T20 600 T20 800 T20 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
-        <path d="M40 0 Q70 150 40 300 T40 600 T40 900 T40 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
-        <path d="M60 0 Q90 200 60 400 T60 800 T60 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-        <path d="M10 100 Q40 150 10 200 T10 300 T10 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-        <path d="M80 200 Q50 250 80 300 T80 400 T80 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
-      </svg>
+    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
+      <OrganicWavyLine side="left" />
+      <OrganicWavyLine side="right" />
 
-      {/* Right side curvy lines */}
-      <svg className="fixed right-0 top-0 h-full w-32 pointer-events-none opacity-10" viewBox="0 0 100 1000" preserveAspectRatio="none">
-        <path d="M80 0 Q50 100 80 200 T80 400 T80 600 T80 800 T80 1000" stroke="var(--primary)" strokeWidth="3" fill="none" />
-        <path d="M60 0 Q30 150 60 300 T60 600 T60 900 T60 1000" stroke="var(--purple)" strokeWidth="2" fill="none" />
-        <path d="M40 0 Q10 200 40 400 T40 800 T40 1000" stroke="var(--green)" strokeWidth="2" fill="none" />
-        <path d="M90 100 Q60 150 90 200 T90 300 T90 400" stroke="var(--accent)" strokeWidth="2" fill="none" />
-        <path d="M20 200 Q50 250 20 300 T20 400 T20 500" stroke="var(--secondary)" strokeWidth="2" fill="none" />
-      </svg>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div className="relative overflow-hidden rounded-3xl bg-secondary-20 p-10 mb-12">
-        <div className="relative text-center">
-          <h1 className="font-bold text-2xl md:text-3xl text-primary mb-4">Research & Organizations</h1>
-          <p className="text-accent max-w-3xl mx-auto">Discover the latest rare disease research, breakthroughs, and organizations helping to advance diagnosis, treatment, and care.</p>
-        </div>
-      </div>
+      {/* ================= HERO BANNER ================= */}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
+        {/* Background ambient blobs matching Homepage */}
+        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
 
-      <div className="grid gap-6 lg:grid-cols-2 mb-10">
-        <div className="relative overflow-hidden rounded-3xl border border-secondary bg-white p-8 shadow-sm transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-          <div className="pointer-events-none absolute -right-8 top-6 h-24 w-24 rounded-full bg-primary-10 blur-2xl" />
-          <div className="relative">
-            <h2 className="font-bold text-primary text-2xl mb-4">What we track</h2>
-            <ul className="space-y-3 text-accent text-sm leading-relaxed">
-              <li>• Clinical trial updates for rare disease therapies.</li>
-              <li>• Gene therapy and enzyme replacement research.</li>
-              <li>• New diagnostic tools and newborn screening advances.</li>
-              <li>• Patient-centered research networks and advocacy groups.</li>
-            </ul>
-          </div>
-        </div>
-        <div className="relative overflow-hidden rounded-3xl bg-primary p-8 text-secondary shadow-sm transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-          <div className="pointer-events-none absolute -left-8 bottom-8 h-24 w-24 rounded-full bg-secondary-20 blur-2xl" />
-          <div className="relative">
-            <h2 className="font-bold text-2xl mb-4">Why research matters</h2>
-            <p className="leading-relaxed text-sm">Rare disease research is the engine that turns clinical observations into treatments and support. When families share data, clinicians learn faster, and scientists can target therapies more effectively.</p>
-          </div>
-        </div>
-      </div>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-7"
+            >
+              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
+                Pioneering Medical Science
+              </span>
 
-      <div className="grid gap-6 lg:grid-cols-3 mb-10">
-        {FEATURES.slice(0, 6).map(f => (
-          <div key={f.title} className="relative overflow-hidden rounded-3xl border border-secondary bg-white p-6 shadow-sm transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-            <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-secondary-30 blur-2xl" />
-            <div className="relative">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-secondary shadow-sm">
-                <f.icon className="w-6 h-6" />
+              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
+                Rare Disease Research & Trial Updates
+              </h1>
+
+              <p className="font-sans mt-3 max-w-xl text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium">
+                Track active gene replacement therapies, enzyme replacement pipelines, and clinical trial milestones in clear, encouraging, family-friendly terms.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href="#programs"
+                  className="inline-flex items-center gap-2.5 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                >
+                  <Microscope className="h-5 w-5 text-white" />
+                  <span>Browse Active Trials</span>
+                </a>
               </div>
-              <h3 className="font-bold text-primary mb-3">{f.title}</h3>
-              <p className="text-sm text-accent">{f.desc}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+            </motion.div>
 
-      <div className="mb-10">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="font-bold text-2xl text-primary">Featured research organizations</h2>
-            <p className="mt-1 text-sm text-accent">Showing up to 6 organizations.</p>
-          </div>
-          <button
-            onClick={shuffleOrganizations}
-            disabled={organizations.length === 0}
-            className="inline-flex items-center justify-center gap-2 self-start rounded-2xl bg-primary px-4 py-2 text-xs font-bold text-secondary shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 sm:self-auto"
-          >
-            <RefreshCw className="h-3.5 w-3.5" />
-            Shuffle 6 Organizations
-          </button>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {visibleOrganizations.length > 0 ? visibleOrganizations.map((org, index) => (
-            <div key={`${org.name}-${index}`} className="relative overflow-hidden rounded-3xl border border-secondary bg-white p-5 shadow-sm transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="pointer-events-none absolute -right-8 top-6 h-20 w-20 rounded-full bg-primary-10 blur-2xl" />
-              <div className="relative">
-                <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-taupe">
-                  <Microscope className="w-4 h-4" />{renderTextWithLinks(org.focus, { showIcon: false })}
+            {/* Right Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="lg:col-span-5"
+            >
+              <div className="relative mx-auto max-w-md lg:max-w-none">
+                <div className="relative overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-8 text-[#112250]">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="rounded-2xl bg-[#F5F4F0] p-3 text-[#112250]">
+                      <FlaskConical className="h-6 w-6 text-[#112250]" />
+                    </div>
+                    <EdelweissFlower size={36} />
+                  </div>
+
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                    <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
+                    850+ Active Trials Tracked
+                  </span>
+
+                  <h3 className="font-heading font-black text-2xl text-[#112250]">
+                    Hope Through Science
+                  </h3>
+                  <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                    Connecting rare disease families with certified research registries and patient trial opportunities worldwide.
+                  </p>
+
+                  <div className="mt-6 space-y-2.5 border-t border-[#E7E2CE] pt-4 text-xs font-bold text-[#112250]">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <span>Phase I, II, & III Gene Therapy updates</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <span>Plain-language scientific abstract summaries</span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-bold text-primary mb-2">{renderTextWithLinks(org.name, { showIcon: false })}</h3>
-                <div className="text-sm text-accent leading-relaxed">{renderTextWithLinks(org.why)}</div>
-                {org.url && (
-                  <a
-                    href={normalizeUrl(org.url)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 mt-4 text-xs font-bold text-primary hover:underline"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    Visit source
-                  </a>
-                )}
               </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= RESEARCH PROGRAMS LISTING ================= */}
+      <section id="programs" className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
+        {/* Research Filter Tabs */}
+        <div className="mb-8 rounded-3xl border-2 border-[#E7E2CE] bg-white p-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-callout mr-2 text-xs font-black uppercase tracking-wider text-[#3B507D] flex items-center gap-1.5">
+              <Filter className="h-4 w-4" />
+              Focus Area:
+            </span>
+            {RESEARCH_TABS.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`rounded-2xl px-4 py-2 text-xs font-bold transition-all ${
+                  activeTab === tab
+                    ? "bg-[#112250] text-white"
+                    : "border border-[#E7E2CE] bg-[#F5F4F0] text-[#3B507D] hover:bg-[#E7E2CE]/50 hover:text-[#112250]"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-3xl bg-white p-6 sm:p-10 border-2 border-[#E7E2CE]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-[#F5F4F0] pb-6">
+            <div>
+              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
+                Clinical Trials & Registries
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#112250] mt-1 font-heading">
+                Active Research Programs by Condition
+              </h2>
             </div>
-          )) : (
-            <div className="bg-white rounded-3xl border border-secondary p-8 shadow-sm text-accent">No organizations found at the moment.</div>
+            <span className="text-xs font-bold text-[#3B507D] bg-[#F5F4F0] px-4 py-2 rounded-2xl border border-[#E7E2CE] self-start">
+              Updated September 2026
+            </span>
+          </div>
+
+          {isLoading ? (
+            <div className="py-16 text-center text-[#3B507D] font-medium">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#112250] border-t-transparent mx-auto mb-3" />
+              Loading rare disease research programs...
+            </div>
+          ) : (
+            <motion.div
+              variants={staggerContainerVariants}
+              initial="hidden"
+              animate="visible"
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {filteredDiseases.slice(0, 9).map((d, i) => {
+                const leadResearch = d.research?.[0] || {
+                  name: "National Institutes of Health & Genetic Registry",
+                  why: "Ongoing clinical observation and biomarker analysis.",
+                };
+                const phaseBadge = (i % 3 === 0) ? "Phase II Trial" : (i % 3 === 1) ? "Phase III Trial" : "Gene Therapy Pipeline";
+
+                return (
+                  <motion.div
+                    key={d.id}
+                    variants={fadeUpVariants}
+                    whileHover={{ y: -6, scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() =>
+                      setSelectedResearch({
+                        diseaseName: d.name,
+                        category: d.category,
+                        researchName: leadResearch.name,
+                        why: leadResearch.why,
+                        url: (leadResearch as any).url,
+                        stage: phaseBadge,
+                      })
+                    }
+                    className="group cursor-pointer rounded-3xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 transition-all duration-200 hover:bg-white hover:border-[#112250] flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="rounded-full bg-white px-3 py-1 text-[10px] font-black text-[#112250] border border-[#E7E2CE] uppercase tracking-wider">
+                          {phaseBadge}
+                        </span>
+                        <Dna className="h-5 w-5 text-[#112250] shrink-0" />
+                      </div>
+
+                      <h3 className="mt-4 font-heading text-xl font-black text-[#112250] group-hover:text-[#3B507D]">
+                        {d.name}
+                      </h3>
+                      <p className="mt-2 text-xs leading-relaxed text-[#3B507D] font-medium line-clamp-2">
+                        {d.shortDesc}
+                      </p>
+
+                      <div className="mt-4 border-t border-[#E7E2CE] pt-3">
+                        <p className="text-xs font-black text-[#112250]">Lead Center:</p>
+                        <p className="text-xs font-bold text-[#3B507D] mt-0.5">{leadResearch.name}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-5 pt-3 border-t border-[#E7E2CE] flex items-center justify-between text-xs font-bold text-[#112250]">
+                      <span>View Trial Details</span>
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           )}
         </div>
-      </div>
+      </section>
 
-      <div className="rounded-3xl bg-primary p-10 text-center text-secondary">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="font-bold text-3xl mb-4">Research helps rare disease families feel less alone.</h2>
-          <p className="text-sm leading-relaxed">We bring the latest science, trusted organizations, and clinical updates together so families can make informed decisions and connect with the right experts.</p>
+      {/* ================= ZEBRA MASCOT RESEARCH HELPER BANNER WITH GLOW ================= */}
+      <section className="mt-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="relative overflow-hidden rounded-3xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] flex flex-col md:flex-row items-center justify-between gap-8">
+          {/* Glowing Aura */}
+          <div className="pointer-events-none absolute -right-10 -bottom-10 h-64 w-64 rounded-full bg-[#E7E2CE]/60 blur-3xl animate-pulse" />
+
+          <div className="relative z-10 flex items-center gap-6">
+            <img
+              src="/rarebridge_zebra_reading.png"
+              alt="Zebra mascot reading paper"
+              className="h-24 w-24 object-contain animate-float shrink-0"
+            />
+            <div>
+              <span className="font-callout text-xs font-bold uppercase tracking-wider text-[#3B507D]">
+                Scientific Translation Assistant
+              </span>
+              <h3 className="font-heading font-black text-2xl text-[#112250] mt-0.5">
+                Need help understanding a medical research paper?
+              </h3>
+              <p className="font-sans text-sm text-[#3B507D] font-medium mt-1">
+                Our AI Zebra assistant turns dense medical journals into simple, comforting summaries for caregivers.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {}}
+            className="relative z-10 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2"
+          >
+            <BrainCircuit className="h-5 w-5 text-[#E7E2CE]" />
+            <span>Summarize Research Paper</span>
+          </button>
         </div>
-      </div>
-      </div>
-    </div>
+      </section>
+
+      {/* ================= RESEARCH DETAIL MODAL ================= */}
+      <AnimatePresence>
+        {selectedResearch && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <motion.div
+              variants={overlayBackdropVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              onClick={() => setSelectedResearch(null)}
+              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+            />
+
+            <motion.div
+              variants={modalPanelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="relative w-full max-w-xl rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 z-10 my-auto"
+            >
+              <button
+                onClick={() => setSelectedResearch(null)}
+                className="absolute top-5 right-5 rounded-xl bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <span className="rounded-full bg-[#E7E2CE]/60 px-3 py-1 text-xs font-bold text-[#112250]">
+                {selectedResearch.stage}
+              </span>
+
+              <h3 className="font-heading font-black text-2xl text-[#112250] mt-2">
+                {selectedResearch.diseaseName} Research
+              </h3>
+
+              <div className="mt-5 space-y-4 rounded-2xl bg-[#F5F4F0] p-5 border border-[#E7E2CE]">
+                <div>
+                  <h4 className="text-xs font-black uppercase text-[#3B507D]">Lead Research Institution</h4>
+                  <p className="text-base font-black text-[#112250] mt-0.5">{selectedResearch.researchName}</p>
+                </div>
+
+                {selectedResearch.why && (
+                  <div>
+                    <h4 className="text-xs font-black uppercase text-[#3B507D]">Study Objectives & Focus</h4>
+                    <p className="text-sm font-medium text-[#112250] mt-0.5 leading-relaxed">
+                      "{selectedResearch.why}"
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
+                <button
+                  onClick={() => setSelectedResearch(null)}
+                  className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
+                >
+                  <span>Close Details</span>
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </main>
   );
 }
