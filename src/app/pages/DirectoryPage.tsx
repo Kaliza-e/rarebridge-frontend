@@ -152,7 +152,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
 
               {/* Search Box */}
               <div className="mt-8 max-w-2xl">
-                <div className="relative flex items-center rounded-2xl border-2 border-[#E7E2CE] bg-white p-2 focus-within:border-[#112250] transition-all">
+                <div className="relative flex items-center rounded-xl border-2 border-[#E7E2CE] bg-white p-2 focus-within:border-[#112250] transition-all">
                   <Search className="ml-3 h-5 w-5 text-[#3B507D] shrink-0" />
                   <input
                     type="search"
@@ -164,7 +164,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
                   {query && (
                     <button
                       onClick={() => setQuery("")}
-                      className="mr-2 rounded-xl bg-[#F5F4F0] p-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                      className="mr-2 rounded-lg bg-[#F5F4F0] p-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors"
                       aria-label="Clear search query"
                     >
                       <X className="h-4 w-4" />
@@ -172,7 +172,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
                   )}
                   <button
                     onClick={() => {}}
-                    className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-[#112250] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0"
+                    className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-[#112250] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0"
                   >
                     <span>Search</span>
                   </button>
@@ -183,16 +183,16 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
             {/* Right Card / Graphic */}
             <div className="lg:col-span-5">
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="absolute -inset-4 -z-10 rounded-[3rem] bg-gradient-to-br from-[#E7E2CE] via-[#F5F4F0] to-[#3B507D]/15" />
-                <div className="relative overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-8">
+                <div className="absolute -inset-4 -z-10 rounded-2xl bg-gradient-to-br from-[#E7E2CE] via-[#F5F4F0] to-[#3B507D]/15" />
+                <div className="relative z-10 overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 shadow-xl shadow-[#112250]/5">
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-2xl bg-[#112250] p-3 text-white">
-                      <BookOpen className="h-6 w-6 text-[#E7E2CE]" />
+                    <div className="rounded-lg bg-[#112250] p-3.5 text-white shadow-md flex items-center justify-center shrink-0">
+                      <BookOpen className="h-7 w-7 text-amber-300 stroke-[2.5]" />
                     </div>
                     <EdelweissFlower size={36} />
                   </div>
 
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
                     <Sparkles className="h-3.5 w-3.5 text-[#3B507D]" />
                     Verified Medical Data
                   </span>
@@ -226,7 +226,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
       {/* ================= FILTERS & LISTING SECTION ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         {/* Category Pills & Status Select */}
-        <div className="mb-8 rounded-3xl border-2 border-[#E7E2CE] bg-white p-6">
+        <div className="mb-8 rounded-xl border-2 border-[#E7E2CE] bg-white p-6">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             {/* Categories scrollable */}
             <div className="flex flex-wrap items-center gap-2">
@@ -254,7 +254,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="rounded-2xl border-2 border-[#E7E2CE] bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] outline-none hover:border-[#112250] transition-colors"
+                className="rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] outline-none hover:border-[#112250] transition-colors"
               >
                 {STATUS_FILTERS.map((s) => (
                   <option key={s} value={s}>
@@ -266,7 +266,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
               {(cat !== "All" || status !== "All Status" || query) && (
                 <button
                   onClick={clearFilters}
-                  className="rounded-2xl border border-[#D4183D]/30 bg-[#FDE8E8] px-3.5 py-2 text-xs font-bold text-[#D4183D] hover:bg-[#D4183D] hover:text-white transition-all"
+                  className="rounded-lg border border-[#D4183D]/30 bg-[#FDE8E8] px-3.5 py-2 text-xs font-bold text-[#D4183D] hover:bg-[#D4183D] hover:text-white transition-all"
                 >
                   Clear filters
                 </button>
@@ -288,7 +288,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div
                 key={n}
-                className="h-64 animate-pulse rounded-3xl bg-white border-2 border-[#E7E2CE]"
+                className="h-64 animate-pulse rounded-xl bg-white border-2 border-[#E7E2CE]"
               />
             ))}
           </div>
@@ -305,7 +305,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
                 variants={fadeUpVariants}
                 whileHover={{ y: -6, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                className="h-full rounded-3xl transition-all"
+                className="h-full rounded-xl transition-all"
               >
                 <DiseaseCard
                   disease={disease}
@@ -315,14 +315,14 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
             ))}
           </motion.div>
         ) : (
-          <div className="rounded-3xl border-2 border-[#E7E2CE] bg-white p-8 sm:p-12 text-center">
+          <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-8 sm:p-12 text-center">
             <ZebraEmptyState
               message="No conditions match your search criteria"
               sub="Try broadening your keywords or clearing selected category filters."
             />
             <button
               onClick={clearFilters}
-              className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors"
             >
               <span>Reset All Filters</span>
             </button>
@@ -335,7 +335,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
             <button
               disabled={safeCurrentPage === 1}
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors"
               aria-label="Previous Page"
             >
               ←
@@ -345,7 +345,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`flex h-11 min-w-[2.75rem] items-center justify-center rounded-2xl border-2 px-3 text-sm font-black transition-all ${
+                className={`flex h-11 min-w-[2.75rem] items-center justify-center rounded-lg border-2 px-3 text-sm font-black transition-all ${
                   safeCurrentPage === page
                     ? "border-[#112250] bg-[#112250] text-white shadow-md shadow-[#112250]/20"
                     : "border-[#E7E2CE] bg-white text-[#112250] hover:bg-[#F5F4F0]"
@@ -358,7 +358,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
             <button
               disabled={safeCurrentPage === totalPages}
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors"
               aria-label="Next Page"
             >
               →

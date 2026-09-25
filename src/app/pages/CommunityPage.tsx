@@ -143,7 +143,7 @@ export default function CommunityPage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <button
                   onClick={() => setSelectedFeature(COMMUNITY_FEATURES[0])}
-                  className="inline-flex items-center gap-2.5 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                  className="inline-flex items-center gap-2.5 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
                 >
                   <Users className="h-5 w-5 text-white" />
                   <span>Join Parent Support Circle</span>
@@ -159,15 +159,15 @@ export default function CommunityPage() {
               className="lg:col-span-5"
             >
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="relative overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-8 text-[#112250] shadow-xl">
+                <div className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 text-[#112250] shadow-xl">
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-2xl bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
+                    <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
                       <Heart className="h-6 w-6 text-[#112250]" />
                     </div>
                     <EdelweissFlower size={36} />
                   </div>
 
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
                     <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
                     120K+ Families Supported
                   </span>
@@ -222,13 +222,13 @@ export default function CommunityPage() {
                 whileHover={{ y: -6, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedFeature(feat)}
-                className="group cursor-pointer rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 shadow-sm hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] transition-all flex flex-col justify-between"
+                className="group cursor-pointer rounded-xl border-2 border-[#E7E2CE] bg-white p-6 shadow-sm hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F5F4F0] text-[#112250] mb-4 group-hover:bg-[#112250] group-hover:text-[#E7E2CE] transition-colors shadow-xs">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#F5F4F0] text-[#112250] mb-4 group-hover:bg-[#112250] group-hover:text-[#E7E2CE] transition-colors shadow-xs">
                     <IconComp className="h-6 w-6" />
                   </div>
-                  <span className="rounded-full bg-[#F5F4F0] px-3 py-1 text-[10px] font-bold text-[#3B507D] uppercase tracking-wider border border-[#E7E2CE]">
+                  <span className="rounded-md bg-[#F5F4F0] px-3 py-1 text-[10px] font-bold text-[#3B507D] uppercase tracking-wider border border-[#E7E2CE]">
                     {feat.tag}
                   </span>
                   <h3 className="font-heading font-black text-xl text-[#112250] mt-3 group-hover:text-[#3B507D]">
@@ -251,7 +251,7 @@ export default function CommunityPage() {
 
       {/* ================= MEMBER STORIES ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-white p-8 sm:p-12 border-2 border-[#E7E2CE] shadow-sm">
+        <div className="rounded-xl bg-white p-8 sm:p-12 border-2 border-[#E7E2CE] shadow-sm">
           <div className="mb-10 text-center max-w-xl mx-auto">
             <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
               Real Experiences
@@ -266,7 +266,7 @@ export default function CommunityPage() {
               <motion.div
                 key={i}
                 whileHover={{ y: -4 }}
-                className="rounded-3xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 flex flex-col justify-between hover:bg-white hover:border-[#112250] hover:shadow-[0_10px_30px_rgba(17,34,80,0.1)] transition-all"
+                className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 flex flex-col justify-between hover:bg-white hover:border-[#112250] hover:shadow-[0_10px_30px_rgba(17,34,80,0.1)] transition-all"
               >
                 <p className="text-xs text-[#3B507D] font-medium leading-relaxed italic mb-4">
                   "{story.quote}"
@@ -287,7 +287,7 @@ export default function CommunityPage() {
 
                   <button
                     onClick={() => toggleLike(i)}
-                    className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full border transition-all ${hasLiked[i]
+                    className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-md border transition-all ${hasLiked[i]
                       ? "bg-[#D4183D] text-white border-[#D4183D] shadow-xs animate-pulse"
                       : "bg-white text-[#3B507D] border-[#E7E2CE] hover:border-[#112250]"
                       }`}
@@ -304,7 +304,7 @@ export default function CommunityPage() {
 
       {/* ================= RECENT DISCUSSIONS FEED ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] shadow-sm">
+        <div className="rounded-xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] shadow-sm">
           <div className="flex items-center justify-between mb-6 border-b border-[#F5F4F0] pb-4">
             <div>
               <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
@@ -314,7 +314,7 @@ export default function CommunityPage() {
                 Trending Caregiver Discussions
               </h3>
             </div>
-            <button className="hidden sm:inline-flex items-center gap-2 rounded-2xl bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors shadow-xs">
+            <button className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors shadow-xs">
               <MessageCircle className="h-4 w-4" />
               <span>Start New Topic</span>
             </button>
@@ -324,14 +324,14 @@ export default function CommunityPage() {
             {RECENT_DISCUSSIONS.map((disc, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between gap-4 rounded-2xl bg-[#F5F4F0] p-4 border border-[#E7E2CE] hover:bg-white hover:border-[#112250] transition-all cursor-pointer shadow-xs"
+                className="flex items-center justify-between gap-4 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE] hover:bg-white hover:border-[#112250] transition-all cursor-pointer shadow-xs"
               >
                 <div className="flex items-center gap-3">
-                  <div className="rounded-xl bg-[#112250] p-2 text-[#E7E2CE] shrink-0">
+                  <div className="rounded-lg bg-[#112250] p-2 text-[#E7E2CE] shrink-0">
                     <MessageSquare className="h-4 w-4" />
                   </div>
                   <div>
-                    <span className="rounded-full bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#3B507D] uppercase border border-[#E7E2CE]">
+                    <span className="rounded-md bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#3B507D] uppercase border border-[#E7E2CE]">
                       {disc.tag}
                     </span>
                     <h4 className="font-black text-sm text-[#112250] mt-1">{disc.topic}</h4>
@@ -367,17 +367,17 @@ export default function CommunityPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-lg rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
+              className="relative w-full max-w-lg rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
             >
               <button
                 onClick={() => setSelectedFeature(null)}
-                className="absolute top-5 right-5 rounded-xl bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
               </button>
 
-              <span className="rounded-full bg-[#E7E2CE]/60 px-3 py-1 text-xs font-bold text-[#112250]">
+              <span className="rounded-md bg-[#E7E2CE]/60 px-3 py-1 text-xs font-bold text-[#112250]">
                 {selectedFeature.tag}
               </span>
 
@@ -389,19 +389,19 @@ export default function CommunityPage() {
                 {selectedFeature.detail}
               </p>
 
-              <div className="mt-6 space-y-3 rounded-2xl bg-[#F5F4F0] p-4 border border-[#E7E2CE]">
+              <div className="mt-6 space-y-3 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE]">
                 <h4 className="text-xs font-black uppercase text-[#112250]">Express Interest to Join</h4>
                 <input
                   type="email"
                   placeholder="Enter your email address..."
-                  className="w-full rounded-xl border border-[#E7E2CE] bg-white px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium"
+                  className="w-full rounded-lg border border-[#E7E2CE] bg-white px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium"
                 />
               </div>
 
               <div className="mt-6 flex gap-3">
                 <button
                   onClick={() => setSelectedFeature(null)}
-                  className="flex-1 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
+                  className="flex-1 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
                 >
                   Join Circle
                 </button>

@@ -52,7 +52,7 @@ function SpecialistAvatar({ avatar, name, className }: { avatar?: string; name: 
 
   if (hasError || !avatar) {
     return (
-      <div className={`flex items-center justify-center rounded-2xl bg-[#112250] text-[#E7E2CE] border-2 border-[#E7E2CE] shrink-0 ${className || "h-16 w-16"}`}>
+      <div className={`flex items-center justify-center rounded-xl bg-[#112250] text-[#E7E2CE] border-2 border-[#E7E2CE] shrink-0 ${className || "h-16 w-16"}`}>
         <Stethoscope className="h-7 w-7 text-[#E7E2CE]" />
       </div>
     );
@@ -63,7 +63,7 @@ function SpecialistAvatar({ avatar, name, className }: { avatar?: string; name: 
       src={avatar}
       alt={name}
       onError={() => setHasError(true)}
-      className={`rounded-2xl object-cover border-2 border-[#E7E2CE] shrink-0 group-hover:scale-105 transition-transform ${className || "h-16 w-16"}`}
+      className={`rounded-xl object-cover border-2 border-[#E7E2CE] shrink-0 group-hover:scale-105 transition-transform ${className || "h-16 w-16"}`}
     />
   );
 }
@@ -194,7 +194,7 @@ export default function SpecialistsPage() {
 
               {/* Search Bar */}
               <div className="mt-8 max-w-2xl">
-                <div className="relative flex items-center rounded-2xl border-2 border-[#E7E2CE] bg-white p-2 focus-within:border-[#112250] focus-within:shadow-md transition-all">
+                <div className="relative flex items-center rounded-xl border-2 border-[#E7E2CE] bg-white p-2 focus-within:border-[#112250] focus-within:shadow-md transition-all">
                   <Search className="ml-3 h-5 w-5 text-[#3B507D] shrink-0" />
                   <input
                     type="search"
@@ -206,12 +206,12 @@ export default function SpecialistsPage() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery("")}
-                      className="mr-2 rounded-xl bg-[#F5F4F0] p-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                      className="mr-2 rounded-lg bg-[#F5F4F0] p-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   )}
-                  <button className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-[#112250] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#3B507D] transition-colors shrink-0 shadow-sm">
+                  <button className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-[#112250] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#3B507D] transition-colors shrink-0 shadow-sm">
                     <span>Find Experts</span>
                   </button>
                 </div>
@@ -221,15 +221,15 @@ export default function SpecialistsPage() {
             {/* Right Card */}
             <div className="lg:col-span-5">
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="relative overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-8 shadow-xs">
+                <div className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 shadow-xs">
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-2xl bg-[#112250] p-3 text-white">
+                    <div className="rounded-lg bg-[#112250] p-3 text-white">
                       <Stethoscope className="h-6 w-6 text-[#E7E2CE]" />
                     </div>
                     <EdelweissFlower size={36} />
                   </div>
 
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/70 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/70 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
                     <ShieldCheck className="h-3.5 w-3.5 text-[#112250]" />
                     Family-Centered Guidance
                   </span>
@@ -261,7 +261,7 @@ export default function SpecialistsPage() {
       {/* ================= SPECIALIST LISTING ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
         {/* Specialty Filter Tabs */}
-        <div className="mb-8 rounded-3xl border-2 border-[#E7E2CE] bg-white p-4 shadow-xs">
+        <div className="mb-8 rounded-xl border-2 border-[#E7E2CE] bg-white p-4 shadow-xs">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-callout mr-2 text-xs font-bold uppercase tracking-wider text-[#3B507D] flex items-center gap-1.5">
               <Filter className="h-4 w-4" />
@@ -271,7 +271,7 @@ export default function SpecialistsPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`rounded-2xl px-4 py-2 text-xs font-bold transition-all ${
+                className={`rounded-lg px-4 py-2 text-xs font-bold transition-all ${
                   activeTab === tab
                     ? "bg-[#112250] text-white shadow-xs"
                     : "border border-[#E7E2CE] bg-[#F5F4F0] text-[#3B507D] hover:bg-[#E7E2CE]/50 hover:text-[#112250]"
@@ -295,7 +295,7 @@ export default function SpecialistsPage() {
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div
                 key={n}
-                className="h-52 animate-pulse rounded-3xl bg-white border-2 border-[#E7E2CE]"
+                className="h-52 animate-pulse rounded-xl bg-white border-2 border-[#E7E2CE]"
               />
             ))}
           </div>
@@ -316,13 +316,13 @@ export default function SpecialistsPage() {
                   whileHover={{ y: -5, scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setSelectedSpecialist(spec)}
-                  className="group relative cursor-pointer overflow-hidden rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 hover:border-[#112250] transition-all flex flex-col justify-between shadow-xs hover:shadow-md"
+                  className="group relative cursor-pointer overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-6 hover:border-[#112250] transition-all flex flex-col justify-between shadow-xs hover:shadow-md"
                 >
                   <div>
                     <div className="flex items-start gap-4 mb-4">
                       <SpecialistAvatar avatar={spec.avatar} name={rawName} />
                       <div className="min-w-0 flex-1">
-                        <span className="rounded-full bg-[#E7E2CE]/60 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#112250] border border-[#E7E2CE] truncate max-w-[180px] inline-block">
+                        <span className="rounded-md bg-[#E7E2CE]/60 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#112250] border border-[#E7E2CE] truncate max-w-[180px] inline-block">
                           {spec.disease || "Rare Disease Specialist"}
                         </span>
                         <h3 className="font-heading font-black text-lg text-[#112250] mt-1 group-hover:text-[#3B507D] truncate">
@@ -357,7 +357,7 @@ export default function SpecialistsPage() {
             })}
           </motion.div>
         ) : (
-          <div className="rounded-3xl border-2 border-[#E7E2CE] bg-white p-12 text-center">
+          <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-12 text-center">
             <h3 className="font-heading text-xl font-bold text-[#112250]">No specialists found</h3>
             <p className="text-sm text-[#3B507D] mt-1">Try clearing search terms or selecting 'All Experts'.</p>
             <button
@@ -365,7 +365,7 @@ export default function SpecialistsPage() {
                 setSearchQuery("");
                 setActiveTab("All Experts");
               }}
-              className="mt-4 rounded-2xl bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors"
+              className="mt-4 rounded-lg bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors"
             >
               Reset Filters
             </button>
@@ -391,11 +391,11 @@ export default function SpecialistsPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-xl rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 z-10 my-auto shadow-xl"
+              className="relative w-full max-w-xl rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 z-10 my-auto shadow-xl"
             >
               <button
                 onClick={() => setSelectedSpecialist(null)}
-                className="absolute top-5 right-5 rounded-xl bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
@@ -409,7 +409,7 @@ export default function SpecialistsPage() {
                     <div className="flex items-start gap-4">
                       <SpecialistAvatar avatar={selectedSpecialist.avatar} name={rawName} className="h-20 w-20" />
                       <div>
-                        <span className="rounded-full bg-[#E7E2CE]/70 px-3 py-1 text-xs font-bold text-[#112250]">
+                        <span className="rounded-md bg-[#E7E2CE]/70 px-3 py-1 text-xs font-bold text-[#112250]">
                           {selectedSpecialist.disease || "Metabolic & Genetic Specialist"}
                         </span>
                         <h3 className="font-heading font-black text-2xl text-[#112250] mt-1.5">{rawName}</h3>
@@ -417,7 +417,7 @@ export default function SpecialistsPage() {
                       </div>
                     </div>
 
-                    <div className="mt-6 space-y-3 rounded-2xl bg-[#F5F4F0] p-5 border border-[#E7E2CE] text-sm text-[#112250]">
+                    <div className="mt-6 space-y-3 rounded-lg bg-[#F5F4F0] p-5 border border-[#E7E2CE] text-sm text-[#112250]">
                       <div className="flex items-center gap-3 font-semibold">
                         <Building2 className="h-5 w-5 text-[#3B507D] shrink-0" />
                         <span>{selectedSpecialist.organization || "Rare Disease Clinical Center"}</span>
@@ -439,14 +439,14 @@ export default function SpecialistsPage() {
                     <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
                       <a
                         href={`mailto:${extraContact}`}
-                        className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
+                        className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
                       >
                         <Mail className="h-4 w-4" />
                         <span>Send Direct Inquiry</span>
                       </a>
                       <button
                         onClick={() => setSelectedSpecialist(null)}
-                        className="w-full sm:w-auto rounded-2xl border-2 border-[#E7E2CE] bg-white px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#F5F4F0] transition-colors"
+                        className="w-full sm:w-auto rounded-lg border-2 border-[#E7E2CE] bg-white px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#F5F4F0] transition-colors"
                       >
                         Close
                       </button>

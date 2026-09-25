@@ -155,7 +155,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => onNav("directory")}
-                    className="inline-flex items-center gap-2.5 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                    className="inline-flex items-center gap-2.5 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
                   >
                     <BookOpen className="h-5 w-5 text-white" />
                     <span>Browse Disease Library</span>
@@ -164,7 +164,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => onNav("community")}
-                    className="inline-flex items-center gap-2.5 rounded-2xl border-2 border-[#112250] bg-transparent px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#112250]/10 transition-all"
+                    className="inline-flex items-center gap-2.5 rounded-lg border-2 border-[#112250] bg-transparent px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#112250]/10 transition-all"
                   >
                     <Users className="h-5 w-5 text-[#112250]" />
                     <span>Join Caregiver Community</span>
@@ -176,7 +176,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
           {/* Right: Integrated Hero Image Container */}
           <div className="relative mx-auto w-full max-w-md lg:max-w-none lg:col-span-5">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-2 sm:aspect-[5/4]">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-2 sm:aspect-[5/4]">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={currentSlide}
@@ -186,7 +186,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.8 }}
-                  className="h-full w-full rounded-[2rem] object-cover"
+                  className="h-full w-full rounded-lg object-cover"
                 />
               </AnimatePresence>
             </div>
@@ -238,10 +238,10 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   key={i}
                   whileHover={{ y: -3, scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`rounded-2xl p-5 border-2 border-[#E7E2CE] transition-all duration-200 cursor-pointer ${stat.bg} ${stat.text}`}
+                  className={`rounded-xl p-5 border-2 border-[#E7E2CE] transition-all duration-200 cursor-pointer ${stat.bg} ${stat.text}`}
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <div className="rounded-xl bg-[#E7E2CE]/30 p-2 text-[#E7E2CE]">
+                    <div className="rounded-lg bg-[#E7E2CE]/30 p-2 text-[#E7E2CE]">
                       <IconComp className="h-5 w-5 text-current" />
                     </div>
                     <EdelweissFlower size={20} />
@@ -276,11 +276,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <motion.div
             whileHover={{ y: -4 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-2xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            className="rounded-xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
             onClick={() => onNav("directory")}
           >
             <div>
-              <div className="rounded-xl bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+              <div className="rounded-lg bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
                 <BookOpen className="h-6 w-6" />
               </div>
               <h3 className="font-heading font-extrabold text-xl text-[#112250]">Disease Library</h3>
@@ -298,11 +298,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <motion.div
             whileHover={{ y: -4 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-2xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            className="rounded-xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
             onClick={() => onNav("specialists")}
           >
             <div>
-              <div className="rounded-xl bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+              <div className="rounded-lg bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
                 <Stethoscope className="h-6 w-6" />
               </div>
               <h3 className="font-heading font-extrabold text-xl text-[#112250]">Find Specialists</h3>
@@ -320,11 +320,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <motion.div
             whileHover={{ y: -4 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-2xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            className="rounded-xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
             onClick={() => onNav("research")}
           >
             <div>
-              <div className="rounded-xl bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+              <div className="rounded-lg bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
                 <Microscope className="h-6 w-6" />
               </div>
               <h3 className="font-heading font-extrabold text-xl text-[#112250]">Research & Trials</h3>
@@ -342,11 +342,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <motion.div
             whileHover={{ y: -4 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-2xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            className="rounded-xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
             onClick={() => onNav("community")}
           >
             <div>
-              <div className="rounded-xl bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+              <div className="rounded-lg bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
                 <Users className="h-6 w-6" />
               </div>
               <h3 className="font-heading font-extrabold text-xl text-[#112250]">Caregiver Community</h3>
@@ -378,7 +378,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onNav("directory")}
-              className="inline-flex items-center gap-2 rounded-2xl bg-[#F5F4F0] px-5 py-2.5 text-sm font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors self-start"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#F5F4F0] px-5 py-2.5 text-sm font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors self-start"
             >
               <span>View All Conditions</span>
               <ArrowRight className="h-4 w-4" />
@@ -399,7 +399,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
       {/* ================= FAMILY & CAREGIVER STORY BANNER ================= */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="relative rounded-2xl p-8 sm:p-12 text-white overflow-hidden border-2 border-[#E7E2CE]">
+        <div className="relative rounded-xl p-8 sm:p-12 text-white overflow-hidden border-2 border-[#E7E2CE]">
           {/* Background Image & Overlay */}
           <div className="absolute inset-0 z-0">
             <img
@@ -415,7 +415,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           </div>
 
           <div className="relative z-10 max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-[#E7E2CE] mb-4 backdrop-blur-xs">
+            <div className="inline-flex items-center gap-2 rounded-md bg-white/10 px-4 py-1.5 text-xs font-bold text-[#E7E2CE] mb-4 backdrop-blur-xs">
               <HeartHandshake className="h-4 w-4 text-[#E7E2CE]" />
               <span>You Are Not Alone</span>
             </div>
@@ -431,7 +431,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onNav("about")}
-                className="rounded-2xl bg-[#E7E2CE] px-6 py-3.5 text-sm font-black text-[#112250] hover:bg-white transition-all"
+                className="rounded-lg bg-[#E7E2CE] px-6 py-3.5 text-sm font-black text-[#112250] hover:bg-white transition-all"
               >
                 Our Story & Mission
               </motion.button>
@@ -439,7 +439,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onNav("community")}
-                className="rounded-2xl border-2 border-white/20 bg-white/10 px-6 py-3.5 text-sm font-bold text-white hover:bg-white/20 backdrop-blur-sm transition-all"
+                className="rounded-lg border-2 border-white/20 bg-white/10 px-6 py-3.5 text-sm font-bold text-white hover:bg-white/20 backdrop-blur-sm transition-all"
               >
                 Connect with Families
               </motion.button>
@@ -450,7 +450,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
       {/* ================= RAREBRIDGE AI ZEBRA HELPER BANNER ================= */}
       <section className="pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="rounded-2xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="rounded-xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <img
               src="/rarebridge_zebra_reading.png"
@@ -474,7 +474,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => onNav("directory")}
-            className="rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2"
+            className="rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2"
           >
             <BrainCircuit className="h-5 w-5 text-[#E7E2CE]" />
             <span>Ask Zebra Assistant</span>

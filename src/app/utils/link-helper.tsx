@@ -219,3 +219,45 @@ export function LinkifiedText({
     </span>
   );
 }
+
+export function RichTextRunsRenderer({
+  runs,
+  className = "",
+}: {
+  runs?: Array<{ text: string; bold?: boolean; italic?: boolean; underline?: boolean; color?: string; link?: string }>;
+  className?: string;
+}) {
+  if (!runs || !Array.isArray(runs) || runs.length === 0) return null;
+
+  return (
+    <span className={className}>
+      {runs.map((run, idx) => {
+        let content: React.ReactNode = run.text;
+
+        if (run.bold) content = <strong>{content}</strong>;
+        if (run.italic) content = <em>{content}</em>;
+        if (run.underline) content = <u>{content}</u>;
+
+        if (run.link) {
+          content = (
+            <a
+              href={run.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-[#112250] underline decoration-[#112250]/40 hover:text-[#3B507D] transition-colors inline-flex items-center gap-1"
+            >
+              <span>{content}</span>
+              <ExternalLink className="w-3 h-3 inline-block shrink-0 opacity-70" />
+            </a>
+          );
+        }
+
+        if (run.color) {
+          content = <span style={{ color: run.color }}>{content}</span>;
+        }
+
+        return <React.Fragment key={idx}>{content}</React.Fragment>;
+      })}
+    </span>
+  );
+}

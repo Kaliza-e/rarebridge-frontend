@@ -538,98 +538,162 @@ const FALLBACK_DISEASES = [
   }
 ];
 
+// Helper function to extract plain text safely from string, object, or RichTextRun array
+function extractPlainText(val: any): string {
+  if (!val) return "";
+  if (typeof val === "string") return val.trim();
+  if (Array.isArray(val)) {
+    return val
+      .map((item) => {
+        if (typeof item === "string") return item;
+        if (item && typeof item === "object") return item.text || item.statement || item.explanation || item.myth || item.fact || "";
+        return "";
+      })
+      .join("")
+      .trim();
+  }
+  if (typeof val === "object") {
+    return val.text || val.statement || val.explanation || val.myth || val.fact || val.simple || val.medical || "";
+  }
+  return String(val).trim();
+}
+
 // Function to fetch diseases from API
 export async function fetchDiseasesFromAPI(search?: string, category?: string) {
   try {
     const apiDiseases = await apiService.getDiseases(search, category);
 
-    // Transform API data to frontend format
-    const transformedDiseases = apiDiseases.map((apiDisease: ApiDisease) => ({
-      id: apiDisease.id,
-      name: apiDisease.name,
-      category: apiDisease.category,
-      categoryBadges: apiDisease.category ? apiDisease.category.split(/[·,]/).map((c: string) => c.trim()).filter(Boolean) : ["Rare Disease"],
-      icon: Brain,
-      color: "navy",
-      shortDesc: apiDisease.overview ? (apiDisease.overview.length > 180 ? apiDisease.overview.substring(0, 180) + '...' : apiDisease.overview) : 'Comprehensive rare disease details and support resources.',
-      researchStatus: "Active Research",
-      inheritance: "Genetic",
-      ageAppearance: "Variable",
-      severity: "Severe",
-      symptoms: Array.isArray(apiDisease.typesAndSymptoms) ? apiDisease.typesAndSymptoms : [],
-      overview: {
-        simple: apiDisease.overview || "Overview information being updated.",
-        medical: apiDisease.overview || "Medical overview being updated."
-      },
-      causes: typeof apiDisease.causes === 'object' && apiDisease.causes !== null ?
-        apiDisease.causes :
-        {
-          genetic: apiDisease.causes || "Genetic & environmental cause information.",
-          environmental: extractEnvironmentalCauses(apiDisease.causes || ""),
-          unknown: "Additional factors may contribute to this condition."
-        },
-      types: [],
-      diagnosis: apiDisease.diagnosis ?
-        (Array.isArray(apiDisease.diagnosis)
-          ? apiDisease.diagnosis
-          : [{
-            name: "Diagnostic Process",
-            what: "Clinical evaluation, genetic tests, and diagnostic review",
-            how: "Comprehensive assessment by specialized medical teams",
-            result: apiDisease.diagnosis
-          }]
-        ) : [],
-      lifestyle: typeof apiDisease.lifestyleAndDailySupport === 'object' && apiDisease.lifestyleAndDailySupport !== null ?
-        {
-          therapies: apiDisease.lifestyleAndDailySupport.therapies || [],
-          nutrition: apiDisease.lifestyleAndDailySupport.nutrition || "",
-          devices: apiDisease.lifestyleAndDailySupport.devices || [],
-          caregiverTips: apiDisease.lifestyleAndDailySupport.caregiverTips || [],
-          community: apiDisease.lifestyleAndDailySupport.community || "",
-          raw: apiDisease.lifestyleAndDailySupport.raw || ""
-        } :
-        {
+    // Transform API data to frontend format without discarding structured data or truncating text
+    const transformedDiseases = apiDiseases.map((apiDisease: ApiDisease) => {
+      // Parse facts/myths safely
+      const myths = Array.isArray(apiDisease.factsMyths)
+        ? apiDisease.factsMyths.map((fm: any, idx: number) => {
+            const mythStr = extractPlainText(fm.myth) || extractPlainText(fm.statement) || `Myth #${idx + 1}`;
+            let factStr = extractPlainText(fm.fact) || extractPlainText(fm.explanation) || "";
+            // Strip any [Myth] or [Fact] prefix from explanation
+            factStr = factStr.replace(/^\[(Myth|Fact)\]\s*/i, "");
+            return {
+              myth: mythStr,
+              fact: factStr || "Verified medical guidance.",
+              statement: mythStr,
+              explanation: factStr || "Verified medical guidance.",
+              isFact: fm.isFact ?? false,
+              order: fm.order || idx + 1,
+            };
+          })
+        : [];
+
+      return {
+        ...apiDisease, // Keep all raw backend properties (causesStructured, typesStructured, symptomsStructured, etc.)
+        id: apiDisease.id || apiDisease.diseaseNumber || apiDisease.name.toLowerCase().replace(/\s+/g, "-"),
+        name: apiDisease.name,
+        category: apiDisease.category || "Rare Disease",
+        categoryBadges: apiDisease.category
+          ? apiDisease.category.split(/[·,]/).map((c: string) => c.trim()).filter(Boolean)
+          : ["Rare Disease"],
+        icon: Brain,
+        color: "navy",
+        shortDesc: extractPlainText(apiDisease.overview) || 'Comprehensive rare disease details and support resources.',
+        researchStatus: "Active Research",
+        inheritance: "Genetic",
+        ageAppearance: "Variable",
+        severity: "Severe",
+        symptoms: Array.isArray(apiDisease.typesAndSymptoms) ? apiDisease.typesAndSymptoms : [],
+        overview: typeof apiDisease.overview === 'object' && apiDisease.overview !== null
+          ? apiDisease.overview
+          : {
+              simple: apiDisease.overview || "Overview information being updated.",
+              medical: apiDisease.overview || "Medical overview being updated."
+            },
+        causes: typeof apiDisease.causes === 'object' && apiDisease.causes !== null
+          ? apiDisease.causes
+          : {
+              genetic: apiDisease.causes || "Genetic & environmental cause information.",
+              environmental: apiDisease.causes || "Environmental exposure and risk factor information.",
+              unknown: "Additional factors may contribute to this condition."
+            },
+        causesStructured: apiDisease.causesStructured || [],
+        typesStructured: apiDisease.typesStructured || [],
+        symptomsStructured: apiDisease.symptomsStructured || [],
+        types: Array.isArray(apiDisease.typesStructured) && apiDisease.typesStructured.length > 0
+          ? apiDisease.typesStructured
+          : [],
+        diagnosis: apiDisease.diagnosis ?
+          (Array.isArray(apiDisease.diagnosis)
+            ? apiDisease.diagnosis
+            : [{
+              name: "Diagnostic Process",
+              what: "Clinical evaluation, genetic tests, and diagnostic review",
+              how: "Comprehensive assessment by specialized medical teams",
+              result: extractPlainText(apiDisease.diagnosis)
+            }]
+          ) : [],
+        lifestyleAndDailySupport: apiDisease.lifestyleAndDailySupport || {
           therapies: [],
           nutrition: typeof apiDisease.lifestyleAndDailySupport === "string" ? apiDisease.lifestyleAndDailySupport : "",
           devices: [],
           caregiverTips: [],
           community: "",
-          raw: ""
+          raw: typeof apiDisease.lifestyleAndDailySupport === "string" ? apiDisease.lifestyleAndDailySupport : ""
         },
-      research: apiDisease.treatmentsAndPharma ?
-        (Array.isArray(apiDisease.treatmentsAndPharma)
+        lifestyle: typeof apiDisease.lifestyleAndDailySupport === 'object' && apiDisease.lifestyleAndDailySupport !== null ?
+          {
+            therapies: apiDisease.lifestyleAndDailySupport.therapies || [],
+            nutrition: apiDisease.lifestyleAndDailySupport.nutrition || "",
+            devices: apiDisease.lifestyleAndDailySupport.devices || [],
+            caregiverTips: apiDisease.lifestyleAndDailySupport.caregiverTips || [],
+            community: apiDisease.lifestyleAndDailySupport.community || "",
+            raw: apiDisease.lifestyleAndDailySupport.raw || ""
+          } :
+          {
+            therapies: [],
+            nutrition: typeof apiDisease.lifestyleAndDailySupport === "string" ? apiDisease.lifestyleAndDailySupport : "",
+            devices: [],
+            caregiverTips: [],
+            community: "",
+            raw: typeof apiDisease.lifestyleAndDailySupport === "string" ? apiDisease.lifestyleAndDailySupport : ""
+          },
+        treatmentsAndPharma: apiDisease.treatmentsAndPharma || [],
+        research: Array.isArray(apiDisease.treatmentsAndPharma) && apiDisease.treatmentsAndPharma.length > 0
           ? apiDisease.treatmentsAndPharma.map(org => ({
-            name: org.name,
-            focus: org.focus,
-            why: org.url ? `Visit: ${org.url}` : "Research organization",
-            url: org.url,
-            logo: "RX"
-          }))
-          : [{
-            name: "Research & Pharma Directory",
-            focus: apiDisease.treatmentsAndPharma,
-            why: "Current clinical research, pharmaceutical pipeline, and therapeutic programs",
-            logo: "RX"
-          }]
-        ) : [],
-      faqs: apiDisease.faqs?.map(faq => ({ q: faq.question, a: faq.answer })) || [],
-      myths: apiDisease.factsMyths?.map(fm => ({
-        myth: fm.statement,
-        fact: fm.isFact ? `[Fact] ${fm.explanation}` : `[Myth] ${fm.explanation}`
-      })) || [],
-      specialists: apiDisease.specialists?.map(spec => ({
-        name: spec.name,
-        profession: (spec as any).profession || spec.focus || "",
-        specialization: (spec as any).specialization || spec.focus || "",
-        organization: spec.organization || "",
-        location: spec.location || "",
-        contact: spec.contact || null,
-        publications: (spec as any).publications || "",
-        sources: spec.sources || [],
-        focus: spec.focus || "",
-        why: spec.why || spec.name
-      })) || []
-    }));
+              name: org.name || "Research Institution",
+              focus: org.focus || "Clinical trial and research program",
+              why: org.url ? `Visit: ${org.url}` : "Research organization",
+              url: org.url,
+              drugName: org.drugName,
+              stage: org.stage,
+              status: org.status,
+              eligibility: org.eligibility,
+              logo: "RX"
+            }))
+          : (apiDisease.treatmentsAndPharma ? [{
+              name: "Research & Pharma Directory",
+              focus: extractPlainText(apiDisease.treatmentsAndPharma),
+              why: "Current clinical research, pharmaceutical pipeline, and therapeutic programs",
+              logo: "RX"
+            }] : []),
+        faqs: Array.isArray(apiDisease.faqs)
+          ? apiDisease.faqs.map(faq => ({
+              q: extractPlainText(faq.question) || "Frequently Asked Question",
+              a: extractPlainText(faq.answer) || "Consult specialist for detailed information."
+            }))
+          : [],
+        myths,
+        factsMyths: myths,
+        specialists: apiDisease.specialists?.map(spec => ({
+          name: spec.name,
+          profession: (spec as any).profession || spec.focus || "",
+          specialization: (spec as any).specialization || spec.focus || "",
+          organization: spec.organization || "",
+          location: spec.location || "",
+          contact: spec.contact || null,
+          publications: (spec as any).publications || "",
+          sources: spec.sources || [],
+          focus: spec.focus || "",
+          why: spec.why || spec.name
+        })) || []
+      };
+    });
 
     return transformedDiseases;
   } catch (error) {

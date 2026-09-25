@@ -111,7 +111,7 @@ export default function ResearchPage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <a
                   href="#programs"
-                  className="inline-flex items-center gap-2.5 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                  className="inline-flex items-center gap-2.5 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
                 >
                   <Microscope className="h-5 w-5 text-white" />
                   <span>Browse Active Trials</span>
@@ -127,15 +127,15 @@ export default function ResearchPage() {
               className="lg:col-span-5"
             >
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="relative overflow-hidden rounded-[2.5rem] border-2 border-[#E7E2CE] bg-white p-8 text-[#112250]">
+                <div className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 text-[#112250]">
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-2xl bg-[#F5F4F0] p-3 text-[#112250]">
+                    <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250]">
                       <FlaskConical className="h-6 w-6 text-[#112250]" />
                     </div>
                     <EdelweissFlower size={36} />
                   </div>
 
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
                     <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
                     850+ Active Trials Tracked
                   </span>
@@ -167,7 +167,7 @@ export default function ResearchPage() {
       {/* ================= RESEARCH PROGRAMS LISTING ================= */}
       <section id="programs" className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
         {/* Research Filter Tabs */}
-        <div className="mb-8 rounded-3xl border-2 border-[#E7E2CE] bg-white p-4">
+        <div className="mb-8 rounded-xl border-2 border-[#E7E2CE] bg-white p-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-callout mr-2 text-xs font-black uppercase tracking-wider text-[#3B507D] flex items-center gap-1.5">
               <Filter className="h-4 w-4" />
@@ -177,7 +177,7 @@ export default function ResearchPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`rounded-2xl px-4 py-2 text-xs font-bold transition-all ${
+                className={`rounded-lg px-4 py-2 text-xs font-bold transition-all ${
                   activeTab === tab
                     ? "bg-[#112250] text-white"
                     : "border border-[#E7E2CE] bg-[#F5F4F0] text-[#3B507D] hover:bg-[#E7E2CE]/50 hover:text-[#112250]"
@@ -189,7 +189,7 @@ export default function ResearchPage() {
           </div>
         </div>
 
-        <div className="rounded-3xl bg-white p-6 sm:p-10 border-2 border-[#E7E2CE]">
+        <div className="rounded-xl bg-white p-6 sm:p-10 border-2 border-[#E7E2CE]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-[#F5F4F0] pb-6">
             <div>
               <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
@@ -199,7 +199,7 @@ export default function ResearchPage() {
                 Active Research Programs by Condition
               </h2>
             </div>
-            <span className="text-xs font-bold text-[#3B507D] bg-[#F5F4F0] px-4 py-2 rounded-2xl border border-[#E7E2CE] self-start">
+            <span className="text-xs font-bold text-[#3B507D] bg-[#F5F4F0] px-4 py-2 rounded-lg border border-[#E7E2CE] self-start">
               Updated September 2026
             </span>
           </div>
@@ -239,11 +239,11 @@ export default function ResearchPage() {
                         stage: phaseBadge,
                       })
                     }
-                    className="group cursor-pointer rounded-3xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 transition-all duration-200 hover:bg-white hover:border-[#112250] flex flex-col justify-between"
+                    className="group cursor-pointer rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 transition-all duration-200 hover:bg-white hover:border-[#112250] flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2">
-                        <span className="rounded-full bg-white px-3 py-1 text-[10px] font-black text-[#112250] border border-[#E7E2CE] uppercase tracking-wider">
+                        <span className="rounded-md bg-white px-3 py-1 text-[10px] font-black text-[#112250] border border-[#E7E2CE] uppercase tracking-wider">
                           {phaseBadge}
                         </span>
                         <Dna className="h-5 w-5 text-[#112250] shrink-0" />
@@ -276,7 +276,7 @@ export default function ResearchPage() {
 
       {/* ================= ZEBRA MASCOT RESEARCH HELPER BANNER WITH GLOW ================= */}
       <section className="mt-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="relative overflow-hidden rounded-3xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="relative overflow-hidden rounded-xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Glowing Aura */}
           <div className="pointer-events-none absolute -right-10 -bottom-10 h-64 w-64 rounded-full bg-[#E7E2CE]/60 blur-3xl animate-pulse" />
 
@@ -301,7 +301,7 @@ export default function ResearchPage() {
 
           <button
             onClick={() => {}}
-            className="relative z-10 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2"
+            className="relative z-10 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2"
           >
             <BrainCircuit className="h-5 w-5 text-[#E7E2CE]" />
             <span>Summarize Research Paper</span>
@@ -327,17 +327,17 @@ export default function ResearchPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-xl rounded-3xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 z-10 my-auto"
+              className="relative w-full max-w-xl rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 z-10 my-auto"
             >
               <button
                 onClick={() => setSelectedResearch(null)}
-                className="absolute top-5 right-5 rounded-xl bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
               </button>
 
-              <span className="rounded-full bg-[#E7E2CE]/60 px-3 py-1 text-xs font-bold text-[#112250]">
+              <span className="rounded-md bg-[#E7E2CE]/60 px-3 py-1 text-xs font-bold text-[#112250]">
                 {selectedResearch.stage}
               </span>
 
@@ -345,7 +345,7 @@ export default function ResearchPage() {
                 {selectedResearch.diseaseName} Research
               </h3>
 
-              <div className="mt-5 space-y-4 rounded-2xl bg-[#F5F4F0] p-5 border border-[#E7E2CE]">
+              <div className="mt-5 space-y-4 rounded-lg bg-[#F5F4F0] p-5 border border-[#E7E2CE]">
                 <div>
                   <h4 className="text-xs font-black uppercase text-[#3B507D]">Lead Research Institution</h4>
                   <p className="text-base font-black text-[#112250] mt-0.5">{selectedResearch.researchName}</p>
@@ -364,7 +364,7 @@ export default function ResearchPage() {
               <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
                 <button
                   onClick={() => setSelectedResearch(null)}
-                  className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
+                  className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
                 >
                   <span>Close Details</span>
                 </button>

@@ -80,18 +80,18 @@ export default function SignInPage({ onNav }: SignInPageProps) {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="lg:col-span-7"
         >
-          <div className="relative rounded-3xl border-2 border-[#E7E2CE] bg-white p-8 sm:p-10 shadow-xl shadow-[#112250]/10">
+          <div className="relative rounded-xl border-2 border-[#E7E2CE] bg-white p-8 sm:p-10 shadow-xl shadow-[#112250]/10">
             {/* Background image accent */}
             <div className="pointer-events-none absolute right-4 bottom-4 opacity-10">
               <img src="/rarebridge_zebra_with_book.png" alt="" className="h-28 w-28 object-contain" />
             </div>
 
             {/* Role Switcher */}
-            <div className="flex rounded-2xl bg-[#F5F4F0] p-1.5 border border-[#E7E2CE] mb-6">
+            <div className="flex rounded-lg bg-[#F5F4F0] p-1.5 border border-[#E7E2CE] mb-6">
               <button
                 type="button"
                 onClick={() => setRole("parent")}
-                className={`flex-1 rounded-xl py-2.5 text-xs font-bold transition-all ${
+                className={`flex-1 rounded-md py-2.5 text-xs font-bold transition-all ${
                   role === "parent"
                     ? "bg-[#112250] text-white shadow-sm"
                     : "text-[#3B507D] hover:text-[#112250]"
@@ -102,7 +102,7 @@ export default function SignInPage({ onNav }: SignInPageProps) {
               <button
                 type="button"
                 onClick={() => setRole("specialist")}
-                className={`flex-1 rounded-xl py-2.5 text-xs font-bold transition-all ${
+                className={`flex-1 rounded-md py-2.5 text-xs font-bold transition-all ${
                   role === "specialist"
                     ? "bg-[#112250] text-white shadow-sm"
                     : "text-[#3B507D] hover:text-[#112250]"
@@ -117,7 +117,7 @@ export default function SignInPage({ onNav }: SignInPageProps) {
                 <label className="block text-xs font-bold text-[#112250] mb-1.5">
                   Email Address
                 </label>
-                <div className="relative flex items-center rounded-2xl border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
+                <div className="relative flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
                   <Mail className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
                   <input
                     type="email"
@@ -134,7 +134,7 @@ export default function SignInPage({ onNav }: SignInPageProps) {
                 <label className="block text-xs font-bold text-[#112250] mb-1.5">
                   Password
                 </label>
-                <div className="relative flex items-center rounded-2xl border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
+                <div className="relative flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
                   <Lock className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
                   <input
                     type="password"
@@ -159,7 +159,7 @@ export default function SignInPage({ onNav }: SignInPageProps) {
 
               <button
                 type="submit"
-                className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-2xl bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-all shadow-md"
+                className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-all shadow-md"
               >
                 <span>Sign In to Account</span>
                 <ArrowRight className="h-4 w-4" />

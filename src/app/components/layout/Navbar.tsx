@@ -213,7 +213,7 @@ export default function Navbar({
             <button
               type="button"
               onClick={() => handleNavigation("signin")}
-              className="flex min-h-10 shrink-0 items-center justify-center rounded-xl bg-[#112250] px-4 text-xs font-bold text-white transition-colors hover:bg-[#3B507D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] shadow-sm"
+              className="flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-[#112250] px-4 text-xs font-bold text-white transition-colors hover:bg-[#3B507D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] shadow-sm"
             >
               Sign In
             </button>
@@ -231,7 +231,7 @@ export default function Navbar({
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={menuOpen}
               aria-controls="rarebridge-mobile-menu"
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] ${
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] ${
                 menuOpen
                   ? "border-[#112250] bg-[#112250] text-white"
                   : "border-[#112250]/10 bg-white text-[#112250] hover:bg-[#F5F4F0]"
@@ -269,7 +269,7 @@ export default function Navbar({
                   <button
                     type="button"
                     onClick={() => handleNavigation("directory")}
-                    className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#112250] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#1D376B]"
+                    className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-[#112250] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#1D376B]"
                   >
                     <Search size={17} aria-hidden="true" />
                     <span>Explore Diseases</span>
@@ -277,7 +277,7 @@ export default function Navbar({
                   <button
                     type="button"
                     onClick={() => handleNavigation("signin")}
-                    className="flex min-h-12 items-center justify-center rounded-xl border border-[#112250]/20 bg-white px-4 py-3 text-sm font-bold text-[#112250] transition-colors hover:bg-[#F5F4F0]"
+                    className="flex min-h-12 items-center justify-center rounded-lg border border-[#112250]/20 bg-white px-4 py-3 text-sm font-bold text-[#112250] transition-colors hover:bg-[#F5F4F0]"
                   >
                     Sign In
                   </button>

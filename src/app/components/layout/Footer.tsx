@@ -75,10 +75,10 @@ export default function Footer({ onNav }: FooterProps) {
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 pb-8 pt-4 sm:px-8 lg:px-12">
         {/* ================= FOOTER NEWSLETTER BANNER ================= */}
-        <div className="relative overflow-hidden rounded-3xl border-2 border-white/20 bg-white/10 p-6 sm:p-8 mb-10 backdrop-blur-md shadow-lg">
+        <div className="relative overflow-hidden rounded-xl border-2 border-white/20 bg-white/10 p-6 sm:p-8 mb-10 backdrop-blur-md shadow-lg">
           <div className="grid items-center gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
-              <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#E7E2CE] font-heading border border-white/20">
+              <div className="mb-2 inline-flex items-center gap-2 rounded-md bg-white/15 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#E7E2CE] font-heading border border-white/20">
                 <Mail className="w-3.5 h-3.5 text-[#E7E2CE]" /> Stay Connected
               </div>
               <h3 className="font-heading text-xl font-black text-white sm:text-2xl">
@@ -91,7 +91,7 @@ export default function Footer({ onNav }: FooterProps) {
 
             <div>
               {subscribed ? (
-                <div className="flex items-center gap-2 rounded-2xl bg-[#E7E2CE] p-3.5 text-xs font-bold text-[#112250] font-heading shadow-md">
+                <div className="flex items-center gap-2 rounded-lg bg-[#E7E2CE] p-3.5 text-xs font-bold text-[#112250] font-heading shadow-md">
                   <CheckCircle2 className="w-5 h-5 text-[#112250] shrink-0" />
                   <span>Subscribed! Thank you for staying connected with RareBridge.</span>
                 </div>
@@ -103,11 +103,11 @@ export default function Footer({ onNav }: FooterProps) {
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
                     placeholder="Enter your email address..."
-                    className="font-body flex-1 rounded-2xl border border-white/25 bg-white/15 px-4 py-3 text-xs text-white outline-none font-medium placeholder:text-[#A0ADC6] focus:border-[#E7E2CE] transition-colors"
+                    className="font-body flex-1 rounded-lg border border-white/25 bg-white/15 px-4 py-3 text-xs text-white outline-none font-medium placeholder:text-[#A0ADC6] focus:border-[#E7E2CE] transition-colors"
                   />
                   <button
                     type="submit"
-                    className="font-heading shrink-0 rounded-2xl bg-[#E7E2CE] px-6 py-3 text-xs font-black text-[#112250] hover:bg-white transition-all shadow-md cursor-pointer"
+                    className="font-heading shrink-0 rounded-lg bg-[#E7E2CE] px-6 py-3 text-xs font-black text-[#112250] hover:bg-white transition-all shadow-md cursor-pointer"
                   >
                     Subscribe
                   </button>
@@ -125,7 +125,7 @@ export default function Footer({ onNav }: FooterProps) {
               href="/"
               onClick={(e) => handleLinkClick(e, "home")}
               aria-label="RareBridge home"
-              className="group inline-flex items-center gap-3 rounded-2xl outline-none"
+              className="group inline-flex items-center gap-3 rounded-lg outline-none"
             >
               <img
                 src="/logo-transparent.png"
@@ -143,8 +143,8 @@ export default function Footer({ onNav }: FooterProps) {
 
             {/* Care Message & Medical Integrity Badges */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="inline-flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-xs">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-[#E7E2CE]/30 text-[#E7E2CE]">
+              <div className="inline-flex items-center gap-2.5 rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-xs">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#E7E2CE]/30 text-[#E7E2CE]">
                   <Heart size={14} />
                 </div>
                 <div>
@@ -153,8 +153,8 @@ export default function Footer({ onNav }: FooterProps) {
                 </div>
               </div>
 
-              <div className="inline-flex items-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-xs">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-[#E7E2CE]/30 text-[#E7E2CE]">
+              <div className="inline-flex items-center gap-2.5 rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-xs">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#E7E2CE]/30 text-[#E7E2CE]">
                   <ShieldCheck size={14} />
                 </div>
                 <div>

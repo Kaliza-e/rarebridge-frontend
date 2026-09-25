@@ -334,14 +334,14 @@ export function ZebraGridDoodle({
             {/* --- Square Grid Structure (60px x 60px squares) --- */}
             {/* Outer Square Grid Lines */}
             <path d="M 120 0 H 0 V 120 H 120 Z" fill="none" stroke={gridColorNavy} strokeWidth="0.8" opacity="0.4" />
-            
+
             {/* Interior Center Sub-grid Division Lines */}
             <path d="M 60 0 V 120" fill="none" stroke={gridColorLavender} strokeWidth="0.75" strokeDasharray="4 3" opacity="0.6" />
             <path d="M 0 60 H 120" fill="none" stroke={gridColorLavender} strokeWidth="0.75" strokeDasharray="4 3" opacity="0.6" />
-            
+
             {/* Fine Inner Accent Lines */}
             <path d="M 120 0 L 0 0 0 120" fill="none" stroke={gridColorBeige} strokeWidth="1" opacity="0.8" />
-            
+
             {/* --- Grid Intersection Crosshairs (+) & Nodes --- */}
             {/* Primary Center Intersection (60, 60) Crosshair */}
             <path d="M 54 60 H 66 M 60 54 V 66" stroke={gridColorNavy} strokeWidth="1.2" opacity="0.8" />
@@ -946,7 +946,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
 
   return (
     <div
-      className="group relative overflow-hidden rounded-3xl border-2 border-[#E7E2CE] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#112250] cursor-pointer flex flex-col justify-between"
+      className="group relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#112250] cursor-pointer flex flex-col justify-between"
       onClick={onClick}
     >
       {/* Child-friendly illustrated header */}
@@ -959,7 +959,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
         <div className="absolute inset-0 bg-gradient-to-t from-[#112250] via-[#112250]/40 to-transparent" />
 
         {/* Category Icon Badge */}
-        <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-[#112250] shadow-xs border border-white/60">
+        <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-md bg-white/95 px-3 py-1 text-xs font-bold text-[#112250] shadow-xs border border-white/60">
           <IconComp className="h-3.5 w-3.5 text-[#112250]" />
           <span>{visual.categoryLabel}</span>
         </div>

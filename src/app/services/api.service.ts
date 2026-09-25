@@ -2,6 +2,31 @@ const API_BASE_URL = (import.meta.env.VITE_API_URL).replace(/\/+$/, '');
 
 // ─── Structured Types (matching backend smart-parsed output) ──────────────────
 
+export interface CauseItem {
+  title: string;
+  explanation: string;
+  details?: string[];
+  references?: string[];
+}
+
+export interface ParsedType {
+  title: string;
+  description: string;
+  characteristics?: string[];
+  stage?: string;
+  severity?: string;
+  symptoms?: string[];
+}
+
+export interface ParsedSymptom {
+  name: string;
+  description?: string;
+  category?: string;
+  severity?: string;
+  ageNotes?: string;
+  notes?: string;
+}
+
 export interface DiagnosticStep {
   name: string;
   what: string;
@@ -22,6 +47,15 @@ export interface ResearchOrg {
   name: string;
   focus: string;
   url: string | null;
+  drugName?: string;
+  stage?: string;
+  status?: string;
+  eligibility?: string;
+  dates?: string;
+  contact?: string;
+  location?: string;
+  notes?: string;
+  references?: string[];
 }
 
 export interface FAQ {
@@ -31,9 +65,11 @@ export interface FAQ {
 }
 
 export interface FactMyth {
-  statement: string;
-  isFact: boolean;
-  explanation: string;
+  myth: string;
+  fact: string;
+  statement?: string;
+  isFact?: boolean;
+  explanation?: string;
   order: number;
 }
 
@@ -58,6 +94,23 @@ export interface Source {
   description?: string | null;
 }
 
+export interface ParseCompletenessReport {
+  sourceSectionsCount: number;
+  parsedSectionsCount: number;
+  displayedSectionsCount: number;
+  causesCount: number;
+  typesCount: number;
+  symptomsCount: number;
+  diagnosisCount: number;
+  faqsCount: number;
+  mythsCount: number;
+  specialistsCount: number;
+  sourcesCount: number;
+  researchCount: number;
+  uncategorizedItemsCount: number;
+  isComplete: boolean;
+}
+
 export interface Disease {
   id: string;
   diseaseNumber: string;
@@ -65,6 +118,9 @@ export interface Disease {
   category: string;
   overview: string;
   causes: string | { genetic?: string; environmental?: string; unknown?: string };
+  causesStructured?: CauseItem[];
+  typesStructured?: ParsedType[];
+  symptomsStructured?: ParsedSymptom[];
   /** Smart-parsed symptom list */
   typesAndSymptoms: string[];
   /** Smart-parsed diagnostic steps */
@@ -77,6 +133,8 @@ export interface Disease {
   factsMyths?: FactMyth[];
   specialists?: Specialist[];
   sources?: Source[];
+  uncategorizedContent?: string[];
+  parseCompletenessReport?: ParseCompletenessReport;
   createdAt?: string;
   updatedAt?: string;
 }
