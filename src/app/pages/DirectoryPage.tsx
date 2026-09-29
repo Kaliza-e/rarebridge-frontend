@@ -186,14 +186,14 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
                 <div className="absolute -inset-4 -z-10 rounded-2xl bg-gradient-to-br from-[#E7E2CE] via-[#F5F4F0] to-[#3B507D]/15" />
                 <div className="relative z-10 overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 shadow-xl shadow-[#112250]/5">
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-lg bg-[#112250] p-3.5 text-white shadow-md flex items-center justify-center shrink-0">
-                      <BookOpen className="h-7 w-7 text-amber-300 stroke-[2.5]" />
+                    <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
+                      <BookOpen className="h-6 w-6 text-[#112250]" />
                     </div>
                     <EdelweissFlower size={36} />
                   </div>
 
                   <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
-                    <Sparkles className="h-3.5 w-3.5 text-[#3B507D]" />
+                    <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
                     Verified Medical Data
                   </span>
 

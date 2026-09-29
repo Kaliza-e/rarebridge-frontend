@@ -223,13 +223,13 @@ export default function SpecialistsPage() {
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 <div className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 shadow-xs">
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-lg bg-[#112250] p-3 text-white">
-                      <Stethoscope className="h-6 w-6 text-[#E7E2CE]" />
+                    <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
+                      <Stethoscope className="h-6 w-6 text-[#112250]" />
                     </div>
                     <EdelweissFlower size={36} />
                   </div>
 
-                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/70 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
                     <ShieldCheck className="h-3.5 w-3.5 text-[#112250]" />
                     Family-Centered Guidance
                   </span>

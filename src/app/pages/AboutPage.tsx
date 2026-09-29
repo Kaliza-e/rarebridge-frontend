@@ -46,55 +46,55 @@ const VALUES = [
 
 const TEAM = [
   {
-    name: "Salma Ibrahim",
-    role: "Chief Executive Officer",
-    detail: "Rare Disease Advocate & Researcher",
-    bio: "Pioneered plain-language genetic reporting standards and led community outreach initiatives for rare disease families across 40+ medical centers.",
-    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    name: "Idara",
-    role: "Head of Research",
-    detail: "Genetics Specialist · Former NIH Fellow",
-    bio: "Specializes in metabolic disorder research and ORPHA code categorization. Passionate about empowering families with clear science.",
-    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80",
-  },
-  {
-    name: "Kaliza Esther",
-    role: "Technical Lead",
+    name: "Esther Kaliza",
+    role: "Technical Lead & Software Developer",
     detail: "Platform Architecture & AI Systems",
     bio: "Architected RareBridge's child-friendly AI Zebra assistant and secure patient data integration workflows.",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+    avatar: "/team/esther.png",
+  },
+  {
+    name: "Salma Ibrahim",
+    role: "CEO Research & Content Lead",
+    detail: "Rare Disease Research & Content Strategy",
+    bio: "Pioneered plain-language genetic reporting standards and leads research and content strategy for rare disease families across 40+ medical centers.",
+    avatar: "/team/salma.png",
   },
   {
     name: "Ishema Shoulamite",
-    role: "Technical Team",
+    role: "Software Developer",
     detail: "Frontend & Clinical Data Systems",
     bio: "Focuses on high-accessibility user experience, text-resizing tools, and responsive family-first UI design.",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
+    avatar: "/team/shoula.png",
+  },
+  {
+    name: "Idara",
+    role: "Social Media & Communications Lead",
+    detail: "Community Outreach & Communications",
+    bio: "Drives community engagement, social media initiatives, and empowering rare disease families with clear science and accessible support.",
+    avatar: "/team/idara.png",
   },
 ];
 
 const MILESTONES = [
   {
-    year: "2023",
-    title: "Platform Conception",
-    description: "Founded by rare disease parents and genetic researchers seeking to replace jargon with hope.",
-  },
-  {
-    year: "2024",
-    title: "ORPHA & Specialist Integration",
-    description: "Mapped 7,000+ rare conditions and connected top university medical centers.",
-  },
-  {
-    year: "2025",
-    title: "Child-Friendly AI Launch",
-    description: "Introduced Zebra AI Assistant to break down complex medical reports for families.",
+    year: "July 2026",
+    title: "RareBridge Begins",
+    description: "Started by a team passionate about making rare disease information easier for families, caregivers, and patients to understand and access.",
   },
   {
     year: "2026",
-    title: "Global Caregiver Expansion",
-    description: "Reached 120,000+ families with peer support circles and clinical trial tracking.",
+    title: "Building the Disease Knowledge Base",
+    description: "Began developing a structured database of rare diseases, with the long-term goal of covering 7,000+ conditions and making trusted information easier to explore.",
+  },
+  {
+    year: "2026",
+    title: "Family-Centered Platform",
+    description: "Developed tools for families and caregivers to explore disease information, research, specialists, and frequently asked questions in simpler language.",
+  },
+  {
+    year: "2026 →",
+    title: "Growing the RareBridge Community",
+    description: "Continuing to expand the platform, improve its resources, and work toward supporting families affected by rare diseases around the world.",
   },
 ];
 
@@ -266,11 +266,13 @@ export default function AboutPage({ onNav }: AboutPageProps) {
                 className="group cursor-pointer overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 text-center hover:bg-white hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] transition-all flex flex-col justify-between"
               >
                 <div>
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    className="mx-auto h-24 w-24 rounded-full object-cover border-4 border-white shadow-[0_0_15px_rgba(231,226,206,0.6)] mb-3 group-hover:scale-105 transition-transform"
-                  />
+                  <div className="mx-auto h-28 w-28 rounded-full overflow-hidden border-4 border-white shadow-[0_0_15px_rgba(231,226,206,0.8)] mb-3 group-hover:scale-105 transition-transform bg-white">
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
                   <h3 className="font-heading font-black text-[#112250] text-lg">{member.name}</h3>
                   <p className="text-xs font-bold text-[#3B507D] mt-0.5">{member.role}</p>
                   <p className="mt-2 text-xs text-[#3B507D]/80 font-medium">{member.detail}</p>
@@ -343,11 +345,13 @@ export default function AboutPage({ onNav }: AboutPageProps) {
                 <X className="h-5 w-5" />
               </button>
 
-              <img
-                src={selectedMember.avatar}
-                alt={selectedMember.name}
-                className="mx-auto h-28 w-28 rounded-full object-cover border-4 border-[#E7E2CE] shadow-md mb-4"
-              />
+              <div className="mx-auto h-32 w-32 rounded-full overflow-hidden border-4 border-[#E7E2CE] shadow-md mb-4 bg-white">
+                <img
+                  src={selectedMember.avatar}
+                  alt={selectedMember.name}
+                  className="h-full w-full object-cover object-top"
+                />
+              </div>
 
               <h3 className="font-heading font-black text-2xl text-[#112250]">{selectedMember.name}</h3>
               <p className="text-sm font-bold text-[#3B507D]">{selectedMember.role}</p>
