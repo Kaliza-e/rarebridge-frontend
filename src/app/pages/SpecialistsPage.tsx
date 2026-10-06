@@ -1,29 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Stethoscope,
   MapPin,
   Building2,
   Search,
   X,
-  Mail,
-  ChevronRight,
-  Sparkles,
-  Award,
-  Phone,
-  Calendar,
   ExternalLink,
-  ShieldCheck,
-  Filter,
-  CheckCircle2,
-  Clock,
+  ChevronRight,
+  ChevronLeft,
   BookOpen,
 } from "lucide-react";
 
 import { apiService, Specialist } from "../services/api.service";
-import { renderTextWithLinks } from "../utils/link-helper";
-import { EdelweissFlower, OrganicWavyLine } from "../components/common/Visuals";
-import SectionDivider from "../components/common/SectionDivider";
+import type { ContentNode, Disease as ApiDisease } from "../services/api.service";
+import { renderTextWithLinks, RichTextRunsRenderer } from "../utils/link-helper";
+import SpecialistAvatar from "../components/common/SpecialistAvatar";
 import {
   fadeUpVariants,
   staggerContainerVariants,
@@ -33,84 +24,104 @@ import {
 
 interface SpecialistWithDisease extends Specialist {
   disease: string;
-  avatar?: string;
-  experience?: string;
-  rating?: string;
-  hours?: string;
+  diseaseNumber: string;
 }
 
-const SPECIALTY_TABS = [
-  "All Experts",
-  "Pediatric Genetics",
-  "Metabolic Diseases",
-  "Neurology",
-  "Clinical Trials",
-];
+const SPECIALISTS_PER_PAGE = 9;
 
-function SpecialistAvatar({ avatar, name, className }: { avatar?: string; name: string; className?: string }) {
-  const [hasError, setHasError] = useState(false);
+function renderAdditionalContent(nodes?: ContentNode[]): React.ReactNode {
+  if (!nodes?.length) return null;
 
-  if (hasError || !avatar) {
+  return nodes.map((node, index) => {
+    const title = node.title?.map((run) => run.text).join("").trim();
     return (
-      <div className={`flex items-center justify-center rounded-xl bg-[#112250] text-[#E7E2CE] border-2 border-[#E7E2CE] shrink-0 ${className || "h-16 w-16"}`}>
-        <Stethoscope className="h-7 w-7 text-[#E7E2CE]" />
+      <div key={`${title || node.type}-${index}`} className="space-y-2">
+        {title && <h4 className="text-sm font-bold text-[#112250]"><RichTextRunsRenderer runs={node.title} /></h4>}
+        {node.content && <div className="break-words text-sm leading-relaxed text-[#3B507D]"><RichTextRunsRenderer runs={node.content} /></div>}
+        {renderAdditionalContent(node.children)}
       </div>
     );
-  }
-
-  return (
-    <img
-      src={avatar}
-      alt={name}
-      onError={() => setHasError(true)}
-      className={`rounded-xl object-cover border-2 border-[#E7E2CE] shrink-0 group-hover:scale-105 transition-transform ${className || "h-16 w-16"}`}
-    />
-  );
+  });
 }
 
 export default function SpecialistsPage() {
   const [specialists, setSpecialists] = useState<SpecialistWithDisease[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [retryToken, setRetryToken] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("All Experts");
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedSpecialist, setSelectedSpecialist] = useState<SpecialistWithDisease | null>(null);
-
-  const doctorAvatars = [
-    "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1594824813566-788536790146?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=400&q=80",
-    "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=400&q=80",
-  ];
 
   useEffect(() => {
     let isMounted = true;
     const loadSpecialists = async () => {
       try {
         setLoading(true);
+        setLoadError(false);
         const diseases = await apiService.getDiseases();
-        const extracted: SpecialistWithDisease[] = [];
+        const extracted = new Map<string, SpecialistWithDisease>();
 
-        diseases.forEach((d: any, idx: number) => {
-          if (Array.isArray(d.specialists)) {
-            d.specialists.forEach((spec: any, sIdx: number) => {
-              extracted.push({
+        diseases.forEach((disease) => {
+          if (!disease || typeof disease !== "object") {
+            console.error("Ignoring malformed disease record while loading specialists", disease);
+            return;
+          }
+          if (disease.specialists != null && !Array.isArray(disease.specialists)) {
+            console.error("Ignoring malformed specialist list for disease record", {
+              diseaseNumber: disease.diseaseNumber,
+              disease: disease.name,
+            });
+            return;
+          }
+          if (Array.isArray(disease.specialists)) {
+            disease.specialists.forEach((spec) => {
+              if (!spec || typeof spec !== "object" || typeof spec.name !== "string" ||
+                  !spec.name.trim() || typeof disease.name !== "string" || !disease.name.trim()) {
+                console.error("Ignoring malformed source specialist record", {
+                  diseaseNumber: disease.diseaseNumber,
+                  specialist: spec,
+                });
+                return;
+              }
+              const record: SpecialistWithDisease = {
                 ...spec,
-                disease: d.name,
-                avatar: doctorAvatars[(idx + sIdx) % doctorAvatars.length],
-                experience: `${12 + ((idx + sIdx) % 15)} Years Exp.`,
-                rating: "4.9 ★",
-                hours: "Mon - Fri, 8:00 AM - 4:00 PM",
-              });
+                disease: disease.name.trim(),
+                diseaseNumber: disease.diseaseNumber,
+              };
+              const identity = JSON.stringify([
+                record.diseaseNumber || record.disease,
+                record.name,
+                record.profession,
+                record.specialization,
+                record.organization,
+                record.location,
+                record.contact,
+                record.publications,
+                record.photoUrl,
+                record.sources,
+                record.links,
+                record.additionalContent,
+              ]);
+              if (extracted.has(identity)) {
+                console.warn("Ignoring exact duplicate source specialist record", {
+                  diseaseNumber: record.diseaseNumber,
+                  name: record.name,
+                });
+                return;
+              }
+              extracted.set(identity, record);
             });
           }
         });
 
         if (isMounted) {
-          setSpecialists(extracted);
+          setSpecialists(Array.from(extracted.values()));
+          setCurrentPage(1);
         }
       } catch (err) {
         console.error("Failed to load specialists:", err);
+        if (isMounted) setLoadError(true);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -120,29 +131,14 @@ export default function SpecialistsPage() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [retryToken]);
 
   const cleanSpecialistInfo = (spec: SpecialistWithDisease) => {
-    let rawName = spec.name || "Rare Disease Specialist";
-    let role = spec.profession || spec.specialization || "Clinical Geneticist";
-    let extraContact = spec.contact || "clinic-support@rarebridge.org";
-
-    if (rawName.startsWith("Contact Information:")) {
-      const email = rawName.replace("Contact Information:", "").trim();
-      if (email.includes("@")) {
-        const parts = email.split("@")[0].split(".");
-        const cleanName = parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(" ");
-        rawName = `Dr. ${cleanName}`;
-      } else {
-        rawName = "Specialist Physician";
-      }
-      if (!extraContact || extraContact === "clinic-support@rarebridge.org") extraContact = email;
-    } else if (rawName.startsWith("Recent Publications:")) {
-      role = "Research & Clinical Fellow";
-      rawName = "Dr. Medical Researcher";
-    }
-
-    return { rawName, role, extraContact };
+    return {
+      rawName: spec.name,
+      profession: spec.profession?.trim() || "",
+      specialization: spec.specialization?.trim() || "",
+    };
   };
 
   const filteredSpecialists = specialists.filter((s) => {
@@ -150,143 +146,95 @@ export default function SpecialistsPage() {
     const matchSearch =
       !q ||
       s.name?.toLowerCase().includes(q) ||
+      s.profession?.toLowerCase().includes(q) ||
       s.organization?.toLowerCase().includes(q) ||
       s.specialization?.toLowerCase().includes(q) ||
       s.location?.toLowerCase().includes(q) ||
-      s.disease?.toLowerCase().includes(q);
+      s.disease?.toLowerCase().includes(q) ||
+      s.publications?.toLowerCase().includes(q);
 
-    const matchTab =
-      activeTab === "All Experts" ||
-      (activeTab === "Pediatric Genetics" && (s.specialization?.includes("Genetics") || s.profession?.includes("Genetics"))) ||
-      (activeTab === "Metabolic Diseases" && (s.disease?.includes("MPS") || s.disease?.includes("Gaucher") || s.disease?.includes("Fabry"))) ||
-      (activeTab === "Neurology" && (s.specialization?.includes("Neuro") || s.profession?.includes("Neuro"))) ||
-      (activeTab === "Clinical Trials" && s.organization);
-
-    return matchSearch && matchTab;
+    return matchSearch;
   });
+  const totalPages = Math.ceil(filteredSpecialists.length / SPECIALISTS_PER_PAGE);
+  const displayedPage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;
+  const firstVisibleIndex = filteredSpecialists.length === 0
+    ? 0
+    : (displayedPage - 1) * SPECIALISTS_PER_PAGE;
+  const paginatedSpecialists = filteredSpecialists.slice(
+    firstVisibleIndex,
+    firstVisibleIndex + SPECIALISTS_PER_PAGE,
+  );
+  const lastVisibleIndex = Math.min(firstVisibleIndex + SPECIALISTS_PER_PAGE, filteredSpecialists.length);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) setCurrentPage(totalPages);
+    if (totalPages === 0 && currentPage !== 1) setCurrentPage(1);
+  }, [currentPage, totalPages]);
+
+  const changePage = (nextPage: number) => {
+    setCurrentPage(nextPage);
+    requestAnimationFrame(() => {
+      document.getElementById("specialist-directory")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   return (
-    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
-      <OrganicWavyLine side="left" />
-      <OrganicWavyLine side="right" />
-
+    <main className="relative z-10 min-h-screen bg-[#FAFAF7] pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
       {/* ================= HERO SECTION ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
-        {/* Background ambient blobs matching site theme */}
-        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
-
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-            {/* Left Column */}
-            <div className="lg:col-span-7">
-              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
-                Vetted Medical Directory
-              </span>
-
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
-                Find Certified Rare Disease Specialists
-              </h1>
-
-              <p className="font-sans mt-3 max-w-xl text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium">
-                Connect with leading pediatric geneticists, metabolic physicians, and specialized clinical research centers dedicated to patient and family care.
-              </p>
-
-              {/* Search Bar */}
-              <div className="mt-8 max-w-2xl">
-                <div className="relative flex items-center rounded-xl border-2 border-[#E7E2CE] bg-white p-2 focus-within:border-[#112250] focus-within:shadow-md transition-all">
-                  <Search className="ml-3 h-5 w-5 text-[#3B507D] shrink-0" />
-                  <input
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search doctor name, hospital, specialty, or condition..."
-                    className="w-full bg-transparent px-3 py-2 text-sm text-[#112250] outline-none placeholder:text-[#3B507D]/60 font-medium sm:text-base"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery("")}
-                      className="mr-2 rounded-lg bg-[#F5F4F0] p-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-                  <button className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-[#112250] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#3B507D] transition-colors shrink-0 shadow-sm">
-                    <span>Find Experts</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Card */}
-            <div className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 shadow-xs">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
-                      <Stethoscope className="h-6 w-6 text-[#112250]" />
-                    </div>
-                    <EdelweissFlower size={36} />
-                  </div>
-
-                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
-                    <ShieldCheck className="h-3.5 w-3.5 text-[#112250]" />
-                    Family-Centered Guidance
-                  </span>
-
-                  <h3 className="font-heading font-extrabold text-2xl text-[#112250]">
-                    2,400+ Verified Doctors
-                  </h3>
-                  <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
-                    Direct access to specialized rare condition clinical directors across top university hospitals and rare disease networks.
-                  </p>
-
-                  <div className="mt-6 space-y-2.5 border-t border-[#F5F4F0] pt-4 text-xs font-bold text-[#112250]">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
-                      <span>Pediatric & Adult Genetic Specialists</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
-                      <span>Metabolic & Enzyme Replacement Centers</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <section className="border-b border-[#E7E2CE] bg-white py-10 sm:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#3B507D]">
+            Specialist directory
+          </p>
+          <h1 className="font-heading text-2xl font-extrabold leading-tight tracking-tight text-[#112250] sm:text-3xl lg:text-4xl">
+            Specialists by condition
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-[#3B507D] sm:text-base">
+            Browse specialist records and disease associations from the source data. Optional profile details appear only when provided.
+          </p>
+          <div className="mt-6 max-w-2xl">
+            <label htmlFor="specialist-search" className="sr-only">Search specialists</label>
+            <div className="flex items-center rounded-xl border border-[#D9D5C8] bg-white p-2 transition-colors focus-within:border-[#3B507D] focus-within:ring-2 focus-within:ring-[#3B507D]/20">
+              <Search className="ml-3 h-5 w-5 shrink-0 text-[#3B507D]" aria-hidden="true" />
+              <input
+                id="specialist-search"
+                type="search"
+                value={searchQuery}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by name, expertise, organization, location, or condition"
+                className="min-w-0 w-full bg-transparent px-3 py-2 text-sm font-medium text-[#112250] outline-none placeholder:text-[#3B507D]/70 sm:text-base"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                  aria-label="Clear specialist search"
+                  className="mr-1 rounded-lg p-2 text-[#112250] hover:bg-[#F5F4F0]"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              )}
             </div>
           </div>
         </div>
       </section>
 
       {/* ================= SPECIALIST LISTING ================= */}
-      <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
-        {/* Specialty Filter Tabs */}
-        <div className="mb-8 rounded-xl border-2 border-[#E7E2CE] bg-white p-4 shadow-xs">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-callout mr-2 text-xs font-bold uppercase tracking-wider text-[#3B507D] flex items-center gap-1.5">
-              <Filter className="h-4 w-4" />
-              Specialty:
-            </span>
-            {SPECIALTY_TABS.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`rounded-lg px-4 py-2 text-xs font-bold transition-all ${
-                  activeTab === tab
-                    ? "bg-[#112250] text-white shadow-xs"
-                    : "border border-[#E7E2CE] bg-[#F5F4F0] text-[#3B507D] hover:bg-[#E7E2CE]/50 hover:text-[#112250]"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-        </div>
-
+      <section id="specialist-directory" className="scroll-mt-24 mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
         {/* Counter */}
         <div className="mb-6 flex items-center justify-between px-1">
-          <p className="font-sans text-sm font-semibold text-[#3B507D]">
-            Showing <strong className="text-[#112250] font-black">{filteredSpecialists.length}</strong> medical specialists
+          <p className="font-sans text-sm font-semibold text-[#3B507D]" aria-live="polite">
+            {filteredSpecialists.length > 0 ? (
+              <>Showing <strong className="text-[#112250] font-black">{firstVisibleIndex + 1}–{lastVisibleIndex}</strong> of <strong className="text-[#112250] font-black">{filteredSpecialists.length}</strong> disease-linked records</>
+            ) : (
+              <>Showing <strong className="text-[#112250] font-black">0</strong> disease-linked records</>
+            )}
           </p>
         </div>
 
@@ -299,6 +247,18 @@ export default function SpecialistsPage() {
               />
             ))}
           </div>
+        ) : loadError ? (
+          <div role="alert" className="rounded-xl border border-[#D9D5C8] bg-white p-8 text-center">
+            <h2 className="font-heading text-lg font-bold text-[#112250]">Specialist records are unavailable</h2>
+            <p className="mt-2 text-sm text-[#3B507D]">The directory could not load its source data. Please try again.</p>
+            <button
+              type="button"
+              onClick={() => setRetryToken((token) => token + 1)}
+              className="mt-4 rounded-lg bg-[#112250] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#3B507D]"
+            >
+              Try again
+            </button>
+          </div>
         ) : filteredSpecialists.length > 0 ? (
           <motion.div
             variants={staggerContainerVariants}
@@ -306,70 +266,114 @@ export default function SpecialistsPage() {
             animate="visible"
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {filteredSpecialists.map((spec, i) => {
-              const { rawName, role } = cleanSpecialistInfo(spec);
+            {paginatedSpecialists.map((spec) => {
+              const { rawName, profession, specialization } = cleanSpecialistInfo(spec);
 
               return (
-                <motion.div
-                  key={i}
+                <motion.article
+                  key={JSON.stringify([
+                    spec.diseaseNumber,
+                    spec.name,
+                    spec.profession,
+                    spec.specialization,
+                    spec.organization,
+                    spec.location,
+                    spec.contact,
+                    spec.publications,
+                    spec.sources,
+                  ])}
                   variants={fadeUpVariants}
-                  whileHover={{ y: -5, scale: 1.01 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setSelectedSpecialist(spec)}
-                  className="group relative cursor-pointer overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-6 hover:border-[#112250] transition-all flex flex-col justify-between shadow-xs hover:shadow-md"
+                  className="flex min-w-0 flex-col rounded-xl border border-[#E3E0D7] bg-white p-5 transition-colors hover:border-[#A9B2C5] sm:p-6"
                 >
                   <div>
-                    <div className="flex items-start gap-4 mb-4">
-                      <SpecialistAvatar avatar={spec.avatar} name={rawName} />
+                    <div className="mb-4 flex min-w-0 items-start gap-4">
+                      <SpecialistAvatar name={rawName} photoUrl={spec.photoUrl} />
                       <div className="min-w-0 flex-1">
-                        <span className="rounded-md bg-[#E7E2CE]/60 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#112250] border border-[#E7E2CE] truncate max-w-[180px] inline-block">
-                          {spec.disease || "Rare Disease Specialist"}
+                        <span className="inline-block max-w-full break-words rounded-md bg-[#F5F4F0] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#112250]">
+                          {spec.disease}
                         </span>
-                        <h3 className="font-heading font-black text-lg text-[#112250] mt-1 group-hover:text-[#3B507D] truncate">
+                        <h2 className="mt-2 break-words font-heading text-lg font-bold leading-snug text-[#112250]">
                           {rawName}
-                        </h3>
-                        <p className="text-xs font-bold text-[#3B507D] truncate">{role}</p>
+                        </h2>
+                        {profession && <p className="mt-1 break-words text-sm font-semibold text-[#3B507D]">{profession}</p>}
                       </div>
                     </div>
 
                     <div className="space-y-2 border-t border-[#F5F4F0] pt-3 text-xs text-[#3B507D] font-medium">
+                      {specialization && (
+                        <div>
+                          <p className="font-bold text-[#112250]">Specialty / expertise</p>
+                          <p className="mt-0.5 break-words leading-relaxed">{specialization}</p>
+                        </div>
+                      )}
                       {spec.organization && (
                         <div className="flex items-center gap-2">
                           <Building2 className="h-3.5 w-3.5 text-[#112250] shrink-0" />
-                          <span className="truncate">{spec.organization}</span>
+                          <span className="break-words">{spec.organization}</span>
                         </div>
                       )}
                       {spec.location && (
                         <div className="flex items-center gap-2">
                           <MapPin className="h-3.5 w-3.5 text-[#112250] shrink-0" />
-                          <span className="truncate">{spec.location}</span>
+                          <span className="break-words">{spec.location}</span>
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-[#F5F4F0] flex items-center justify-between text-xs font-extrabold text-[#112250] group-hover:text-[#3B507D]">
-                    <span>View Specialist Details</span>
-                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1 text-[#112250]" />
-                  </div>
-                </motion.div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedSpecialist(spec)}
+                    className="mt-5 flex min-h-11 items-center justify-between border-t border-[#F5F4F0] pt-3 text-left text-sm font-bold text-[#112250] hover:text-[#3B507D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B507D]"
+                  >
+                    <span>View profile details</span>
+                    <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  </button>
+                </motion.article>
               );
             })}
           </motion.div>
         ) : (
           <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-12 text-center">
             <h3 className="font-heading text-xl font-bold text-[#112250]">No specialists found</h3>
-            <p className="text-sm text-[#3B507D] mt-1">Try clearing search terms or selecting 'All Experts'.</p>
+            <p className="text-sm text-[#3B507D] mt-1">Try clearing your search terms.</p>
             <button
+              type="button"
               onClick={() => {
                 setSearchQuery("");
-                setActiveTab("All Experts");
+                setCurrentPage(1);
               }}
               className="mt-4 rounded-lg bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors"
             >
               Reset Filters
             </button>
           </div>
+        )}
+
+        {!loading && !loadError && totalPages > 1 && (
+          <nav aria-label="Specialist directory pagination" className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => changePage(displayedPage - 1)}
+              disabled={displayedPage === 1}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#D9D5C8] bg-white px-4 py-2 text-sm font-bold text-[#112250] transition-colors hover:bg-[#F5F4F0] disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+              Previous
+            </button>
+            <span className="min-w-24 text-center text-sm font-semibold text-[#3B507D]" aria-current="page">
+              Page {displayedPage} of {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => changePage(displayedPage + 1)}
+              disabled={displayedPage === totalPages}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#D9D5C8] bg-white px-4 py-2 text-sm font-bold text-[#112250] transition-colors hover:bg-[#F5F4F0] disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              Next
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </nav>
         )}
       </section>
 
@@ -402,51 +406,62 @@ export default function SpecialistsPage() {
               </button>
 
               {(() => {
-                const { rawName, role, extraContact } = cleanSpecialistInfo(selectedSpecialist);
+                const { rawName, profession, specialization } = cleanSpecialistInfo(selectedSpecialist);
 
                 return (
                   <div>
                     <div className="flex items-start gap-4">
-                      <SpecialistAvatar avatar={selectedSpecialist.avatar} name={rawName} className="h-20 w-20" />
-                      <div>
+                      <SpecialistAvatar name={rawName} photoUrl={selectedSpecialist.photoUrl} className="h-20 w-20" />
+                      <div className="min-w-0">
                         <span className="rounded-md bg-[#E7E2CE]/70 px-3 py-1 text-xs font-bold text-[#112250]">
-                          {selectedSpecialist.disease || "Metabolic & Genetic Specialist"}
+                          {selectedSpecialist.disease}
                         </span>
-                        <h3 className="font-heading font-black text-2xl text-[#112250] mt-1.5">{rawName}</h3>
-                        <p className="text-sm font-bold text-[#3B507D]">{role}</p>
+                        <h2 className="mt-1.5 break-words font-heading text-2xl font-bold text-[#112250]">{rawName}</h2>
+                        {profession && <p className="mt-1 break-words text-sm font-semibold text-[#3B507D]">{profession}</p>}
                       </div>
                     </div>
 
                     <div className="mt-6 space-y-3 rounded-lg bg-[#F5F4F0] p-5 border border-[#E7E2CE] text-sm text-[#112250]">
-                      <div className="flex items-center gap-3 font-semibold">
+                      {specialization && <div className="break-words"><strong>Specialty / expertise:</strong> {specialization}</div>}
+                      {selectedSpecialist.organization && <div className="flex items-center gap-3 font-semibold">
                         <Building2 className="h-5 w-5 text-[#3B507D] shrink-0" />
-                        <span>{selectedSpecialist.organization || "Rare Disease Clinical Center"}</span>
-                      </div>
-                      <div className="flex items-center gap-3 font-semibold">
+                        <span>{selectedSpecialist.organization}</span>
+                      </div>}
+                      {selectedSpecialist.location && <div className="flex items-center gap-3 font-semibold">
                         <MapPin className="h-5 w-5 text-[#3B507D] shrink-0" />
-                        <span>{selectedSpecialist.location || "United States"}</span>
-                      </div>
-                      <div className="flex items-center gap-3 font-semibold">
-                        <Clock className="h-5 w-5 text-[#3B507D] shrink-0" />
-                        <span>{selectedSpecialist.hours}</span>
-                      </div>
-                      <div className="flex items-center gap-3 font-semibold">
-                        <Mail className="h-5 w-5 text-[#3B507D] shrink-0" />
-                        <span className="text-[#3B507D] truncate">{extraContact}</span>
-                      </div>
+                        <span>{selectedSpecialist.location}</span>
+                      </div>}
+                      {selectedSpecialist.contact && <div className="flex items-start gap-3 font-semibold">
+                        <ExternalLink className="h-5 w-5 text-[#3B507D] shrink-0" />
+                        <span className="text-[#3B507D] break-words">{renderTextWithLinks(selectedSpecialist.contact)}</span>
+                      </div>}
+                      {selectedSpecialist.publications && <div className="flex items-start gap-3 font-semibold">
+                        <BookOpen className="h-5 w-5 shrink-0 text-[#3B507D]" />
+                        <span className="text-[#3B507D] break-words">{renderTextWithLinks(selectedSpecialist.publications)}</span>
+                      </div>}
                     </div>
+                    {selectedSpecialist.additionalContent && selectedSpecialist.additionalContent.length > 0 && (
+                      <div className="mt-4 space-y-4">
+                        {renderAdditionalContent(selectedSpecialist.additionalContent)}
+                      </div>
+                    )}
+                    {selectedSpecialist.sources && selectedSpecialist.sources.length > 0 && (
+                      <div className="mt-4">
+                        <h3 className="text-sm font-bold text-[#112250]">Sources</h3>
+                        <ul className="mt-2 space-y-1">
+                          {selectedSpecialist.sources.map((source) => (
+                            <li key={source} className="break-all text-sm text-[#3B507D]">
+                              {renderTextWithLinks(source)}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
                     <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
-                      <a
-                        href={`mailto:${extraContact}`}
-                        className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
-                      >
-                        <Mail className="h-4 w-4" />
-                        <span>Send Direct Inquiry</span>
-                      </a>
                       <button
                         onClick={() => setSelectedSpecialist(null)}
-                        className="w-full sm:w-auto rounded-lg border-2 border-[#E7E2CE] bg-white px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#F5F4F0] transition-colors"
+                        className="w-full rounded-lg border-2 border-[#E7E2CE] bg-white px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#F5F4F0] transition-colors"
                       >
                         Close
                       </button>

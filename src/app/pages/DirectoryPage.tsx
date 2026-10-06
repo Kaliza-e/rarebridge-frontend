@@ -194,14 +194,14 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
 
                   <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
                     <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
-                    Verified Medical Data
+                    Source-Based Disease Information
                   </span>
 
                   <h3 className="font-heading font-black text-2xl text-[#112250]">
-                    7,000+ Conditions
+                    Explore Condition Records
                   </h3>
                   <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
-                    Reviewed by pediatric geneticists and metabolic specialists to ensure medical clarity for families.
+                    Disease information is organized from available source records and displayed with its source structure.
                   </p>
 
                   <div className="mt-6 space-y-2.5 border-t border-[#F5F4F0] pt-4 text-xs font-bold text-[#112250]">

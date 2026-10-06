@@ -595,23 +595,9 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
         color: "navy",
         shortDesc: extractPlainText(apiDisease.overview) || 'Comprehensive rare disease details and support resources.',
         researchStatus: "Active Research",
-        inheritance: "Genetic",
-        ageAppearance: "Variable",
-        severity: "Severe",
         symptoms: Array.isArray(apiDisease.typesAndSymptoms) ? apiDisease.typesAndSymptoms : [],
-        overview: typeof apiDisease.overview === 'object' && apiDisease.overview !== null
-          ? apiDisease.overview
-          : {
-              simple: apiDisease.overview || "Overview information being updated.",
-              medical: apiDisease.overview || "Medical overview being updated."
-            },
-        causes: typeof apiDisease.causes === 'object' && apiDisease.causes !== null
-          ? apiDisease.causes
-          : {
-              genetic: apiDisease.causes || "Genetic & environmental cause information.",
-              environmental: apiDisease.causes || "Environmental exposure and risk factor information.",
-              unknown: "Additional factors may contribute to this condition."
-            },
+        overview: apiDisease.overview,
+        causes: apiDisease.causes,
         causesStructured: apiDisease.causesStructured || [],
         typesStructured: apiDisease.typesStructured || [],
         symptomsStructured: apiDisease.symptomsStructured || [],
@@ -643,7 +629,9 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
             devices: apiDisease.lifestyleAndDailySupport.devices || [],
             caregiverTips: apiDisease.lifestyleAndDailySupport.caregiverTips || [],
             community: apiDisease.lifestyleAndDailySupport.community || "",
-            raw: apiDisease.lifestyleAndDailySupport.raw || ""
+            raw: apiDisease.lifestyleAndDailySupport.raw || "",
+            sections: apiDisease.lifestyleAndDailySupport.sections || [],
+            communities: apiDisease.lifestyleAndDailySupport.communities || []
           } :
           {
             therapies: [],
@@ -651,7 +639,9 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
             devices: [],
             caregiverTips: [],
             community: "",
-            raw: typeof apiDisease.lifestyleAndDailySupport === "string" ? apiDisease.lifestyleAndDailySupport : ""
+            raw: typeof apiDisease.lifestyleAndDailySupport === "string" ? apiDisease.lifestyleAndDailySupport : "",
+            sections: [],
+            communities: []
           },
         treatmentsAndPharma: apiDisease.treatmentsAndPharma || [],
         research: Array.isArray(apiDisease.treatmentsAndPharma) && apiDisease.treatmentsAndPharma.length > 0
@@ -682,13 +672,16 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
         factsMyths: myths,
         specialists: apiDisease.specialists?.map(spec => ({
           name: spec.name,
-          profession: (spec as any).profession || spec.focus || "",
-          specialization: (spec as any).specialization || spec.focus || "",
+          profession: spec.profession || spec.focus || "",
+          specialization: spec.specialization || spec.focus || "",
+          photoUrl: spec.photoUrl || null,
           organization: spec.organization || "",
           location: spec.location || "",
           contact: spec.contact || null,
-          publications: (spec as any).publications || "",
+          publications: spec.publications || "",
           sources: spec.sources || [],
+          links: spec.links || [],
+          additionalContent: spec.additionalContent || [],
           focus: spec.focus || "",
           why: spec.why || spec.name
         })) || []
@@ -697,8 +690,8 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
 
     return transformedDiseases;
   } catch (error) {
-    console.error('Failed to fetch diseases from API, using fallback data:', error);
-    return FALLBACK_DISEASES;
+    console.error('Failed to fetch diseases from API:', error);
+    throw error;
   }
 }
 

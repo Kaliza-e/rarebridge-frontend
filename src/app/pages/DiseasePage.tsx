@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { DISEASES, fetchDiseasesFromAPI } from "../data";
+import { fetchDiseasesFromAPI } from "../data";
+import type { ContentNode, ParsedSection } from "../services/api.service";
 import { ZebraEmptyState, OrganicWavyLine, ZebraGridDoodle } from "../components/common/Visuals";
+import SpecialistAvatar from "../components/common/SpecialistAvatar";
 import { generateDiseasePDF } from "../utils/pdf-generator";
 import { LinkifiedText, RichTextRunsRenderer } from "../utils/link-helper";
 import {
@@ -102,9 +104,35 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
   );
 }
 
+function StructuredSections({ sections, emptyHeading }: { sections: ParsedSection[]; emptyHeading: string }) {
+  if (!sections.length) return null;
+  return (
+    <div className="space-y-3">
+      {sections.map((section, index) => (
+        <details key={`${section.title}-${index}`} className="group rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0]">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-xl p-4 text-sm font-bold text-[#112250] marker:content-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#112250]">
+            <span>{section.title || emptyHeading}</span>
+            <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" aria-hidden="true" />
+          </summary>
+          <div className="border-t border-[#E7E2CE] bg-white p-4">
+            {section.content?.length ? (
+              <ContentNodeRenderer nodes={section.content as ContentNode[]} />
+            ) : (
+              <p className="whitespace-pre-line text-sm leading-relaxed text-[#112250]">
+                <LinkifiedText text={section.raw} />
+              </p>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+  );
+}
+
 export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   const [disease, setDisease] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [activeTab, setActiveTab] = useState<
     | "overview"
     | "symptoms"
@@ -131,35 +159,22 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
 
     async function loadDetail() {
       setLoading(true);
+      setLoadError("");
       try {
         const allDiseases = await fetchDiseasesFromAPI();
         if (cancelled) return;
 
-        const found = (allDiseases && allDiseases.length > 0 ? allDiseases : DISEASES).find(
+        const found = allDiseases.find(
           (d: any) =>
             d.id === diseaseId ||
             d.diseaseNumber === diseaseId ||
             d.name?.toLowerCase() === diseaseId?.toLowerCase()
         );
 
-        if (found) {
-          setDisease(found);
-        } else {
-          const local = DISEASES.find(
-            (d) =>
-              d.id === diseaseId ||
-              d.name?.toLowerCase() === diseaseId?.toLowerCase()
-          );
-          setDisease(local || DISEASES[0]);
-        }
+        setDisease(found || null);
       } catch (err) {
         console.error("Failed to load disease detail:", err);
-        const local = DISEASES.find(
-          (d) =>
-            d.id === diseaseId ||
-            d.name?.toLowerCase() === diseaseId?.toLowerCase()
-        );
-        setDisease(local || DISEASES[0]);
+        if (!cancelled) setLoadError("Disease information could not be loaded from the source data. Please try again.");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -208,7 +223,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
 
   const symptomsList = disease && Array.isArray(disease.symptomsStructured) && disease.symptomsStructured.length > 0
     ? disease.symptomsStructured
-    : (disease && Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0
+    : (disease && !disease.typesAndSymptomsSections?.length && Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0
         ? disease.typesAndSymptoms.map((s: string) => ({ name: s }))
         : (disease && Array.isArray(disease.symptoms) && disease.symptoms.length > 0
             ? disease.symptoms.map((s: string) => ({ name: s }))
@@ -217,10 +232,32 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   const diagnosticSteps = disease && Array.isArray(disease.diagnosis) && disease.diagnosis.length > 0
     ? disease.diagnosis
     : (disease?.diagnosticSteps || []);
+  const diagnosisSections: ParsedSection[] = Array.isArray(disease?.diagnosisSections)
+    ? disease.diagnosisSections
+    : [];
 
   const researchList = disease && Array.isArray(disease.treatmentsAndPharma) && disease.treatmentsAndPharma.length > 0
     ? disease.treatmentsAndPharma
     : (disease && Array.isArray(disease.research) ? disease.research : []);
+  const clinicalTrials = Array.isArray(disease?.clinicalTrials) ? disease.clinicalTrials : researchList;
+  const researchOrganizations = Array.isArray(disease?.researchOrganizations)
+    ? disease.researchOrganizations
+    : [];
+  const typesAndSymptomsSections: ParsedSection[] = Array.isArray(disease?.typesAndSymptomsSections)
+    ? disease.typesAndSymptomsSections
+    : [];
+  const treatmentSections: ParsedSection[] = Array.isArray(disease?.treatmentSections)
+    ? disease.treatmentSections
+    : [];
+  const clinicalTrialSections: ParsedSection[] = Array.isArray(disease?.researchSections)
+    ? disease.researchSections.filter((section: any) => section.kind === "clinicalTrials")
+    : [];
+  const lifestyleSections: ParsedSection[] = Array.isArray(disease?.lifestyleAndDailySupport?.sections)
+    ? disease.lifestyleAndDailySupport.sections.filter((section: ParsedSection) => !/community|support (?:groups?|networks?|resources?)|regional.*groups?/i.test(section.title))
+    : [];
+  const communityResources = Array.isArray(disease?.lifestyleAndDailySupport?.communities)
+    ? disease.lifestyleAndDailySupport.communities
+    : [];
 
   const faqsList = disease && Array.isArray(disease.faqs) && disease.faqs.length > 0
     ? disease.faqs
@@ -241,12 +278,13 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   const uncategorizedList = disease && Array.isArray(disease.uncategorizedContent) ? disease.uncategorizedContent : [];
 
   const hasOverview = Boolean(disease?.overview || disease?.shortDesc);
-  const hasSymptoms = symptomsList.length > 0;
+  const hasSymptoms = symptomsList.length > 0 || typesAndSymptomsSections.length > 0;
   const hasCauses = causesList.length > 0;
   const hasTypes = typesList.length > 0;
-  const hasDiagnosis = diagnosticSteps.length > 0;
-  const hasTreatments = researchList.length > 0;
+  const hasDiagnosis = diagnosticSteps.length > 0 || diagnosisSections.length > 0;
+  const hasTreatments = researchList.length > 0 || treatmentSections.length > 0;
   const hasLifestyle = Boolean(
+    lifestyleSections.length > 0 ||
     disease?.lifestyleAndDailySupport && (
       (Array.isArray(disease.lifestyleAndDailySupport.therapies) && disease.lifestyleAndDailySupport.therapies.length > 0) ||
       (disease.lifestyleAndDailySupport.nutrition && String(disease.lifestyleAndDailySupport.nutrition).trim()) ||
@@ -257,7 +295,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
       (typeof disease.lifestyleAndDailySupport === "string" && disease.lifestyleAndDailySupport.trim())
     )
   );
-  const hasCommunity = Boolean(disease?.lifestyleAndDailySupport?.community || disease?.community);
+  const hasCommunity = communityResources.length > 0 || Boolean(disease?.lifestyleAndDailySupport?.community || disease?.community);
   const hasFaqs = faqsList.length > 0;
   const hasMyths = mythsList.length > 0;
   const hasSpecialists = specialistsList.length > 0;
@@ -267,9 +305,9 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
 
   const allTabs = [
     { id: "overview", label: "Overview", icon: BookOpen, show: hasOverview },
-    { id: "symptoms", label: "Symptoms", icon: Activity, show: hasSymptoms },
+    { id: "symptoms", label: typesAndSymptomsSections.length > 0 ? "Types & Symptoms" : "Symptoms", icon: Activity, show: hasSymptoms },
     { id: "causes", label: "Causes & Risk Factors", icon: Microscope, show: hasCauses },
-    { id: "types", label: "Types", icon: Layers, show: hasTypes },
+    { id: "types", label: "Types", icon: Layers, show: hasTypes && typesAndSymptomsSections.length === 0 },
     { id: "diagnosis", label: "Diagnosis", icon: FileText, show: hasDiagnosis },
     { id: "treatments", label: "Treatment & Management", icon: FlaskConical, show: hasTreatments },
     { id: "lifestyle", label: `Living with ${diseaseFirstName}`, icon: HeartPulse, show: hasLifestyle },
@@ -281,6 +319,12 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   ];
 
   const tabs = allTabs.filter((t) => t.show);
+  const navigateToTab = (id: string) => {
+    setActiveTab(id as typeof activeTab);
+    requestAnimationFrame(() => {
+      document.getElementById("disease-tab-content")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   // Hook #7: Reset activeTab if current activeTab is hidden
   useEffect(() => {
@@ -305,7 +349,10 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   if (!disease) {
     return (
       <div className="min-h-screen bg-[#F5F4F0] px-6 py-16 text-center">
-        <ZebraEmptyState message="Condition not found" sub="The condition you are looking for could not be loaded." />
+        <ZebraEmptyState
+          message={loadError ? "Disease information unavailable" : "Condition not found"}
+          sub={loadError || "The condition you are looking for could not be loaded from the source data."}
+        />
         <button
           onClick={onBack}
           className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#112250] px-6 py-3.5 font-bold text-white hover:bg-[#3B507D] transition-all"
@@ -343,13 +390,6 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
             className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-[#F5F8FF] p-4 sm:p-8 lg:p-10 shadow-xs"
           >
             <ZebraGridDoodle opacity={0.12} />
-            {/* Soft Background Illustration Image */}
-            <img
-              src="/rarebridge_hero_child.png"
-              alt=""
-              aria-hidden="true"
-              className="pointer-events-none absolute -right-6 -bottom-8 h-64 w-64 object-contain opacity-20 hidden md:block"
-            />
 
             <div className="relative z-10 grid gap-6 lg:grid-cols-12 lg:items-center">
               {/* Left Column: Icon + Header Details */}
@@ -375,6 +415,11 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       <span>{disease.category}</span>
                     </span>
                   )}
+                  {disease.diseaseNumber && (
+                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-bold text-[#112250] border border-[#E7E2CE] shadow-2xs">
+                      Disease No. {disease.diseaseNumber}
+                    </span>
+                  )}
                   {Array.isArray(disease.categoryBadges) &&
                     disease.categoryBadges.map((badge: string, idx: number) => {
                       if (badge.toLowerCase() === disease.category?.toLowerCase()) return null;
@@ -396,24 +441,8 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 </div>
               </div>
 
-              {/* Right Column: Zebra Artwork & PDF Action */}
+              {/* Right Column: PDF Action */}
               <div className="lg:col-span-4 flex flex-col items-stretch sm:items-center lg:items-end justify-center gap-4">
-                <div className="relative z-10 flex items-center gap-3 rounded-2xl bg-white p-3.5 sm:p-4 border border-[#E7E2CE] shadow-xs w-full sm:w-auto overflow-hidden">
-                  <div className="relative h-14 w-14 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-xl bg-[#E7E2CE]">
-                    <img
-                      src="/rarebridge_hero_child.png"
-                      alt="RareBridge Support"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="rounded-lg bg-[#112250] px-2.5 py-1 text-[10px] sm:text-[11px] font-bold text-white shadow-2xs inline-block truncate max-w-full">
-                      More awareness, more hope ❤️
-                    </div>
-                    <p className="mt-1 text-xs text-[#3B507D] font-semibold truncate">RareBridge Rare Disease Support</p>
-                  </div>
-                </div>
-
                 <button
                   onClick={() => generateDiseasePDF(disease)}
                   className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#112250] px-5 sm:px-6 py-3 text-xs sm:text-sm font-bold text-white hover:bg-[#3B507D] transition-all shadow-sm"
@@ -438,7 +467,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => navigateToTab(tab.id)}
                     className={`inline-flex shrink-0 items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs transition-all whitespace-nowrap ${
                       isActive
                         ? "border-b-2 border-[#112250] text-[#112250] bg-white rounded-t-lg font-black shadow-2xs"
@@ -456,7 +485,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
       )}
 
       {/* ================= MAIN CONTENT GRID (8-COL MAIN / 4-COL SIDEBAR) ================= */}
-      <section className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+      <section id="disease-tab-content" className="scroll-mt-32 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8">
         <div className="grid gap-6 lg:gap-8 lg:grid-cols-12">
           {/* ================= LEFT MAIN CONTENT COLUMN (8 COLS) ================= */}
           <div className="lg:col-span-8 space-y-6 sm:space-y-8">
@@ -486,16 +515,6 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       )}
                     </div>
 
-                    {/* Quick Fact Callout Box */}
-                    <div className="mt-6 flex items-start gap-3 rounded-xl bg-[#F0F5FF] p-4 border border-[#CDE0FF]">
-                      <Info className="h-5 w-5 text-[#112250] shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="text-xs font-bold text-[#112250] uppercase tracking-wider">Quick Fact</h4>
-                        <p className="mt-1 text-xs text-[#3B507D] font-semibold leading-relaxed">
-                          {disease.name} is caused by cellular protein changes that impact organ systems, requiring structured care management.
-                        </p>
-                      </div>
-                    </div>
                   </div>
 
                   {/* Card 2: Common Symptoms Summary */}
@@ -505,7 +524,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                         <h3 className="font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
                           <Activity className="h-5 w-5 text-[#112250] shrink-0" /> Common Symptoms
                         </h3>
-                        <button onClick={() => setActiveTab("symptoms")} className="text-xs font-bold text-[#112250] hover:underline">
+                        <button onClick={() => navigateToTab("symptoms")} className="text-xs font-bold text-[#112250] hover:underline">
                           View All Symptoms →
                         </button>
                       </div>
@@ -529,7 +548,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                         <h3 className="font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
                           <Dna className="h-5 w-5 text-[#112250] shrink-0" /> Causes & Risk Factors
                         </h3>
-                        <button onClick={() => setActiveTab("causes")} className="text-xs font-bold text-[#112250] hover:underline">
+                        <button onClick={() => navigateToTab("causes")} className="text-xs font-bold text-[#112250] hover:underline">
                           View All Causes →
                         </button>
                       </div>
@@ -557,7 +576,9 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       Full symptom list extracted from clinical sources with attached descriptions, severity, and age notes.
                     </p>
 
-                    {symptomsList.length > 0 ? (
+                    {typesAndSymptomsSections.length > 0 ? (
+                      <StructuredSections sections={typesAndSymptomsSections} emptyHeading="Types & Symptoms" />
+                    ) : symptomsList.length > 0 ? (
                       <div className="space-y-4">
                         {symptomsList.map((sym: any, idx: number) => (
                           <div key={idx} className="rounded-xl border border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-5 transition-all">
@@ -691,7 +712,9 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       Complete diagnostic criteria, tests, procedures, and result meanings.
                     </p>
 
-                    {diagnosticSteps.length > 0 ? (
+                    {diagnosisSections.length > 0 ? (
+                      <StructuredSections sections={diagnosisSections} emptyHeading="Diagnosis" />
+                    ) : diagnosticSteps.length > 0 ? (
                       <div className="space-y-4">
                         {diagnosticSteps.map((step: any, idx: number) => (
                           <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
@@ -734,9 +757,18 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       Complete records of active clinical trials, pharmaceutical organizations, development stages, and eligibility.
                     </p>
 
-                    {researchList.length > 0 ? (
-                      <div className="space-y-4 sm:space-y-5">
-                        {researchList.map((res: any, idx: number) => (
+                    {treatmentSections.length > 0 && (
+                      <div className="mb-8">
+                        <h3 className="mb-3 font-heading text-lg font-black text-[#112250]">Treatment & Management</h3>
+                        <StructuredSections sections={treatmentSections} emptyHeading="Treatment" />
+                      </div>
+                    )}
+
+                    {clinicalTrials.length > 0 && (
+                      <div className="mb-8">
+                        <h3 className="mb-3 font-heading text-lg font-black text-[#112250]">Clinical Trials</h3>
+                        <div className="space-y-4 sm:space-y-5">
+                          {clinicalTrials.map((res: any, idx: number) => (
                           <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
                             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                               <div className="min-w-0">
@@ -772,12 +804,42 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                               {res.eligibility && <div className="break-words">Eligibility: <span className="text-[#112250]">{res.eligibility}</span></div>}
                               {res.location && <div className="break-words">Location: <span className="text-[#112250]">{res.location}</span></div>}
                             </div>
+                            {res.notes && (
+                              <p className="border-t border-[#E7E2CE] pt-3 text-xs leading-relaxed text-[#3B507D]">
+                                <LinkifiedText text={res.notes} />
+                              </p>
+                            )}
                           </div>
                         ))}
                       </div>
-                    ) : (
+                    </div>
+                  )}
+
+                  {clinicalTrials.length === 0 && clinicalTrialSections.length > 0 && (
+                    <div className="mb-8">
+                      <h3 className="mb-3 font-heading text-lg font-black text-[#112250]">Clinical Trials</h3>
+                      <StructuredSections sections={clinicalTrialSections} emptyHeading="Clinical Trials" />
+                    </div>
+                  )}
+
+                  {researchOrganizations.length > 0 && (
+                    <div className="mb-8">
+                      <h3 className="mb-3 font-heading text-lg font-black text-[#112250]">Research Organizations</h3>
+                      <div className="space-y-4 sm:space-y-5">
+                        {researchOrganizations.map((res: any, idx: number) => (
+                          <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
+                            <h4 className="font-heading font-black text-base text-[#112250]">{res.name}</h4>
+                            {res.focus && <p className="text-xs leading-relaxed text-[#112250]"><LinkifiedText text={res.focus} /></p>}
+                            {res.url && <a href={res.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#112250] hover:underline">Visit source <ExternalLink className="h-3.5 w-3.5" /></a>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {treatmentSections.length === 0 && clinicalTrials.length === 0 && clinicalTrialSections.length === 0 && researchOrganizations.length === 0 ? (
                       <p className="text-xs text-[#3B507D] italic">No research records found for this disease.</p>
-                    )}
+                    ) : null}
                   </div>
                 </motion.div>
               )}
@@ -793,7 +855,9 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       Therapies, nutrition, equipment, daily guidance, and support routines.
                     </p>
 
-                    {disease.lifestyleAndDailySupport ? (
+                    {lifestyleSections.length > 0 ? (
+                      <StructuredSections sections={lifestyleSections} emptyHeading="Lifestyle & Daily Support" />
+                    ) : disease.lifestyleAndDailySupport ? (
                       <div className="space-y-4 sm:space-y-5">
                         {disease.lifestyleAndDailySupport.raw && (
                           <div className="rounded-xl bg-[#F5F4F0] p-4 sm:p-5 text-xs text-[#112250] leading-relaxed font-medium border border-[#E7E2CE] break-words">
@@ -864,33 +928,41 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                     <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
                       <Users className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Community & Patient Support Resources
                     </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Patient advocacy organizations, family networks, support groups, and contact channels.
-                    </p>
-
-                    <div className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#112250] text-white">
-                          <Users className="h-5 w-5" />
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="font-heading font-bold text-sm sm:text-base text-[#112250] truncate">Global Rare Disease Alliance</h3>
-                          <p className="text-xs text-[#3B507D] truncate">Connecting families and patients worldwide</p>
-                        </div>
-                      </div>
-                      <p className="text-xs text-[#112250] font-medium leading-relaxed break-words">
-                        {disease.lifestyleAndDailySupport?.community ? (
+                    <div className="space-y-4">
+                      {communityResources.map((resource: any, index: number) => (
+                        <article key={`${resource.name}-${index}`} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6">
+                          <div className="flex items-start gap-3">
+                            <Users className="mt-0.5 h-5 w-5 shrink-0 text-[#112250]" aria-hidden="true" />
+                            <div className="min-w-0">
+                              <h3 className="font-heading text-sm font-black text-[#112250]">{resource.name}</h3>
+                              {resource.category && <p className="mt-1 text-xs font-bold text-[#3B507D]">{resource.category}</p>}
+                            </div>
+                          </div>
+                          {resource.description && (
+                            <p className="mt-3 whitespace-pre-line text-xs font-medium leading-relaxed text-[#112250]">
+                              <LinkifiedText text={resource.description} />
+                            </p>
+                          )}
+                          {Array.isArray(resource.links) && resource.links.length > 0 ? (
+                            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#E7E2CE] pt-3">
+                              {resource.links.map((link: any, linkIndex: number) => (
+                                <a key={`${link.url}-${linkIndex}`} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#112250] hover:underline">
+                                  <span>{link.label || "Visit resource"}</span><ExternalLink className="h-3.5 w-3.5" />
+                                </a>
+                              ))}
+                            </div>
+                          ) : resource.url ? (
+                            <a href={resource.url} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 border-t border-[#E7E2CE] pt-3 text-xs font-bold text-[#112250] hover:underline">
+                              <span>Visit resource</span><ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                          ) : null}
+                        </article>
+                      ))}
+                      {communityResources.length === 0 && disease.lifestyleAndDailySupport?.community && (
+                        <p className="whitespace-pre-line text-sm leading-relaxed text-[#112250]">
                           <LinkifiedText text={disease.lifestyleAndDailySupport.community} />
-                        ) : (
-                          `Connect with support groups and peer resources for families navigating ${disease.name}. Access patient advocacy tools, community forums, and verified guidance.`
-                        )}
-                      </p>
-                      <div className="pt-3 border-t border-[#E7E2CE] flex flex-wrap items-center gap-3">
-                        <a href="https://rarediseases.org" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#112250] hover:underline">
-                          <span>Visit NORD Patient Portal</span>
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-                      </div>
+                        </p>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -1002,77 +1074,78 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       <Stethoscope className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Specialist Directory
                     </h2>
                     <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Boundary-delimited specialist records with confirmed medical credentials.
+                      Specialist details are shown as provided in this condition's source records.
                     </p>
 
                     {specialistsList.length > 0 ? (
                       <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
                         {specialistsList.map((spec: any, idx: number) => {
-                          const specText = spec.specialization || spec.focus || "";
-                          const isLongSpec = specText.length > 35;
-                          const badgeLabel = !isLongSpec && specText
-                            ? specText
-                            : (spec.profession || "Medical Specialist");
-
                           return (
-                            <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F9F8F5] p-4 sm:p-6 flex flex-col justify-between space-y-4 shadow-xs hover:border-[#112250]/30 transition-all">
-                              <div className="space-y-3">
-                                <div className="flex flex-wrap items-center justify-between gap-2">
-                                  <span className="rounded-full bg-[#112250] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-2xs">
-                                    {badgeLabel}
-                                  </span>
-                                  {spec.location && (
-                                    <span className="text-[11px] font-bold text-[#3B507D] flex items-center gap-1">
-                                      <MapPin className="h-3.5 w-3.5 text-[#112250] shrink-0" />
-                                      <span>{spec.location}</span>
-                                    </span>
-                                  )}
+                            <article key={`${spec.name}-${spec.organization || ""}-${spec.location || ""}-${idx}`} className="flex min-w-0 flex-col gap-4 rounded-xl border border-[#E3E0D7] bg-white p-4 transition-colors hover:border-[#A9B2C5] sm:p-6">
+                              <div className="flex min-w-0 items-start gap-4">
+                                <SpecialistAvatar name={spec.name} photoUrl={spec.photoUrl} />
+                                <div className="min-w-0">
+                                  <h3 className="break-words font-heading text-lg font-bold leading-snug text-[#112250] sm:text-xl">{spec.name}</h3>
+                                  {spec.profession && <p className="mt-1 break-words text-sm font-semibold text-[#3B507D]">{spec.profession}</p>}
                                 </div>
-
-                                <div>
-                                  <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] flex items-center gap-2 break-words">
-                                    <Stethoscope className="h-5 w-5 text-[#112250] shrink-0" />
-                                    <span>{spec.name}</span>
-                                  </h3>
-                                  {spec.profession && (
-                                    <p className="text-xs font-bold text-[#3B507D] mt-1 break-words">{spec.profession}</p>
-                                  )}
-                                </div>
-
-                                {/* Specialization & Clinical Focus Details */}
-                                {specText && (
-                                  <div className="rounded-lg bg-white p-3.5 sm:p-4 border border-[#E7E2CE] space-y-1">
-                                    <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-[#112250]">
-                                      Clinical Specialization & Focus
-                                    </h4>
-                                    <p className="text-xs text-[#3B507D] font-medium leading-relaxed break-words">
-                                      <LinkifiedText text={specText} />
-                                    </p>
-                                  </div>
-                                )}
-
-                                {spec.publications && spec.publications !== "0" && (
-                                  <div className="text-xs text-[#3B507D] font-medium pl-1 break-words">
-                                    <strong className="text-[#112250]">Publications & Clinical Trials:</strong> <LinkifiedText text={String(spec.publications)} />
-                                  </div>
-                                )}
                               </div>
 
-                              <div className="space-y-2 border-t border-[#E7E2CE] pt-3 text-xs text-[#3B507D] font-medium">
+                              {spec.specialization && (
+                                <div className="break-words">
+                                  <h4 className="text-xs font-bold text-[#112250]">Specialty / expertise</h4>
+                                  <p className="mt-1 text-sm leading-relaxed text-[#3B507D]">
+                                    <LinkifiedText text={spec.specialization} />
+                                  </p>
+                                </div>
+                              )}
+
+                              <div className="space-y-2 text-sm text-[#3B507D]">
                                 {spec.organization && (
-                                  <div className="flex items-center gap-2">
-                                    <Building2 className="h-4 w-4 text-[#112250] shrink-0" />
-                                    <span className="font-bold text-[#112250] break-words">{spec.organization}</span>
+                                  <div className="flex items-start gap-2">
+                                    <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-[#112250]" />
+                                    <span className="break-words">{spec.organization}</span>
+                                  </div>
+                                )}
+                                {spec.location && (
+                                  <div className="flex items-start gap-2">
+                                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#112250]" />
+                                    <span className="break-words">{spec.location}</span>
                                   </div>
                                 )}
                                 {spec.contact && (
-                                  <div className="flex items-center gap-2">
-                                    <Mail className="h-4 w-4 text-[#112250] shrink-0" />
+                                  <div className="flex items-start gap-2">
+                                    <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#112250]" />
                                     <span className="break-words"><LinkifiedText text={spec.contact} /></span>
                                   </div>
                                 )}
                               </div>
-                            </div>
+
+                              {spec.publications && spec.publications !== "0" && (
+                                <div className="break-words border-t border-[#F5F4F0] pt-3 text-sm text-[#3B507D]">
+                                  <strong className="text-[#112250]">Publications / research:</strong>{" "}
+                                  <LinkifiedText text={String(spec.publications)} />
+                                </div>
+                              )}
+                              {Array.isArray(spec.additionalContent) && spec.additionalContent.length > 0 && (
+                                <div className="space-y-3 border-t border-[#F5F4F0] pt-3">
+                                  {spec.additionalContent.map((item: ContentNode, extraIndex: number) => (
+                                    <div key={`${extraIndex}-${item.title?.[0]?.text || "additional"}`} className="break-words">
+                                      {item.title?.length > 0 && <h4 className="text-xs font-bold text-[#112250]">{item.title.map((run) => run.text).join("")}</h4>}
+                                      <ContentNodeRenderer nodes={item.children} />
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {Array.isArray(spec.links) && spec.links.length > 0 && (
+                                <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-[#F5F4F0] pt-3">
+                                  {spec.links.map((link: any, linkIndex: number) => (
+                                    <a key={`${link.url}-${linkIndex}`} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full items-center gap-1.5 break-all text-xs font-bold text-[#112250] hover:underline">
+                                      <span>{link.label || "View source"}</span><ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+                            </article>
                           );
                         })}
                       </div>
@@ -1172,38 +1245,22 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 <Zap className="h-4 w-4 text-[#112250]" /> Quick Links
               </h3>
               <div className="space-y-2">
-                <button
-                  onClick={() => setActiveTab("treatments")}
-                  className="flex w-full items-center justify-between rounded-lg bg-[#F5F4F0] p-3 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-all text-left"
-                >
-                  <span className="flex items-center gap-2 pr-1 min-w-0">
-                    <FlaskConical className="h-4 w-4 text-[#112250] shrink-0" />
-                    <span className="truncate">Find Treatments & Research</span>
-                  </span>
-                  <span className="shrink-0">→</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab("specialists")}
-                  className="flex w-full items-center justify-between rounded-lg bg-[#F5F4F0] p-3 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-all text-left"
-                >
-                  <span className="flex items-center gap-2 pr-1 min-w-0">
-                    <Stethoscope className="h-4 w-4 text-[#112250] shrink-0" />
-                    <span className="truncate">Find Specialists</span>
-                  </span>
-                  <span className="shrink-0">→</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab("community")}
-                  className="flex w-full items-center justify-between rounded-lg bg-[#F5F4F0] p-3 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-all text-left"
-                >
-                  <span className="flex items-center gap-2 pr-1 min-w-0">
-                    <Users className="h-4 w-4 text-[#112250] shrink-0" />
-                    <span className="truncate">Join the Community</span>
-                  </span>
-                  <span className="shrink-0">→</span>
-                </button>
+                {tabs.filter((tab) => tab.id !== "overview").map((tab) => {
+                  const IconComp = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => navigateToTab(tab.id)}
+                      className="flex w-full items-center justify-between rounded-lg bg-[#F5F4F0] p-3 text-left text-xs font-bold text-[#112250] transition-all hover:bg-[#E7E2CE]"
+                    >
+                      <span className="flex min-w-0 items-center gap-2 pr-1">
+                        <IconComp className="h-4 w-4 shrink-0 text-[#112250]" />
+                        <span className="truncate">{tab.label}</span>
+                      </span>
+                      <span className="shrink-0">→</span>
+                    </button>
+                  );
+                })}
 
                 <button
                   onClick={() => generateDiseasePDF(disease)}
@@ -1214,46 +1271,6 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                     <span className="truncate">Download Resources (PDF)</span>
                   </span>
                   <span className="shrink-0">→</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Sidebar Card 2: Latest Research Preview */}
-            <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-xs">
-              <div className="h-32 sm:h-36 bg-[#E0EBFB] relative flex items-center justify-center p-4">
-                <div className="text-center">
-                  <FlaskConical className="h-8 w-8 sm:h-10 sm:w-10 text-[#112250] mx-auto mb-1" />
-                  <span className="text-xs font-black text-[#112250]">Latest Clinical Trials</span>
-                </div>
-              </div>
-              <div className="p-4 sm:p-5">
-                <span className="text-[10px] font-bold text-[#3B507D] uppercase tracking-wider">Latest Research</span>
-                <h4 className="font-heading font-black text-xs sm:text-sm text-[#112250] mt-1 leading-snug break-words">
-                  New gene therapies and precision modulators show promise for rare conditions
-                </h4>
-                <button
-                  onClick={() => setActiveTab("treatments")}
-                  className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#112250] hover:underline"
-                >
-                  <span>Read more</span>
-                  <span>→</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Sidebar Card 3: Community Callout Zebra Card */}
-            <div className="rounded-xl border-2 border-[#E7E2CE] bg-[#FFFBF0] p-4 sm:p-6 shadow-xs relative overflow-hidden">
-              <div className="relative z-10">
-                <h4 className="font-heading font-black text-base sm:text-lg text-[#112250]">You&apos;re not alone.</h4>
-                <p className="mt-2 text-xs font-medium text-[#3B507D] leading-relaxed break-words">
-                  Thousands of families are on this journey. Let&apos;s build a stronger support system together.
-                </p>
-                <button
-                  onClick={() => setActiveTab("community")}
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#112250] px-4 sm:px-5 py-2.5 text-xs font-bold text-white hover:bg-[#3B507D] transition-all shadow-xs"
-                >
-                  <span>Join the Community</span>
-                  <span>→</span>
                 </button>
               </div>
             </div>

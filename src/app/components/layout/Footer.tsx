@@ -138,7 +138,7 @@ export default function Footer({ onNav }: FooterProps) {
             </a>
 
             <p className="font-body max-w-md text-xs leading-relaxed text-[#D6E0F5] font-medium">
-              RareBridge connects families, researchers, and pediatric specialists with plain-language medical guidance, verified doctor directories, and supportive peer networks.
+              RareBridge shares plain-language disease information, source-listed specialist records, and links to peer-support resources.
             </p>
 
             {/* Care Message & Medical Integrity Badges */}
@@ -158,8 +158,8 @@ export default function Footer({ onNav }: FooterProps) {
                   <ShieldCheck size={14} />
                 </div>
                 <div>
-                  <p className="font-heading text-xs font-extrabold text-white">Medical Integrity</p>
-                  <p className="font-body text-[11px] text-[#D6E0F5]/80 font-medium">Plain-language verified</p>
+                  <p className="font-heading text-xs font-extrabold text-white">Source transparency</p>
+                  <p className="font-body text-[11px] text-[#D6E0F5]/80 font-medium">References shown where available</p>
                 </div>
               </div>
             </div>

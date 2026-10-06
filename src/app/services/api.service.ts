@@ -1,4 +1,4 @@
-const API_BASE_URL = (import.meta.env.VITE_API_URL).replace(/\/+$/, '');
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
 // ─── Structured Types (matching backend smart-parsed output) ──────────────────
 
@@ -34,6 +34,27 @@ export interface DiagnosticStep {
   result: string;
 }
 
+export interface ContentNode {
+  type: string;
+  title?: Array<{ text: string; link?: string }>;
+  content?: Array<{ text: string; link?: string }>;
+  children?: ContentNode[];
+}
+
+export interface ParsedSection {
+  title: string;
+  raw: string;
+  content: ContentNode[];
+}
+
+export interface CommunityResource {
+  name: string;
+  description: string;
+  category: string;
+  url: string | null;
+  links: Array<{ url: string; label?: string }>;
+}
+
 export interface LifestyleData {
   therapies: Array<string | { name: string; desc?: string }>;
   nutrition: string;
@@ -41,6 +62,8 @@ export interface LifestyleData {
   caregiverTips: string[];
   community: string;
   raw: string;
+  sections: ParsedSection[];
+  communities: CommunityResource[];
 }
 
 export interface ResearchOrg {
@@ -56,6 +79,13 @@ export interface ResearchOrg {
   location?: string;
   notes?: string;
   references?: string[];
+  links?: Array<{ url: string; label?: string }>;
+  additionalContent?: ContentNode[];
+}
+
+export interface ResearchSection extends ParsedSection {
+  kind: 'treatment' | 'clinicalTrials' | 'research';
+  organizations: ResearchOrg[];
 }
 
 export interface FAQ {
@@ -77,11 +107,14 @@ export interface Specialist {
   name: string;
   profession?: string;
   specialization?: string;
+  photoUrl?: string | null;
   organization: string;
   location: string;
   contact?: string | null;
   publications?: string;
   sources?: string[];
+  links?: Array<{ url: string; label?: string }>;
+  additionalContent?: ContentNode[];
   /** Legacy compat */
   focus: string;
   why: string;
@@ -121,14 +154,20 @@ export interface Disease {
   causesStructured?: CauseItem[];
   typesStructured?: ParsedType[];
   symptomsStructured?: ParsedSymptom[];
+  typesAndSymptomsSections?: ParsedSection[];
   /** Smart-parsed symptom list */
   typesAndSymptoms: string[];
   /** Smart-parsed diagnostic steps */
   diagnosis: DiagnosticStep[];
+  diagnosisSections?: ParsedSection[];
   /** Smart-parsed lifestyle data with sub-sections */
   lifestyleAndDailySupport: LifestyleData;
   /** Smart-parsed research orgs with links */
   treatmentsAndPharma: ResearchOrg[];
+  treatmentSections?: ResearchSection[];
+  clinicalTrials?: ResearchOrg[];
+  researchOrganizations?: ResearchOrg[];
+  researchSections?: ResearchSection[];
   faqs?: FAQ[];
   factsMyths?: FactMyth[];
   specialists?: Specialist[];
