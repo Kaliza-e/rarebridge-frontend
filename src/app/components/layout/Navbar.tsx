@@ -96,7 +96,7 @@ export default function Navbar({
       <img
         src="/logo-transparent.png"
         alt="RareBridge Logo"
-        className={`block object-contain ${mobile ? "h-12 w-auto" : "h-16 sm:h-20 w-auto max-h-20 drop-shadow-xs"}`}
+        className={`block object-contain ${mobile ? "h-10 w-auto sm:h-12" : "h-14 w-auto max-h-16 sm:h-16"}`}
       />
     </button>
   );
@@ -191,10 +191,10 @@ export default function Navbar({
 
   return (
     <header
-      className={`sticky top-0 z-50 font-heading transition-[background-color,box-shadow] duration-200 ${
+      className={`sticky top-0 z-50 border-b border-[#BEB7A7]/30 bg-[#F8F7F2]/85 font-heading backdrop-blur-xl transition-[background-color,box-shadow] duration-200 ${
         scrolled
-          ? "bg-[#F8F7F2]/90 shadow-[0_4px_20px_rgba(17,34,80,0.04)] backdrop-blur-xl"
-          : "bg-transparent"
+          ? "bg-[#F8F7F2]/95 shadow-[0_4px_20px_rgba(17,34,80,0.04)]"
+          : ""
       }`}
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">

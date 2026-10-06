@@ -179,7 +179,7 @@ export default function SpecialistsPage() {
   };
 
   return (
-    <main className="relative z-10 min-h-screen bg-[#FAFAF7] pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
+    <main className="relative z-10 min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
       {/* ================= HERO SECTION ================= */}
       <section className="border-b border-[#E7E2CE] bg-white py-10 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

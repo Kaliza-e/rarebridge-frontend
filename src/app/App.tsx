@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { MotionConfig } from "framer-motion";
 
 import Navbar from "./components/layout/Navbar";
 import MobileNav from "./components/layout/MobileNav";
@@ -15,8 +16,7 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 
 import {
-  BackgroundParticles,
-  ZebraCursor,
+  ZebraStripeBackground,
   usePopSound,
   useChimeSound,
   useSparkleSound,
@@ -168,11 +168,10 @@ export default function App() {
   }, [textSize]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#F8F7F2] text-[#112250] font-body">
-      {/* Global styles */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,800&display=swap');
-
+    <MotionConfig reducedMotion="user">
+      <div className="rb-app-shell relative isolate min-h-screen bg-[#F8F7F2] text-[#112250] font-body">
+        {/* Global styles */}
+        <style>{`
         .scrollbar-none::-webkit-scrollbar {
           display: none;
         }
@@ -302,65 +301,66 @@ export default function App() {
           background: var(--secondary);
           color: var(--primary);
         }
-      `}</style>
+          `}</style>
 
-      {/* Custom Zebra Cursor & Companion Trail */}
-      <ZebraCursor />
+          <ZebraStripeBackground />
 
-      {/* Decorative background */}
-      <BackgroundParticles />
-
-      {/* Navbar */}
-      <Navbar
-        onNav={handleNav}
-        activeView={view}
-        textSize={textSize}
-        setTextSize={setTextSize}
-      />
-
-      {/* Main content */}
-      <main className="pb-20 md:pb-0">
-        {view === "home" && (
-          <HomePage
+          {/* Navbar */}
+          <Navbar
             onNav={handleNav}
-            onDisease={handleDisease}
+            activeView={view}
+            textSize={textSize}
+            setTextSize={setTextSize}
           />
-        )}
 
-        {view === "directory" && (
-          <DirectoryPage onDisease={handleDisease} />
-        )}
+          {/* Main content */}
+          <main className="rb-content-layer pb-20 md:pb-0">
+            {view === "home" && (
+              <HomePage
+                onNav={handleNav}
+                onDisease={handleDisease}
+              />
+            )}
 
-        {view === "about" && <AboutPage onNav={handleNav} />}
+            {view === "directory" && (
+              <DirectoryPage onDisease={handleDisease} />
+            )}
 
-        {view === "research" && <ResearchPage />}
+            {view === "about" && <AboutPage onNav={handleNav} />}
 
-        {view === "specialists" && <SpecialistsPage />}
+            {view === "research" && <ResearchPage />}
 
-        {view === "community" && <CommunityPage />}
+            {view === "specialists" && <SpecialistsPage />}
 
-        {view === "signin" && <SignInPage onNav={handleNav} />}
+            {view === "community" && <CommunityPage />}
 
-        {view === "signup" && <SignUpPage onNav={handleNav} />}
+            {view === "signin" && <SignInPage onNav={handleNav} />}
 
-        {view === "disease" && selectedDisease && (
-          <DiseasePage
-            diseaseId={selectedDisease}
-            onBack={handleBackToDirectory}
+            {view === "signup" && <SignUpPage onNav={handleNav} />}
+
+            {view === "disease" && selectedDisease && (
+              <DiseasePage
+                diseaseId={selectedDisease}
+                onBack={handleBackToDirectory}
+              />
+            )}
+          </main>
+
+          {/* AI Assistant */}
+          <div className="relative z-20">
+            <AIAssistant />
+          </div>
+
+          {/* Bottom navigation and footer */}
+          <MobileNav
+            onNav={handleNav}
+            activeView={view}
           />
-        )}
-      </main>
 
-      {/* AI Assistant */}
-      <AIAssistant />
-
-      {/* Bottom navigation and footer */}
-      <MobileNav
-        onNav={handleNav}
-        activeView={view}
-      />
-
-      <Footer onNav={handleNav} />
-    </div>
+          <div className="relative z-10">
+            <Footer onNav={handleNav} />
+          </div>
+        </div>
+    </MotionConfig>
   );
 }

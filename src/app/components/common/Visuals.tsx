@@ -268,35 +268,6 @@ export function useSparkleSound() {
   }, []);
 }
 
-// Small helper that attaches mousemove to update particle CSS vars
-if (typeof window !== "undefined") {
-  try {
-    let throttle = 0;
-    window.addEventListener("mousemove", (e) => {
-      if (Date.now() < throttle) return;
-      throttle = Date.now() + 40;
-      const root = document.getElementById("rb-particles");
-      if (!root) return;
-      const rect = root.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      // Spread a few offsets
-      root.style.setProperty("--p-x", `${(x - rect.width * 0.2) * 0.02}px`);
-      root.style.setProperty("--p-y", `${(y - rect.height * 0.3) * 0.02}px`);
-      root.style.setProperty("--p-x2", `${(x - rect.width * 0.7) * 0.03}px`);
-      root.style.setProperty("--p-y2", `${(y - rect.height * 0.1) * 0.03}px`);
-      root.style.setProperty("--p-x3", `${(x - rect.width * 0.84) * 0.025}px`);
-      root.style.setProperty("--p-y3", `${(y - rect.height * 0.72) * 0.025}px`);
-      root.style.setProperty("--p-x4", `${(x - rect.width * 0.2) * 0.04}px`);
-      root.style.setProperty("--p-y4", `${(y - rect.height * 0.68) * 0.04}px`);
-      root.style.setProperty("--p-x5", `${(x - rect.width * 0.54) * 0.035}px`);
-      root.style.setProperty("--p-y5", `${(y - rect.height * 0.36) * 0.035}px`);
-    });
-  } catch (e) {
-    // silent
-  }
-}
-
 /**
  * Reusable ZebraGridDoodle component
  * Provides a soft, decorative background with delicate lavender & warm beige grid lines,
@@ -419,149 +390,14 @@ export function ZebraGridDoodle({
   );
 }
 
-export function BackgroundParticles() {
+export function ZebraStripeBackground() {
   return (
-    <div id="rb-particles" className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {/* Keyframe animation definitions */}
-      <style>{`
-        @keyframes rbFloatParticle {
-          0%, 100% {
-            transform: translateY(0px) translateX(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) translateX(8px) rotate(10deg);
-          }
-        }
-        @keyframes rbFloatParticleRev {
-          0%, 100% {
-            transform: translateY(0px) translateX(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(18px) translateX(-10px) rotate(-12deg);
-          }
-        }
-        @keyframes rbSparkleShimmer {
-          0%, 100% {
-            opacity: 0.3;
-            transform: scale(0.8) rotate(0deg);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.35) rotate(45deg);
-          }
-        }
-        @keyframes rbDriftSlow {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-12px) scale(1.04); }
-        }
-      `}</style>
-
-      {/* Crisp Zebra Square Grid Doodle Background Layer */}
-      <ZebraGridDoodle opacity={0.25} />
-
-      {/* Dynamic Animated Particles Layer (36+ Sparkles, Orbs, Micro Squares, Zebra Curves) */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        {[...Array(36)].map((_, i) => {
-          const type = i % 4; // 0: Sparkle Star, 1: Soft Glowing Orb, 2: Zebra Curve, 3: Micro Grid Square
-          const topPct = (i * 13 + 7) % 95;
-          const leftPct = (i * 19 + 5) % 96;
-          const animDur = 4 + (i % 5) * 1.5;
-          const animDelay = (i % 7) * 0.5;
-          const animName = i % 2 === 0 ? "rbFloatParticle" : "rbFloatParticleRev";
-
-          if (type === 0) {
-            // 4-Point Vector Sparkle Star (✦)
-            return (
-              <div
-                key={i}
-                className="absolute"
-                style={{
-                  top: `${topPct}%`,
-                  left: `${leftPct}%`,
-                  animation: `rbSparkleShimmer ${animDur}s ease-in-out infinite ${animDelay}s, ${animName} ${animDur * 2}s ease-in-out infinite`,
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"
-                    fill={i % 3 === 0 ? "#F59E0B" : i % 3 === 1 ? "#8B5CF6" : "#3B507D"}
-                    opacity={0.8}
-                  />
-                </svg>
-              </div>
-            );
-          } else if (type === 1) {
-            // Soft Glowing Color Orb
-            const size = 6 + (i % 4) * 4;
-            const colors = [
-              "bg-[#F59E0B]/50",
-              "bg-[#3B507D]/40",
-              "bg-[#8B5CF6]/50",
-              "bg-[#06B6D4]/45",
-              "bg-[#E7E2CE]/80"
-            ];
-            return (
-              <div
-                key={i}
-                className={`absolute rounded-full blur-[0.5px] ${colors[i % colors.length]}`}
-                style={{
-                  width: `${size}px`,
-                  height: `${size}px`,
-                  top: `${topPct}%`,
-                  left: `${leftPct}%`,
-                  animation: `${animName} ${animDur}s ease-in-out infinite ${animDelay}s`,
-                }}
-              />
-            );
-          } else if (type === 2) {
-            // Floating Zebra Stripe Curve Accent
-            return (
-              <div
-                key={i}
-                className="absolute opacity-70"
-                style={{
-                  top: `${topPct}%`,
-                  left: `${leftPct}%`,
-                  animation: `${animName} ${animDur * 1.5}s ease-in-out infinite ${animDelay}s`,
-                }}
-              >
-                <svg width="22" height="12" viewBox="0 0 28 14" fill="none">
-                  <path
-                    d="M 2 12 Q 14 0 26 12"
-                    stroke={i % 2 === 0 ? "#3B507D" : "#A7A9C6"}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </div>
-            );
-          } else {
-            // Micro Grid Square Accent Tile
-            return (
-              <div
-                key={i}
-                className="absolute border border-[#3B507D]/40 bg-[#E7E2CE]/30 rounded-xs"
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  top: `${topPct}%`,
-                  left: `${leftPct}%`,
-                  animation: `${animName} ${animDur * 1.8}s ease-in-out infinite ${animDelay}s`,
-                }}
-              />
-            );
-          }
-        })}
-      </div>
-
-      {/* Ambient Glassmorphism Background Orbs */}
-      <div className="absolute -top-24 left-1/4 h-96 w-96 rounded-full bg-[#E7E2CE]/50 blur-3xl opacity-60 pointer-events-none" />
-      <div className="absolute top-1/3 -right-20 h-96 w-96 rounded-full bg-[#3B507D]/15 blur-3xl opacity-50 pointer-events-none" />
-      <div className="absolute top-2/3 left-10 h-80 w-80 rounded-full bg-[#EAECFD]/60 blur-3xl opacity-60 pointer-events-none" />
-    </div>
+    <div
+      aria-hidden="true"
+      className="rb-zebra-background pointer-events-none fixed inset-0 z-0"
+    />
   );
 }
-
 
 export function FlyingZebra() {
   const [position, setPosition] = useState({ x: -150, y: 100 });
@@ -1078,4 +914,3 @@ export function ZebraCursor() {
     </>
   );
 }
-

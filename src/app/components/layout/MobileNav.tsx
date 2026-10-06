@@ -10,7 +10,7 @@ export default function MobileNav({ onNav, activeView }: { onNav: (v: string) =>
     { label: "Community", icon: Users, view: "community" },
   ];
   return (
-    <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white/95 backdrop-blur-md border-t border-taupe-40/60 shadow-lg z-50">
+    <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#BEB7A7]/40 bg-[#F8F7F2]/95 shadow-[0_-8px_24px_rgba(17,34,80,0.06)] backdrop-blur-xl md:hidden">
       <div className="flex">
         {tabs.map(t => (
           <button

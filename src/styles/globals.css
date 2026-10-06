@@ -51,28 +51,68 @@
   animation: twinkle 6s ease-in-out infinite;
 }
 
-.particle-dot {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
+.rb-app-shell {
+  background-color: #f8f7f2;
+  color: #112250;
+  font-family: var(--rb-font-body);
 }
 
-/* Particle follow helpers — small offsets applied via inline CSS vars */
-#rb-particles {
-  --p-x: 0px;
-  --p-y: 0px;
-  --p-x2: 0px;
-  --p-y2: 0px;
-  --p-x3: 0px;
-  --p-y3: 0px;
-  --p-x4: 0px;
-  --p-y4: 0px;
-  --p-x5: 0px;
-  --p-y5: 0px;
+.rb-content-layer {
+  position: relative;
+  z-index: 10;
 }
-.particle-dot {
-  transition: transform 350ms cubic-bezier(0.2, 0.9, 0.25, 1);
+
+.rb-content-layer :is(h1, h2, h3, h4, h5, h6),
+.font-heading {
+  font-family: var(--rb-font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.rb-app-shell .text-xs {
+  font-size: 0.8125rem !important;
+  line-height: 1.45;
+}
+
+.rb-app-shell [class~="text-[10px]"],
+.rb-app-shell [class~="text-[11px]"] {
+  font-size: 0.75rem !important;
+  line-height: 1.4;
+}
+
+.font-callout,
+.font-badge,
+.font-highlight {
+  font-family: var(--rb-font-body);
+}
+
+.rb-zebra-background {
+  background-image: url("/zebra-stripe-pattern.svg");
+  background-position: center top;
+  background-repeat: repeat;
+  background-size: 560px 560px;
+  opacity: 0.34;
+}
+
+.rb-content-layer .rounded-xl.border-2 {
+  border-width: 1px !important;
+  border-color: rgba(190, 183, 167, 0.56) !important;
+  box-shadow: 0 12px 32px rgba(17, 34, 80, 0.045);
+}
+
+.rb-content-layer :is(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(59, 80, 125, 0.48);
+  outline-offset: 3px;
+}
+
+.rb-content-layer button:not(:disabled) {
+  transition-duration: 180ms;
+}
+
+@media (max-width: 640px) {
+  .rb-zebra-background {
+    background-position: 38% top;
+    background-size: 420px 420px;
+    opacity: 0.25;
+  }
 }
