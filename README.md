@@ -213,14 +213,14 @@ Components commonly use rounded-xl cards and rounded-lg controls; thin champagne
 
 ### Typography
 
-The current intended hierarchy is:
+The current hierarchy is:
 
-- **Headings:** Nunito, using a close-set, balanced heading treatment.
-- **Body and controls:** Inter, with a system sans-serif fallback.
-- **Callouts/badges:** Inter as well, to keep the interface to two type families.
+- **Headings:** Fredoka, using a close-set, balanced heading treatment.
+- **Body and controls:** Nunito, with a system sans-serif fallback.
+- **Callouts/badges:** Nunito, to keep the interface to two type families.
 - **Icons:** Lucide React line icons; Material icon fonts remain available to the shared icon helper.
 
-Font assets are loaded once in `index.html`. Tiny 10–11px interface text is normalized to at least 12px, and `text-xs` copy is raised to 13px for readability. The existing text-size preference still scales the root font size. Keep typography restrained and editorial rather than using display effects or futuristic letterforms.
+Google Fonts are imported from the shared stylesheet. The global weight hierarchy favors 500 for body emphasis and 600 for headings and stronger labels. Tiny 10–11px interface text is normalized to at least 12px, and `text-xs` copy is raised to 13px for readability. The existing text-size preference still scales the root font size. Keep typography restrained and editorial rather than using display effects or futuristic letterforms.
 
 Interactive motion is kept short and low-amplitude for cards, buttons, and view transitions; the app-level motion configuration follows the operating system's reduced-motion preference.
 
