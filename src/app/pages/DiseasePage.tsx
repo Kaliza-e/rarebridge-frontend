@@ -511,7 +511,13 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                           {disease.overview.medical && <p><LinkifiedText text={disease.overview.medical} /></p>}
                         </>
                       ) : (
-                        <p><LinkifiedText text={disease.overview || disease.shortDesc || "Comprehensive overview currently being updated."} /></p>
+                        <p className="whitespace-pre-line">
+                          {Array.isArray(disease.parsedDiseaseModel?.overview) ? (
+                            <RichTextRunsRenderer runs={disease.parsedDiseaseModel.overview} />
+                          ) : (
+                            <LinkifiedText text={disease.overview || disease.shortDesc || "Comprehensive overview currently being updated."} />
+                          )}
+                        </p>
                       )}
                     </div>
 

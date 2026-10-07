@@ -11,8 +11,10 @@ import {
   Stethoscope,
   Users,
   ArrowUp,
+  Instagram,
+  MapPin,
 } from "lucide-react";
-import { ZebraMascot, ZebraGridDoodle } from "../common/Visuals";
+import { ZebraMascot } from "../common/Visuals";
 import { SectionDivider } from "../common/SectionDivider";
 
 interface FooterProps {
@@ -66,10 +68,7 @@ export default function Footer({ onNav }: FooterProps) {
   ];
 
   return (
-    <footer className="relative isolate overflow-hidden bg-[#112250] text-white pt-6 font-body">
-      {/* Decorative Zebra Grid Pattern in Footer Background */}
-      <ZebraGridDoodle opacity={0.12} gridColorLavender="#8B5CF6" gridColorBeige="#E7E2CE" gridColorNavy="#FFFFFF" />
-
+    <footer className="rb-footer relative isolate overflow-hidden text-white pt-6 font-body">
       {/* Top Organic Sweeping Divider */}
       <SectionDivider variant="wave" className="-mt-7 mb-6 text-[#112250]" />
 
@@ -140,6 +139,24 @@ export default function Footer({ onNav }: FooterProps) {
             <p className="font-body max-w-md text-xs leading-relaxed text-[#D6E0F5] font-medium">
               RareBridge shares plain-language disease information, source-listed specialist records, and links to peer-support resources.
             </p>
+
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-1 text-xs font-semibold text-[#D6E0F5]">
+              <a
+                href="https://www.instagram.com/rarebridge_/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-2 transition-colors hover:bg-white/20 hover:text-white"
+                aria-label="Visit RareBridge on Instagram"
+              >
+                <Instagram size={15} aria-hidden="true" />
+                <span>@rarebridge_</span>
+                <ArrowUpRight size={13} aria-hidden="true" />
+              </a>
+              <span className="inline-flex items-center gap-2">
+                <MapPin size={15} className="text-[#E7E2CE]" aria-hidden="true" />
+                <span>Rwanda, Africa</span>
+              </span>
+            </div>
 
             {/* Care Message & Medical Integrity Badges */}
             <div className="flex flex-wrap items-center gap-3 pt-2">

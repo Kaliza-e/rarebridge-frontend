@@ -9,12 +9,14 @@ import {
   ChevronRight,
   ChevronLeft,
   BookOpen,
+  CheckCircle2,
 } from "lucide-react";
 
 import { apiService, Specialist } from "../services/api.service";
 import type { ContentNode, Disease as ApiDisease } from "../services/api.service";
 import { renderTextWithLinks, RichTextRunsRenderer } from "../utils/link-helper";
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
+import { EdelweissFlower } from "../components/common/Visuals";
 import {
   fadeUpVariants,
   staggerContainerVariants,
@@ -181,45 +183,83 @@ export default function SpecialistsPage() {
   return (
     <main className="relative z-10 min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
       {/* ================= HERO SECTION ================= */}
-      <section className="border-b border-[#E7E2CE] bg-white py-10 sm:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#3B507D]">
-            Specialist directory
-          </p>
-          <h1 className="font-heading text-2xl font-extrabold leading-tight tracking-tight text-[#112250] sm:text-3xl lg:text-4xl">
-            Specialists by condition
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-[#3B507D] sm:text-base">
-            Browse specialist records and disease associations from the source data. Optional profile details appear only when provided.
-          </p>
-          <div className="mt-6 max-w-2xl">
-            <label htmlFor="specialist-search" className="sr-only">Search specialists</label>
-            <div className="flex items-center rounded-xl border border-[#D9D5C8] bg-white p-2 transition-colors focus-within:border-[#3B507D] focus-within:ring-2 focus-within:ring-[#3B507D]/20">
-              <Search className="ml-3 h-5 w-5 shrink-0 text-[#3B507D]" aria-hidden="true" />
-              <input
-                id="specialist-search"
-                type="search"
-                value={searchQuery}
-                onChange={(event) => {
-                  setSearchQuery(event.target.value);
-                  setCurrentPage(1);
-                }}
-                placeholder="Search by name, expertise, organization, location, or condition"
-                className="min-w-0 w-full bg-transparent px-3 py-2 text-sm font-medium text-[#112250] outline-none placeholder:text-[#3B507D]/70 sm:text-base"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setCurrentPage(1);
-                  }}
-                  aria-label="Clear specialist search"
-                  className="mr-1 rounded-lg p-2 text-[#112250] hover:bg-[#F5F4F0]"
-                >
-                  <X className="h-4 w-4" aria-hidden="true" />
-                </button>
-              )}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
+        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
+        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
+            <div className="lg:col-span-7">
+              <span className="mb-2 block text-xs font-bold uppercase tracking-widest text-[#3B507D]">
+                Specialist Directory
+              </span>
+              <h1 className="font-heading text-2xl font-extrabold leading-tight tracking-tight text-[#112250] sm:text-3xl lg:text-4xl">
+                Specialists by condition
+              </h1>
+              <p className="mt-3 max-w-xl text-sm font-medium leading-relaxed text-[#3B507D] sm:text-base">
+                Browse specialist records and disease associations from the source data. Optional profile details appear only when provided.
+              </p>
+
+              <div className="mt-7 max-w-2xl">
+                <label htmlFor="specialist-search" className="sr-only">Search specialists</label>
+                <div className="flex items-center rounded-xl border border-[#D9D5C8] bg-white p-2 transition-colors focus-within:border-[#3B507D] focus-within:ring-2 focus-within:ring-[#3B507D]/20">
+                  <Search className="ml-3 h-5 w-5 shrink-0 text-[#3B507D]" aria-hidden="true" />
+                  <input
+                    id="specialist-search"
+                    type="search"
+                    value={searchQuery}
+                    onChange={(event) => {
+                      setSearchQuery(event.target.value);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Search by name, expertise, organization, location, or condition"
+                    className="min-w-0 w-full bg-transparent px-3 py-2 text-sm font-medium text-[#112250] outline-none placeholder:text-[#3B507D]/70 sm:text-base"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery("");
+                        setCurrentPage(1);
+                      }}
+                      aria-label="Clear specialist search"
+                      className="mr-1 rounded-lg p-2 text-[#112250] hover:bg-[#F5F4F0]"
+                    >
+                      <X className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5">
+              <div className="mx-auto max-w-md rounded-xl border-2 border-[#E7E2CE] bg-white p-7 text-[#112250] sm:p-8 lg:max-w-none">
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="rounded-lg bg-[#F5F4F0] p-3">
+                    <Building2 className="h-6 w-6 text-[#112250]" aria-hidden="true" />
+                  </div>
+                  <EdelweissFlower size={36} />
+                </div>
+                <span className="mb-3 inline-flex rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250]">
+                  Explore the directory
+                </span>
+                <h2 className="font-heading text-2xl font-black text-[#112250]">
+                  Find care with clarity
+                </h2>
+                <p className="mt-2 text-sm font-medium leading-relaxed text-[#3B507D]">
+                  Search condition-linked specialist records and review the profile details available in the source data.
+                </p>
+                <div className="mt-6 space-y-2.5 border-t border-[#E7E2CE] pt-4 text-xs font-bold text-[#112250]">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#3B507D]" aria-hidden="true" />
+                    <span>Search by expertise, organization, and location</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#3B507D]" aria-hidden="true" />
+                    <span>Browse records associated with conditions</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
