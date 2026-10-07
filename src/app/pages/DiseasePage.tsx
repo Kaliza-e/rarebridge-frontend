@@ -135,17 +135,14 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   const [loadError, setLoadError] = useState("");
   const [activeTab, setActiveTab] = useState<
     | "overview"
-    | "symptoms"
     | "causes"
-    | "types"
+    | "typesAndSymptoms"
     | "diagnosis"
-    | "treatments"
-    | "lifestyle"
-    | "community"
+    | "lifestyleCommunity"
+    | "researchPharma"
     | "faqs"
     | "myths"
     | "specialists"
-    | "sources"
   >("overview");
 
   // State for FAQ accordion toggle
@@ -277,61 +274,25 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
 
   const uncategorizedList = disease && Array.isArray(disease.uncategorizedContent) ? disease.uncategorizedContent : [];
 
-  const hasOverview = Boolean(disease?.overview || disease?.shortDesc);
-  const hasSymptoms = symptomsList.length > 0 || typesAndSymptomsSections.length > 0;
-  const hasCauses = causesList.length > 0;
-  const hasTypes = typesList.length > 0;
-  const hasDiagnosis = diagnosticSteps.length > 0 || diagnosisSections.length > 0;
-  const hasTreatments = researchList.length > 0 || treatmentSections.length > 0;
-  const hasLifestyle = Boolean(
-    lifestyleSections.length > 0 ||
-    disease?.lifestyleAndDailySupport && (
-      (Array.isArray(disease.lifestyleAndDailySupport.therapies) && disease.lifestyleAndDailySupport.therapies.length > 0) ||
-      (disease.lifestyleAndDailySupport.nutrition && String(disease.lifestyleAndDailySupport.nutrition).trim()) ||
-      (Array.isArray(disease.lifestyleAndDailySupport.devices) && disease.lifestyleAndDailySupport.devices.length > 0) ||
-      (Array.isArray(disease.lifestyleAndDailySupport.caregiverTips) && disease.lifestyleAndDailySupport.caregiverTips.length > 0) ||
-      (disease.lifestyleAndDailySupport.raw && String(disease.lifestyleAndDailySupport.raw).trim()) ||
-      (disease.lifestyleAndDailySupportRaw && String(disease.lifestyleAndDailySupportRaw).trim()) ||
-      (typeof disease.lifestyleAndDailySupport === "string" && disease.lifestyleAndDailySupport.trim())
-    )
-  );
-  const hasCommunity = communityResources.length > 0 || Boolean(disease?.lifestyleAndDailySupport?.community || disease?.community);
-  const hasFaqs = faqsList.length > 0;
-  const hasMyths = mythsList.length > 0;
-  const hasSpecialists = specialistsList.length > 0;
-  const hasSources = sourcesList.length > 0;
-
-  const diseaseFirstName = disease?.name ? disease.name.split(" ")[0] : "Condition";
-
   const allTabs = [
-    { id: "overview", label: "Overview", icon: BookOpen, show: hasOverview },
-    { id: "symptoms", label: typesAndSymptomsSections.length > 0 ? "Types & Symptoms" : "Symptoms", icon: Activity, show: hasSymptoms },
-    { id: "causes", label: "Causes & Risk Factors", icon: Microscope, show: hasCauses },
-    { id: "types", label: "Types", icon: Layers, show: hasTypes && typesAndSymptomsSections.length === 0 },
-    { id: "diagnosis", label: "Diagnosis", icon: FileText, show: hasDiagnosis },
-    { id: "treatments", label: "Treatment & Management", icon: FlaskConical, show: hasTreatments },
-    { id: "lifestyle", label: `Living with ${diseaseFirstName}`, icon: HeartPulse, show: hasLifestyle },
-    { id: "community", label: "Community", icon: Users, show: hasCommunity },
-    { id: "faqs", label: "FAQs", icon: HelpCircle, show: hasFaqs },
-    { id: "myths", label: "Facts vs. Myths", icon: Lightbulb, show: hasMyths },
-    { id: "specialists", label: "Specialists", icon: Stethoscope, show: hasSpecialists },
-    { id: "sources", label: "Sources & Links", icon: ExternalLink, show: hasSources },
-  ];
+    { id: "overview", label: "Overview", icon: BookOpen },
+    { id: "causes", label: "causes", icon: Microscope },
+    { id: "typesAndSymptoms", label: "types and symptoms", icon: Activity },
+    { id: "diagnosis", label: "Diagnosis", icon: FileText },
+    { id: "lifestyleCommunity", label: "lifestyle and daily support + community", icon: HeartPulse },
+    { id: "researchPharma", label: "Research and Pharma directory", icon: FlaskConical },
+    { id: "faqs", label: "FAQs", icon: HelpCircle },
+    { id: "myths", label: "Facts vs. Myths", icon: Lightbulb },
+    { id: "specialists", label: "speacislist directory", icon: Stethoscope },
+  ] as const;
 
-  const tabs = allTabs.filter((t) => t.show);
-  const navigateToTab = (id: string) => {
-    setActiveTab(id as typeof activeTab);
+  const tabs = allTabs;
+  const navigateToTab = (id: typeof activeTab) => {
+    setActiveTab(id);
     requestAnimationFrame(() => {
       document.getElementById("disease-tab-content")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
-
-  // Hook #7: Reset activeTab if current activeTab is hidden
-  useEffect(() => {
-    if (disease && tabs.length > 0 && !tabs.some((t) => t.id === activeTab)) {
-      setActiveTab(tabs[0].id as any);
-    }
-  }, [disease, activeTab, tabs]);
 
   const toggleFaq = (idx: number) => {
     setOpenFaqIndices((prev) => ({ ...prev, [idx]: !prev[idx] }));
@@ -489,7 +450,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
         <div className="grid gap-6 lg:gap-8 lg:grid-cols-12">
           {/* ================= LEFT MAIN CONTENT COLUMN (8 COLS) ================= */}
           <div className="lg:col-span-8 space-y-6 sm:space-y-8">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               {/* ── 1. OVERVIEW TAB ── */}
               {activeTab === "overview" && (
                 <motion.div key="overview" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
@@ -530,7 +491,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                         <h3 className="font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
                           <Activity className="h-5 w-5 text-[#112250] shrink-0" /> Common Symptoms
                         </h3>
-                        <button onClick={() => navigateToTab("symptoms")} className="text-xs font-bold text-[#112250] hover:underline">
+                        <button onClick={() => navigateToTab("typesAndSymptoms")} className="text-xs font-bold text-[#112250] hover:underline">
                           View All Symptoms →
                         </button>
                       </div>
@@ -572,7 +533,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
               )}
 
               {/* ── 2. SYMPTOMS TAB ── */}
-              {activeTab === "symptoms" && (
+              {activeTab === "typesAndSymptoms" && (
                 <motion.div key="symptoms" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
                     <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
@@ -660,7 +621,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
               )}
 
               {/* ── 4. TYPES TAB ── */}
-              {activeTab === "types" && (
+              {activeTab === "typesAndSymptoms" && (
                 <motion.div key="types" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
                     <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
@@ -753,7 +714,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
               )}
 
               {/* ── 6. TREATMENT & RESEARCH TAB ── */}
-              {activeTab === "treatments" && (
+              {activeTab === "researchPharma" && (
                 <motion.div key="treatments" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
                     <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
@@ -851,7 +812,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
               )}
 
               {/* ── 7. LIFESTYLE TAB ── */}
-              {activeTab === "lifestyle" && (
+              {activeTab === "lifestyleCommunity" && (
                 <motion.div key="lifestyle" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
                     <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
@@ -928,7 +889,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
               )}
 
               {/* ── 8. COMMUNITY TAB ── */}
-              {activeTab === "community" && (
+              {activeTab === "lifestyleCommunity" && (
                 <motion.div key="community" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
                     <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
@@ -964,11 +925,13 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                           ) : null}
                         </article>
                       ))}
-                      {communityResources.length === 0 && disease.lifestyleAndDailySupport?.community && (
+                      {communityResources.length === 0 && disease.lifestyleAndDailySupport?.community ? (
                         <p className="whitespace-pre-line text-sm leading-relaxed text-[#112250]">
                           <LinkifiedText text={disease.lifestyleAndDailySupport.community} />
                         </p>
-                      )}
+                      ) : communityResources.length === 0 && !disease.lifestyleAndDailySupport?.community ? (
+                        <p className="text-xs text-[#3B507D] italic">Community information currently being updated.</p>
+                      ) : null}
                     </div>
                   </div>
                 </motion.div>
@@ -1163,7 +1126,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
               )}
 
               {/* ── 12. SOURCES & LINKS TAB ── */}
-              {activeTab === "sources" && (
+              {activeTab === "overview" && sourcesList.length > 0 && (
                 <motion.div key="sources" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
                     <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">

@@ -91,13 +91,13 @@
   background-position: center top;
   background-repeat: repeat;
   background-size: 560px 560px;
-  opacity: 0.08;
+  opacity: 0.13;
 }
 
 .rb-footer {
   background-color: #112250;
   background-image:
-    linear-gradient(rgba(17, 34, 80, 0.91), rgba(17, 34, 80, 0.91)),
+    linear-gradient(rgba(17, 34, 80, 0.975), rgba(17, 34, 80, 0.975)),
     url("/zebra-stripe-pattern.svg");
   background-position: center, center top;
   background-repeat: no-repeat, repeat;
@@ -123,6 +123,6 @@
   .rb-zebra-background {
     background-position: 38% top;
     background-size: 420px 420px;
-    opacity: 0.06;
+    opacity: 0.11;
   }
 }
