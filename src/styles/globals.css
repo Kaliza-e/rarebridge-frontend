@@ -97,11 +97,12 @@
 .rb-footer {
   background-color: #112250;
   background-image:
-    linear-gradient(rgba(17, 34, 80, 0.975), rgba(17, 34, 80, 0.975)),
-    url("/zebra-stripe-pattern.svg");
-  background-position: center, center top;
-  background-repeat: no-repeat, repeat;
-  background-size: cover, 560px 560px;
+    radial-gradient(ellipse at 12% 0%, rgba(85, 108, 157, 0.26), transparent 42%),
+    radial-gradient(ellipse at 88% 100%, rgba(231, 226, 206, 0.08), transparent 36%),
+    linear-gradient(135deg, #112250, #0d1b40);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .rb-content-layer .rounded-xl.border-2 {
