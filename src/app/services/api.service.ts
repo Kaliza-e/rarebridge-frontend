@@ -181,6 +181,10 @@ export interface Disease {
 // ─── API Service ──────────────────────────────────────────────────────────────
 
 class ApiService {
+  async getHealth(): Promise<{ status: 'ok' }> {
+    return this.request<{ status: 'ok' }>('/health');
+  }
+
   private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
     try {

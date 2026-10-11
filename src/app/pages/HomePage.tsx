@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { apiService } from "../services/api.service";
 import {
   DISEASES,
   fetchDiseasesFromAPI,
@@ -62,6 +63,7 @@ const HERO_SLIDES = [
 export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
   const [diseases, setDiseases] = useState<Disease[]>(DISEASES);
   const [isLoading, setIsLoading] = useState(false);
+  const [apiStatus, setApiStatus] = useState<"checking" | "online" | "offline">("checking");
 
   // Hero Image Carousel State
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -69,6 +71,14 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
   useEffect(() => {
     let isMounted = true;
+
+    apiService.getHealth()
+      .then(() => {
+        if (isMounted) setApiStatus("online");
+      })
+      .catch(() => {
+        if (isMounted) setApiStatus("offline");
+      });
 
     const loadDiseases = async () => {
       try {
@@ -170,6 +180,23 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                     <span>Join Caregiver Community</span>
                   </motion.button>
                 </div>
+                <p className="mt-3 text-xs font-medium text-[#3B507D]" role="status">
+                  <span
+                    aria-hidden="true"
+                    className={`mr-2 inline-block h-2 w-2 rounded-full ${
+                      apiStatus === "online"
+                        ? "bg-emerald-500"
+                        : apiStatus === "offline"
+                          ? "bg-amber-500"
+                          : "animate-pulse bg-[#3B507D]/50"
+                    }`}
+                  />
+                  {apiStatus === "checking"
+                    ? "Checking API connection..."
+                    : apiStatus === "online"
+                      ? "Live API connected."
+                      : "API unavailable. Showing sample disease data."}
+                </p>
               </motion.div>
             </AnimatePresence>
           </div>
