@@ -493,46 +493,52 @@ export function AIAssistant() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    const handleOpen = () => setOpen(true);
+    window.addEventListener("open-ai-assistant", handleOpen);
+    return () => window.removeEventListener("open-ai-assistant", handleOpen);
+  }, []);
+
   return (
     <>
       {/* Floating button */}
-      {/* <button
+      <button
         onClick={() => setOpen(o => !o)}
-        className="ai-assistant-control fixed right-5 bottom-24 md:bottom-8 z-50 flex items-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-bold text-ivory shadow-xl hover:bg-accent transition-all duration-200 hover:-translate-y-0.5 group"
+        className="ai-assistant-control fixed right-5 bottom-24 md:bottom-8 z-50 flex items-center gap-2 rounded-2xl bg-[#112250] px-4 py-3 text-sm font-bold text-white shadow-xl hover:bg-[#3B507D] transition-all duration-200 hover:-translate-y-0.5 group cursor-pointer border border-[#E7E2CE]/30"
         aria-label="Open AI Assistant"
       >
-        <Bot className="w-5 h-5" />
-        <span className="hidden sm:inline">RareBridge</span>
+        <Bot className="w-5 h-5 text-[#E7E2CE]" />
+        <span className="hidden sm:inline">Ask RareBridge AI</span>
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-secondary" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E7E2CE] opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E7E2CE]" />
         </span>
-      </button> */}
+      </button>
 
       {/* Popup panel */}
       {open && (
-        <div className="fixed right-5 bottom-36 md:bottom-24 z-50 w-[340px] sm:w-[380px] rounded-xl bg-white border border-[#E5E0D6] flex flex-col overflow-hidden">
+        <div className="fixed right-5 bottom-36 md:bottom-24 z-50 w-[340px] sm:w-[380px] rounded-xl bg-white border-2 border-[#E7E2CE] shadow-2xl flex flex-col overflow-hidden animate-fade-in">
           {/* Header */}
-          <div className="flex items-center gap-3 bg-primary px-5 py-4">
-            <div className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center shrink-0">
-              <Bot className="w-5 h-5 text-primary" />
+          <div className="flex items-center gap-3 bg-[#112250] px-5 py-4">
+            <div className="w-9 h-9 rounded-xl bg-[#3B507D] flex items-center justify-center shrink-0">
+              <Bot className="w-5 h-5 text-[#E7E2CE]" />
             </div>
             <div className="flex-1">
-              <p className="font-bold text-ivory text-sm leading-none">RareBridge AI</p>
-              <p className="text-taupe text-xs mt-0.5">Ask anything about rare diseases</p>
+              <p className="font-bold text-white text-sm leading-none font-heading">RareBridge AI</p>
+              <p className="text-[#D6E0F5] text-xs mt-0.5 font-medium">Ask anything about rare diseases</p>
             </div>
-            <button onClick={() => setOpen(false)} className="text-taupe hover:text-ivory transition-colors p-1">
+            <button onClick={() => setOpen(false)} className="text-[#D6E0F5] hover:text-white transition-colors p-1 cursor-pointer">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 max-h-64 scrollbar-none">
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 max-h-64 scrollbar-none bg-[#F5F4F0]">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${m.role === "user"
-                  ? "bg-primary text-ivory rounded-br-sm"
-                  : "bg-secondary text-primary rounded-bl-sm"
+                <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed font-medium ${m.role === "user"
+                  ? "bg-[#112250] text-white rounded-br-sm"
+                  : "bg-white text-[#112250] border border-[#E7E2CE] shadow-xs rounded-bl-sm"
                   }`}>
                   {m.text}
                 </div>
@@ -542,27 +548,27 @@ export function AIAssistant() {
           </div>
 
           {/* Quick questions */}
-          <div className="px-4 pb-2 flex gap-2 overflow-x-auto scrollbar-none">
+          <div className="px-4 py-2 bg-white border-t border-[#E7E2CE] flex gap-2 overflow-x-auto scrollbar-none">
             {QUICK.map(q => (
-              <button key={q} onClick={() => send(q)} className="shrink-0 px-3 py-1.5 rounded-full bg-secondary text-primary text-xs font-semibold hover:bg-primary hover:text-ivory transition-colors whitespace-nowrap">
+              <button key={q} onClick={() => send(q)} className="shrink-0 px-3 py-1.5 rounded-full bg-[#F5F4F0] text-[#112250] text-xs font-semibold hover:bg-[#112250] hover:text-white transition-colors whitespace-nowrap border border-[#E7E2CE] cursor-pointer">
                 {q}
               </button>
             ))}
           </div>
 
           {/* Input */}
-          <div className="px-4 pb-4 pt-2">
-            <div className="flex items-center gap-2 bg-ivory rounded-xl border border-taupe-40 px-3 py-2 focus-within:border-primary transition-colors">
+          <div className="px-4 pb-4 pt-2 bg-white">
+            <div className="flex items-center gap-2 bg-[#F5F4F0] rounded-xl border border-[#E7E2CE] px-3 py-2 focus-within:border-[#112250] focus-within:bg-white transition-colors">
               <input
                 type="text"
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && send(input)}
                 placeholder="Ask a question…"
-                className="flex-1 bg-transparent text-sm text-primary placeholder-taupe outline-none font-medium"
+                className="flex-1 bg-transparent text-xs sm:text-sm text-[#112250] placeholder-[#3B507D]/60 outline-none font-medium"
               />
-              <button onClick={() => send(input)} className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center hover:bg-accent transition-colors shrink-0">
-                <svg className="w-3.5 h-3.5 text-ivory" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
+              <button onClick={() => send(input)} className="w-7 h-7 rounded-lg bg-[#112250] flex items-center justify-center hover:bg-[#3B507D] transition-colors shrink-0 cursor-pointer">
+                <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
               </button>
             </div>
           </div>

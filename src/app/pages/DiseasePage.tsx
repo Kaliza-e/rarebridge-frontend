@@ -6,6 +6,8 @@ import { ZebraEmptyState, OrganicWavyLine, ZebraGridDoodle } from "../components
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
 import { generateDiseasePDF } from "../utils/pdf-generator";
 import { LinkifiedText, RichTextRunsRenderer } from "../utils/link-helper";
+import { getBlocks } from "../utils/rbm";
+import { BlocksRenderer } from "../components/rbm";
 import {
   ArrowLeft,
   Download,
@@ -148,6 +150,22 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   // State for FAQ accordion toggle
   const [openFaqIndices, setOpenFaqIndices] = useState<Record<number, boolean>>({});
 
+  // State for Lifestyle 5-section collapsible accordions (Defect 8)
+  const [openLifestyleAccordions, setOpenLifestyleAccordions] = useState<Record<string, boolean>>({
+    therapies: true,
+    nutrition: true,
+    devices: true,
+    caregiverTips: true,
+    community: true,
+  });
+
+  const toggleLifestyleAccordion = (key: string) => {
+    setOpenLifestyleAccordions((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // State for Hero Banner overview Read More toggle (Defect 2)
+  const [showHeroMore, setShowHeroMore] = useState(false);
+
   // State for Parse Completeness Report collapsible debug panel
   const [showReport, setShowReport] = useState(false);
 
@@ -274,16 +292,28 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
 
   const uncategorizedList = disease && Array.isArray(disease.uncategorizedContent) ? disease.uncategorizedContent : [];
 
+  // Extract structured RBM blocks if present (or parse on the fly)
+  const overviewBlocks = disease?.rbmBlocks?.overview || getBlocks(disease?.overview);
+  const causesBlocks = disease?.rbmBlocks?.causes || getBlocks(disease?.causes);
+  const typesSymptomsBlocks = disease?.rbmBlocks?.typesSymptoms || getBlocks(disease?.typesAndSymptoms) || getBlocks(disease?.typesAndSymptomsRaw);
+  const diagnosisBlocks = disease?.rbmBlocks?.diagnosis || getBlocks(disease?.diagnosis) || getBlocks(disease?.diagnosisRaw);
+  const lifestyleBlocks = disease?.rbmBlocks?.lifestyle || getBlocks(disease?.lifestyleAndDailySupport) || getBlocks(disease?.lifestyleAndDailySupportRaw);
+  const researchBlocks = disease?.rbmBlocks?.research || getBlocks(disease?.treatmentsAndPharma) || getBlocks(disease?.treatmentsAndPharmaRaw);
+  const faqsBlocks = disease?.rbmBlocks?.faqs || getBlocks(disease?.faqs);
+  const mythsBlocks = disease?.rbmBlocks?.myths || getBlocks(disease?.factsMyths);
+  const specialistsBlocks = disease?.rbmBlocks?.specialists || getBlocks(disease?.specialists);
+  const sourcesBlocks = disease?.rbmBlocks?.sources || getBlocks(disease?.sources);
+
   const allTabs = [
     { id: "overview", label: "Overview", icon: BookOpen },
-    { id: "causes", label: "causes", icon: Microscope },
-    { id: "typesAndSymptoms", label: "types and symptoms", icon: Activity },
+    { id: "causes", label: "Causes", icon: Microscope },
+    { id: "typesAndSymptoms", label: "Types & Symptoms", icon: Activity },
     { id: "diagnosis", label: "Diagnosis", icon: FileText },
-    { id: "lifestyleCommunity", label: "lifestyle and daily support + community", icon: HeartPulse },
-    { id: "researchPharma", label: "Research and Pharma directory", icon: FlaskConical },
+    { id: "lifestyleCommunity", label: "Lifestyle & Daily Support", icon: HeartPulse },
+    { id: "researchPharma", label: "Research & Pharma", icon: FlaskConical },
     { id: "faqs", label: "FAQs", icon: HelpCircle },
     { id: "myths", label: "Facts vs. Myths", icon: Lightbulb },
-    { id: "specialists", label: "speacislist directory", icon: Stethoscope },
+    { id: "specialists", label: "Specialist Directory", icon: Stethoscope },
   ] as const;
 
   const tabs = allTabs;
@@ -363,9 +393,48 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                     <h1 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-black text-[#112250] break-words">
                       {disease.name}
                     </h1>
-                    <p className="mt-1.5 text-xs sm:text-base font-medium text-[#3B507D] leading-relaxed max-w-2xl">
-                      {disease.shortDesc || (typeof disease.overview === "string" ? disease.overview : (disease.overview?.simple || disease.overview?.medical))}
-                    </p>
+                    {(() => {
+                      const rawOverviewStr = typeof disease.overview === "string"
+                        ? disease.overview.replace(/^<!--rbm:\d+-->\s*/, '').replace(/[*_#`]/g, '').trim()
+                        : (disease.overview?.simple || disease.overview?.medical || disease.shortDesc || "");
+                      const isOverviewLong = rawOverviewStr.length > 180;
+                      const heroOverviewSnippet = isOverviewLong && !showHeroMore
+                        ? rawOverviewStr.slice(0, 170).trim() + "..."
+                        : rawOverviewStr;
+
+                      return (
+                        <>
+                          <div className="mt-2 text-xs sm:text-sm font-medium text-[#3B507D] leading-relaxed max-w-2xl">
+                            <span>{heroOverviewSnippet}</span>
+                            {isOverviewLong && (
+                              <button
+                                type="button"
+                                onClick={() => setShowHeroMore(!showHeroMore)}
+                                className="ml-2 font-bold text-[#112250] hover:text-[#3B507D] underline cursor-pointer"
+                              >
+                                {showHeroMore ? "Show less" : "Read more"}
+                              </button>
+                            )}
+                          </div>
+                          <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#3B507D]">
+                            <span className="font-bold text-[#112250]">Specialty Focus:</span>
+                            <span>{disease.category || "Rare Disease Specialization"}</span>
+                            {specialistsList.length > 0 && (
+                              <>
+                                <span className="text-[#E7E2CE]">•</span>
+                                <button
+                                  type="button"
+                                  onClick={() => navigateToTab("specialists")}
+                                  className="font-semibold text-[#112250] hover:underline cursor-pointer"
+                                >
+                                  {specialistsList.length} Specialist{specialistsList.length > 1 ? "s" : ""} Available
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
 
@@ -465,23 +534,26 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       </h2>
                     </div>
 
-                    <div className="prose max-w-none text-sm text-[#112250] leading-relaxed font-medium space-y-3">
-                      {typeof disease.overview === "object" && disease.overview !== null ? (
-                        <>
-                          {disease.overview.simple && <p><LinkifiedText text={disease.overview.simple} /></p>}
-                          {disease.overview.medical && <p><LinkifiedText text={disease.overview.medical} /></p>}
-                        </>
-                      ) : (
-                        <p className="whitespace-pre-line">
-                          {Array.isArray(disease.parsedDiseaseModel?.overview) ? (
-                            <RichTextRunsRenderer runs={disease.parsedDiseaseModel.overview} />
-                          ) : (
-                            <LinkifiedText text={disease.overview || disease.shortDesc || "Comprehensive overview currently being updated."} />
-                          )}
-                        </p>
-                      )}
-                    </div>
-
+                    {overviewBlocks && overviewBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={overviewBlocks} />
+                    ) : (
+                      <div className="prose max-w-none text-sm text-[#112250] leading-relaxed font-medium space-y-3">
+                        {typeof disease.overview === "object" && disease.overview !== null ? (
+                          <>
+                            {disease.overview.simple && <p><LinkifiedText text={disease.overview.simple} /></p>}
+                            {disease.overview.medical && <p><LinkifiedText text={disease.overview.medical} /></p>}
+                          </>
+                        ) : (
+                          <p className="whitespace-pre-line">
+                            {Array.isArray(disease.parsedDiseaseModel?.overview) ? (
+                              <RichTextRunsRenderer runs={disease.parsedDiseaseModel.overview} />
+                            ) : (
+                              <LinkifiedText text={disease.overview || disease.shortDesc || "Comprehensive overview currently being updated."} />
+                            )}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {/* Card 2: Common Symptoms Summary */}
@@ -532,49 +604,97 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 </motion.div>
               )}
 
-              {/* ── 2. SYMPTOMS TAB ── */}
+              {/* ── 2. TYPES & SYMPTOMS TAB (Defect 3) ── */}
               {activeTab === "typesAndSymptoms" && (
-                <motion.div key="symptoms" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+                <motion.div key="typesAndSymptoms" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Symptoms & Characteristics
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Full symptom list extracted from clinical sources with attached descriptions, severity, and age notes.
-                    </p>
-
-                    {typesAndSymptomsSections.length > 0 ? (
-                      <StructuredSections sections={typesAndSymptomsSections} emptyHeading="Types & Symptoms" />
-                    ) : symptomsList.length > 0 ? (
-                      <div className="space-y-4">
-                        {symptomsList.map((sym: any, idx: number) => (
-                          <div key={idx} className="rounded-xl border border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-5 transition-all">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
-                              <h4 className="font-heading text-sm sm:text-base font-bold text-[#112250] flex items-center gap-2 break-words">
-                                <span className="flex h-2.5 w-2.5 rounded-full bg-[#112250] shrink-0" />
-                                <span>{sym.name || sym}</span>
-                              </h4>
-                              {sym.severity && (
-                                <span className="self-start sm:self-auto rounded-full bg-[#112250] px-3 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
-                                  {sym.severity}
-                                </span>
-                              )}
-                            </div>
-                            {sym.description && (
-                              <p className="mt-2 text-xs text-[#3B507D] font-medium leading-relaxed pl-4 border-l-2 border-[#112250]">
-                                <LinkifiedText text={sym.description} />
-                              </p>
-                            )}
-                            {sym.ageNotes && (
-                              <p className="mt-1 text-[11px] text-[#3B507D] font-semibold italic pl-4">
-                                Age factor: {sym.ageNotes}
-                              </p>
-                            )}
-                          </div>
-                        ))}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <Activity className="h-5 w-5 text-[#112250]" />
                       </div>
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Types & Symptoms
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Documented subtypes, clinical forms, and symptoms preserved in document order.
+                        </p>
+                      </div>
+                    </div>
+
+                    {typesSymptomsBlocks && typesSymptomsBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={typesSymptomsBlocks} />
+                    ) : typesAndSymptomsSections.length > 0 ? (
+                      <StructuredSections sections={typesAndSymptomsSections} emptyHeading="Types & Symptoms" />
                     ) : (
-                      <p className="text-xs text-[#3B507D] italic">No symptom details available for this condition.</p>
+                      <div className="space-y-6">
+                        {typesList.length > 0 && (
+                          <div>
+                            <h3 className="font-heading text-base sm:text-lg font-bold text-[#112250] mb-3 pb-2 border-b border-[#E7E2CE] flex items-center gap-2">
+                              <Layers className="h-4 w-4 text-[#112250]" /> Subtypes & Forms
+                            </h3>
+                            <div className="space-y-4">
+                              {typesList.map((type: any, idx: number) => (
+                                <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F9F8F5] p-4 sm:p-5">
+                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 mb-2">
+                                    <h4 className="font-heading font-black text-sm sm:text-base text-[#112250] break-words">
+                                      {type.title || `Subtype ${idx + 1}`}
+                                    </h4>
+                                    {type.stage && (
+                                      <span className="self-start sm:self-auto rounded-md bg-[#112250] px-2.5 py-0.5 text-[10px] font-bold text-white uppercase">
+                                        {type.stage}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-xs text-[#112250] font-medium leading-relaxed mb-2 break-words">
+                                    <LinkifiedText text={type.description} />
+                                  </p>
+                                  {Array.isArray(type.characteristics) && type.characteristics.length > 0 && (
+                                    <div className="mt-2 rounded-lg bg-white p-3 border border-[#E7E2CE]">
+                                      <h5 className="text-[11px] font-bold text-[#112250] uppercase mb-1">Key Characteristics</h5>
+                                      <ul className="list-disc list-inside text-xs text-[#3B507D] font-medium space-y-1">
+                                        {type.characteristics.map((c: string, cIdx: number) => (
+                                          <li key={cIdx} className="break-words">{c}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {symptomsList.length > 0 && (
+                          <div>
+                            <h3 className="font-heading text-base sm:text-lg font-bold text-[#112250] mb-3 pb-2 border-b border-[#E7E2CE] flex items-center gap-2">
+                              <Activity className="h-4 w-4 text-[#112250]" /> Symptoms & Characteristics
+                            </h3>
+                            <div className="space-y-3">
+                              {symptomsList.map((sym: any, idx: number) => (
+                                <div key={idx} className="rounded-xl border border-[#E7E2CE] bg-[#F5F4F0] p-4">
+                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                                    <h4 className="font-heading text-sm font-bold text-[#112250] flex items-center gap-2">
+                                      <span className="flex h-2 w-2 rounded-full bg-[#112250] shrink-0" />
+                                      <span>{sym.name || sym}</span>
+                                    </h4>
+                                    {sym.severity && (
+                                      <span className="self-start sm:self-auto rounded-full bg-[#112250] px-2.5 py-0.5 text-[10px] font-bold text-white uppercase">
+                                        {sym.severity}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {sym.description && (
+                                    <p className="mt-2 text-xs text-[#3B507D] font-medium leading-relaxed pl-4 border-l-2 border-[#112250]">
+                                      <LinkifiedText text={sym.description} />
+                                    </p>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     )}
                   </div>
                 </motion.div>
@@ -584,14 +704,23 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
               {activeTab === "causes" && (
                 <motion.div key="causes" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <Microscope className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Causes & Genetic Risk Factors
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Detailed breakdown of genetic mutations, environmental factors, and inheritance patterns.
-                    </p>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <Microscope className="h-5 w-5 text-[#112250]" />
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Causes & Genetic Risk Factors
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Detailed breakdown of genetic mutations, environmental factors, and inheritance patterns.
+                        </p>
+                      </div>
+                    </div>
 
-                    {causesList.length > 0 ? (
+                    {causesBlocks && causesBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={causesBlocks} />
+                    ) : causesList.length > 0 ? (
                       <div className="space-y-4 sm:space-y-5">
                         {causesList.map((cause: any, idx: number) => (
                           <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
@@ -620,66 +749,27 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 </motion.div>
               )}
 
-              {/* ── 4. TYPES TAB ── */}
-              {activeTab === "typesAndSymptoms" && (
-                <motion.div key="types" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <Layers className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Disease Subtypes & Forms
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Preserved sub-information, characteristics, and clinical stages per type.
-                    </p>
-
-                    {typesList.length > 0 ? (
-                      <div className="space-y-4 sm:space-y-5">
-                        {typesList.map((type: any, idx: number) => (
-                          <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F9F8F5] p-4 sm:p-6">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 mb-3">
-                              <h3 className="font-heading font-black text-base sm:text-lg text-[#112250] break-words">
-                                {type.title || `Type ${idx + 1}`}
-                              </h3>
-                              {type.stage && (
-                                <span className="self-start sm:self-auto rounded-md bg-[#112250] px-2.5 py-1 text-[10px] font-bold text-white uppercase">
-                                  {type.stage}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-xs text-[#112250] font-medium leading-relaxed mb-3 break-words">
-                              <LinkifiedText text={type.description} />
-                            </p>
-                            {Array.isArray(type.characteristics) && type.characteristics.length > 0 && (
-                              <div className="mt-3 rounded-lg bg-white p-3 border border-[#E7E2CE]">
-                                <h4 className="text-[11px] font-bold text-[#112250] uppercase mb-1">Key Characteristics</h4>
-                                <ul className="list-disc list-inside text-xs text-[#3B507D] font-medium space-y-1">
-                                  {type.characteristics.map((c: string, cIdx: number) => (
-                                    <li key={cIdx} className="break-words">{c}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-[#3B507D] italic">No specific subtype breakdown for this condition.</p>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ── 5. DIAGNOSIS TAB ── */}
+              {/* ── 4. DIAGNOSIS TAB (Defect 4) ── */}
               {activeTab === "diagnosis" && (
                 <motion.div key="diagnosis" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Diagnostic Procedures & Testing
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Complete diagnostic criteria, tests, procedures, and result meanings.
-                    </p>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <FileText className="h-5 w-5 text-[#112250]" />
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Diagnostic Procedures & Testing
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Complete diagnostic criteria, laboratory tests, procedures, and clinical result meanings.
+                        </p>
+                      </div>
+                    </div>
 
-                    {diagnosisSections.length > 0 ? (
+                    {diagnosisBlocks && diagnosisBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={diagnosisBlocks} />
+                    ) : diagnosisSections.length > 0 ? (
                       <StructuredSections sections={diagnosisSections} emptyHeading="Diagnosis" />
                     ) : diagnosticSteps.length > 0 ? (
                       <div className="space-y-4">
@@ -689,19 +779,19 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                               {step.name || `Diagnostic Method #${idx + 1}`}
                             </span>
                             {step.what && (
-                              <p className="text-xs font-bold text-[#112250] break-words">
+                              <div className="text-xs font-bold text-[#112250]">
                                 What it is: <span className="font-medium text-[#3B507D]"><LinkifiedText text={step.what} /></span>
-                              </p>
+                              </div>
                             )}
                             {step.how && (
-                              <p className="text-xs font-bold text-[#112250] break-words">
+                              <div className="text-xs font-bold text-[#112250]">
                                 How it works: <span className="font-medium text-[#3B507D]"><LinkifiedText text={step.how} /></span>
-                              </p>
+                              </div>
                             )}
                             {step.result && (
-                              <p className="text-xs font-bold text-[#112250] break-words">
+                              <div className="text-xs font-bold text-[#112250]">
                                 Result meaning: <span className="font-medium text-[#3B507D]"><LinkifiedText text={step.result} /></span>
-                              </p>
+                              </div>
                             )}
                           </div>
                         ))}
@@ -713,242 +803,383 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 </motion.div>
               )}
 
-              {/* ── 6. TREATMENT & RESEARCH TAB ── */}
+              {/* ── 5. RESEARCH & PHARMA TAB (Defects 5 & 6) ── */}
               {activeTab === "researchPharma" && (
                 <motion.div key="treatments" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <FlaskConical className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Research & Pharma Directory
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Complete records of active clinical trials, pharmaceutical organizations, development stages, and eligibility.
-                    </p>
-
-                    {treatmentSections.length > 0 && (
-                      <div className="mb-8">
-                        <h3 className="mb-3 font-heading text-lg font-black text-[#112250]">Treatment & Management</h3>
-                        <StructuredSections sections={treatmentSections} emptyHeading="Treatment" />
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <FlaskConical className="h-5 w-5 text-[#112250]" />
                       </div>
-                    )}
-
-                    {clinicalTrials.length > 0 && (
-                      <div className="mb-8">
-                        <h3 className="mb-3 font-heading text-lg font-black text-[#112250]">Clinical Trials</h3>
-                        <div className="space-y-4 sm:space-y-5">
-                          {clinicalTrials.map((res: any, idx: number) => (
-                          <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
-                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                              <div className="min-w-0">
-                                <h3 className="font-heading font-black text-base sm:text-lg text-[#112250] break-words">
-                                  {res.name || res.title || "Research Organization"}
-                                </h3>
-                                {res.drugName && (
-                                  <span className="mt-1 inline-block text-xs font-bold text-[#3B507D] break-words">
-                                    Drug / Compound: {res.drugName}
-                                  </span>
-                                )}
-                              </div>
-                              {res.url && (
-                                <a
-                                  href={res.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#112250] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#3B507D] transition-all shrink-0 self-start sm:self-auto"
-                                >
-                                  <span>Official Website / Trial</span>
-                                  <ExternalLink className="h-3.5 w-3.5" />
-                                </a>
-                              )}
-                            </div>
-
-                            <p className="text-xs text-[#112250] font-medium leading-relaxed break-words">
-                              <LinkifiedText text={res.focus || res.description || "Active rare disease research project."} />
-                            </p>
-
-                            <div className="grid gap-2 text-[11px] text-[#3B507D] font-semibold grid-cols-1 sm:grid-cols-2 pt-2 border-t border-[#E7E2CE]">
-                              {res.stage && <div className="break-words">Development Stage: <span className="text-[#112250]">{res.stage}</span></div>}
-                              {res.status && <div className="break-words">Trial Status: <span className="text-[#112250]">{res.status}</span></div>}
-                              {res.eligibility && <div className="break-words">Eligibility: <span className="text-[#112250]">{res.eligibility}</span></div>}
-                              {res.location && <div className="break-words">Location: <span className="text-[#112250]">{res.location}</span></div>}
-                            </div>
-                            {res.notes && (
-                              <p className="border-t border-[#E7E2CE] pt-3 text-xs leading-relaxed text-[#3B507D]">
-                                <LinkifiedText text={res.notes} />
-                              </p>
-                            )}
-                          </div>
-                        ))}
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Research & Pharma Directory
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Approved treatments, active clinical trials, and dedicated research organizations.
+                        </p>
                       </div>
                     </div>
-                  )}
 
-                  {clinicalTrials.length === 0 && clinicalTrialSections.length > 0 && (
-                    <div className="mb-8">
-                      <h3 className="mb-3 font-heading text-lg font-black text-[#112250]">Clinical Trials</h3>
-                      <StructuredSections sections={clinicalTrialSections} emptyHeading="Clinical Trials" />
-                    </div>
-                  )}
-
-                  {researchOrganizations.length > 0 && (
-                    <div className="mb-8">
-                      <h3 className="mb-3 font-heading text-lg font-black text-[#112250]">Research Organizations</h3>
-                      <div className="space-y-4 sm:space-y-5">
-                        {researchOrganizations.map((res: any, idx: number) => (
-                          <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
-                            <h4 className="font-heading font-black text-base text-[#112250]">{res.name}</h4>
-                            {res.focus && <p className="text-xs leading-relaxed text-[#112250]"><LinkifiedText text={res.focus} /></p>}
-                            {res.url && <a href={res.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#112250] hover:underline">Visit source <ExternalLink className="h-3.5 w-3.5" /></a>}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {treatmentSections.length === 0 && clinicalTrials.length === 0 && clinicalTrialSections.length === 0 && researchOrganizations.length === 0 ? (
-                      <p className="text-xs text-[#3B507D] italic">No research records found for this disease.</p>
-                    ) : null}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ── 7. LIFESTYLE TAB ── */}
-              {activeTab === "lifestyleCommunity" && (
-                <motion.div key="lifestyle" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <HeartPulse className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Lifestyle & Daily Support
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Therapies, nutrition, equipment, daily guidance, and support routines.
-                    </p>
-
-                    {lifestyleSections.length > 0 ? (
-                      <StructuredSections sections={lifestyleSections} emptyHeading="Lifestyle & Daily Support" />
-                    ) : disease.lifestyleAndDailySupport ? (
-                      <div className="space-y-4 sm:space-y-5">
-                        {disease.lifestyleAndDailySupport.raw && (
-                          <div className="rounded-xl bg-[#F5F4F0] p-4 sm:p-5 text-xs text-[#112250] leading-relaxed font-medium border border-[#E7E2CE] break-words">
-                            <LinkifiedText text={disease.lifestyleAndDailySupport.raw} />
+                    {researchBlocks && researchBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={researchBlocks} />
+                    ) : (
+                      <div className="space-y-8">
+                        {/* Section 1: Treatments */}
+                        {treatmentSections.length > 0 && (
+                          <div>
+                            <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
+                              <HeartPulse className="h-4 w-4 text-[#112250]" /> Treatments & Management
+                            </h3>
+                            <StructuredSections sections={treatmentSections} emptyHeading="Treatment" />
                           </div>
                         )}
 
-                        {Array.isArray(disease.lifestyleAndDailySupport.therapies) && disease.lifestyleAndDailySupport.therapies.length > 0 && (
-                          <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-5">
-                            <h4 className="font-heading font-black text-sm sm:text-base text-[#112250] mb-3 flex items-center gap-2">
-                              <Activity className="h-4 w-4 text-[#112250] shrink-0" /> Recommended Therapies
-                            </h4>
-                            <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
-                              {disease.lifestyleAndDailySupport.therapies.map((th: any, idx: number) => (
-                                <div key={idx} className="rounded-lg bg-[#F5F4F0] p-3 text-xs font-bold text-[#112250] border border-[#E7E2CE] break-words">
-                                  {typeof th === "string" ? th : `${th.name}${th.desc ? `: ${th.desc}` : ""}`}
+                        {/* Section 2: Clinical Trials */}
+                        {(clinicalTrials.length > 0 || clinicalTrialSections.length > 0) && (
+                          <div>
+                            <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
+                              <FlaskConical className="h-4 w-4 text-[#112250]" /> Clinical Trials
+                            </h3>
+                            {clinicalTrials.length > 0 ? (
+                              <div className="space-y-4">
+                                {clinicalTrials.map((res: any, idx: number) => (
+                                  <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
+                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                                      <div className="min-w-0">
+                                        <h4 className="font-heading font-black text-base text-[#112250]">
+                                          {res.name || res.title || "Clinical Trial / Research"}
+                                        </h4>
+                                        {res.drugName && (
+                                          <span className="mt-1 inline-block text-xs font-bold text-[#3B507D]">
+                                            Drug / Compound: {res.drugName}
+                                          </span>
+                                        )}
+                                      </div>
+                                      {res.url && (
+                                        <a
+                                          href={res.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#112250] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#3B507D] transition-all shrink-0"
+                                        >
+                                          <span>Official Trial Website</span>
+                                          <ExternalLink className="h-3.5 w-3.5" />
+                                        </a>
+                                      )}
+                                    </div>
+                                    <p className="text-xs text-[#112250] font-medium leading-relaxed">
+                                      <LinkifiedText text={res.focus || res.description || "Active clinical trial research."} />
+                                    </p>
+                                    <div className="grid gap-2 text-[11px] text-[#3B507D] font-semibold grid-cols-1 sm:grid-cols-2 pt-2 border-t border-[#E7E2CE]">
+                                      {res.stage && <div>Stage: <span className="text-[#112250]">{res.stage}</span></div>}
+                                      {res.status && <div>Status: <span className="text-[#112250]">{res.status}</span></div>}
+                                      {res.eligibility && <div>Eligibility: <span className="text-[#112250]">{res.eligibility}</span></div>}
+                                      {res.location && <div>Location: <span className="text-[#112250]">{res.location}</span></div>}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <StructuredSections sections={clinicalTrialSections} emptyHeading="Clinical Trials" />
+                            )}
+                          </div>
+                        )}
+
+                        {/* Section 3: Research Organizations */}
+                        {researchOrganizations.length > 0 && (
+                          <div>
+                            <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
+                              <Building2 className="h-4 w-4 text-[#112250]" /> Research Organizations
+                            </h3>
+                            <div className="space-y-4">
+                              {researchOrganizations.map((org: any, idx: number) => (
+                                <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6">
+                                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                                    <div className="space-y-1.5 flex-1 min-w-0">
+                                      <h4 className="font-heading font-black text-base text-[#112250] flex items-center gap-2">
+                                        <Building2 className="h-4 w-4 text-[#112250] shrink-0" />
+                                        <span>{org.name || "Research Organization"}</span>
+                                      </h4>
+                                      {org.focus && (
+                                        <p className="text-xs text-[#3B507D] font-medium leading-relaxed pl-6">
+                                          <span className="font-bold text-[#112250]">Focus Area: </span>
+                                          <LinkifiedText text={org.focus} />
+                                        </p>
+                                      )}
+                                    </div>
+                                    {org.url && (
+                                      <a
+                                        href={org.url.startsWith("http") ? org.url : `https://${org.url}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#112250] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0"
+                                      >
+                                        <ExternalLink className="h-3.5 w-3.5" />
+                                        <span>Official Website</span>
+                                      </a>
+                                    )}
+                                  </div>
                                 </div>
                               ))}
                             </div>
                           </div>
                         )}
 
-                        {disease.lifestyleAndDailySupport.nutrition && (
-                          <div className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-5">
-                            <h4 className="font-heading font-black text-sm sm:text-base text-[#112250] mb-1">Nutrition & Dietary Support</h4>
-                            <p className="text-xs text-[#3B507D] font-medium leading-relaxed break-words">
-                              <LinkifiedText text={disease.lifestyleAndDailySupport.nutrition} />
-                            </p>
-                          </div>
-                        )}
-
-                        {Array.isArray(disease.lifestyleAndDailySupport.devices) && disease.lifestyleAndDailySupport.devices.length > 0 && (
-                          <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-5">
-                            <h4 className="font-heading font-black text-sm sm:text-base text-[#112250] mb-2">Assistive Devices & Medical Equipment</h4>
-                            <ul className="list-disc list-inside space-y-1 text-xs text-[#3B507D] font-medium">
-                              {disease.lifestyleAndDailySupport.devices.map((dev: string, idx: number) => (
-                                <li key={idx} className="break-words">{dev}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        {Array.isArray(disease.lifestyleAndDailySupport.caregiverTips) && disease.lifestyleAndDailySupport.caregiverTips.length > 0 && (
-                          <div className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-5">
-                            <h4 className="font-heading font-black text-sm sm:text-base text-[#112250] mb-3">Caregiver Guidance & Practical Advice</h4>
-                            <ul className="space-y-2">
-                              {disease.lifestyleAndDailySupport.caregiverTips.map((tip: string, idx: number) => (
-                                <li key={idx} className="flex items-start gap-2 text-xs text-[#112250] font-semibold">
-                                  <CheckCircle className="h-4 w-4 text-[#112250] shrink-0 mt-0.5" />
-                                  <span className="break-words"><LinkifiedText text={tip} /></span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                        {treatmentSections.length === 0 && clinicalTrials.length === 0 && clinicalTrialSections.length === 0 && researchOrganizations.length === 0 && (
+                          <p className="text-xs text-[#3B507D] italic">No research records found for this disease.</p>
                         )}
                       </div>
-                    ) : (
-                      <p className="text-xs text-[#3B507D] italic">Lifestyle information currently being updated.</p>
                     )}
                   </div>
                 </motion.div>
               )}
 
-              {/* ── 8. COMMUNITY TAB ── */}
+              {/* ── 6. LIFESTYLE & DAILY SUPPORT TAB (Defect 8) ── */}
               {activeTab === "lifestyleCommunity" && (
-                <motion.div key="community" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
+                <motion.div key="lifestyle" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <Users className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Community & Patient Support Resources
-                    </h2>
-                    <div className="space-y-4">
-                      {communityResources.map((resource: any, index: number) => (
-                        <article key={`${resource.name}-${index}`} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6">
-                          <div className="flex items-start gap-3">
-                            <Users className="mt-0.5 h-5 w-5 shrink-0 text-[#112250]" aria-hidden="true" />
-                            <div className="min-w-0">
-                              <h3 className="font-heading text-sm font-black text-[#112250]">{resource.name}</h3>
-                              {resource.category && <p className="mt-1 text-xs font-bold text-[#3B507D]">{resource.category}</p>}
-                            </div>
-                          </div>
-                          {resource.description && (
-                            <p className="mt-3 whitespace-pre-line text-xs font-medium leading-relaxed text-[#112250]">
-                              <LinkifiedText text={resource.description} />
-                            </p>
-                          )}
-                          {Array.isArray(resource.links) && resource.links.length > 0 ? (
-                            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#E7E2CE] pt-3">
-                              {resource.links.map((link: any, linkIndex: number) => (
-                                <a key={`${link.url}-${linkIndex}`} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#112250] hover:underline">
-                                  <span>{link.label || "Visit resource"}</span><ExternalLink className="h-3.5 w-3.5" />
-                                </a>
-                              ))}
-                            </div>
-                          ) : resource.url ? (
-                            <a href={resource.url} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1.5 border-t border-[#E7E2CE] pt-3 text-xs font-bold text-[#112250] hover:underline">
-                              <span>Visit resource</span><ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          ) : null}
-                        </article>
-                      ))}
-                      {communityResources.length === 0 && disease.lifestyleAndDailySupport?.community ? (
-                        <p className="whitespace-pre-line text-sm leading-relaxed text-[#112250]">
-                          <LinkifiedText text={disease.lifestyleAndDailySupport.community} />
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <HeartPulse className="h-5 w-5 text-[#112250]" />
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Lifestyle & Daily Support
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Therapies, nutrition, assistive equipment, caregiver advice, and community resources.
                         </p>
-                      ) : communityResources.length === 0 && !disease.lifestyleAndDailySupport?.community ? (
-                        <p className="text-xs text-[#3B507D] italic">Community information currently being updated.</p>
-                      ) : null}
+                      </div>
                     </div>
+
+                    {lifestyleBlocks && lifestyleBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={lifestyleBlocks} />
+                    ) : lifestyleSections.length > 0 ? (
+                      <StructuredSections sections={lifestyleSections} emptyHeading="Lifestyle & Daily Support" />
+                    ) : (
+                      <div className="space-y-4">
+                        {disease.lifestyleAndDailySupport?.raw && (
+                          <div className="rounded-xl bg-[#F5F4F0] p-4 sm:p-5 text-xs text-[#112250] leading-relaxed font-medium border border-[#E7E2CE] break-words mb-4">
+                            <LinkifiedText text={disease.lifestyleAndDailySupport.raw} />
+                          </div>
+                        )}
+
+                        {/* Accordion 1: Recommended Therapies */}
+                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => toggleLifestyleAccordion("therapies")}
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                          >
+                            <span className="flex items-center gap-2.5">
+                              <Activity className="h-4 w-4 text-[#112250]" />
+                              <span>1. Recommended Therapies</span>
+                              {Array.isArray(disease.lifestyleAndDailySupport?.therapies) && (
+                                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]">
+                                  {disease.lifestyleAndDailySupport.therapies.length}
+                                </span>
+                              )}
+                            </span>
+                            {openLifestyleAccordions.therapies ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                          </button>
+                          {openLifestyleAccordions.therapies && (
+                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white">
+                              {Array.isArray(disease.lifestyleAndDailySupport?.therapies) && disease.lifestyleAndDailySupport.therapies.length > 0 ? (
+                                <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
+                                  {disease.lifestyleAndDailySupport.therapies.map((th: any, idx: number) => (
+                                    <div key={idx} className="rounded-lg bg-[#F5F4F0] p-3 text-xs font-bold text-[#112250] border border-[#E7E2CE] break-words">
+                                      {typeof th === "string" ? th : `${th.name}${th.desc ? `: ${th.desc}` : ""}`}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="text-xs text-[#3B507D] italic">Therapy recommendations currently being updated.</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Accordion 2: Diets & Nutrition */}
+                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => toggleLifestyleAccordion("nutrition")}
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                          >
+                            <span className="flex items-center gap-2.5">
+                              <HeartPulse className="h-4 w-4 text-[#112250]" />
+                              <span>2. Diets & Nutrition</span>
+                            </span>
+                            {openLifestyleAccordions.nutrition ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                          </button>
+                          {openLifestyleAccordions.nutrition && (
+                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white text-xs text-[#3B507D] font-medium leading-relaxed">
+                              {disease.lifestyleAndDailySupport?.nutrition ? (
+                                <LinkifiedText text={disease.lifestyleAndDailySupport.nutrition} />
+                              ) : (
+                                <p className="italic">Nutritional guidance currently being updated.</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Accordion 3: Assistive Devices & Equipment */}
+                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => toggleLifestyleAccordion("devices")}
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                          >
+                            <span className="flex items-center gap-2.5">
+                              <Zap className="h-4 w-4 text-[#112250]" />
+                              <span>3. Assistive Devices & Medical Equipment</span>
+                              {Array.isArray(disease.lifestyleAndDailySupport?.devices) && (
+                                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]">
+                                  {disease.lifestyleAndDailySupport.devices.length}
+                                </span>
+                              )}
+                            </span>
+                            {openLifestyleAccordions.devices ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                          </button>
+                          {openLifestyleAccordions.devices && (
+                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white">
+                              {Array.isArray(disease.lifestyleAndDailySupport?.devices) && disease.lifestyleAndDailySupport.devices.length > 0 ? (
+                                <ul className="list-disc list-inside space-y-1.5 text-xs text-[#3B507D] font-medium">
+                                  {disease.lifestyleAndDailySupport.devices.map((dev: string, idx: number) => (
+                                    <li key={idx} className="break-words">{dev}</li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p className="text-xs text-[#3B507D] italic">Assistive equipment details currently being updated.</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Accordion 4: Daily Care Tips & Practical Advice */}
+                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => toggleLifestyleAccordion("caregiverTips")}
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                          >
+                            <span className="flex items-center gap-2.5">
+                              <CheckCircle className="h-4 w-4 text-[#112250]" />
+                              <span>4. Daily Care Tips & Practical Advice</span>
+                              {Array.isArray(disease.lifestyleAndDailySupport?.caregiverTips) && (
+                                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]">
+                                  {disease.lifestyleAndDailySupport.caregiverTips.length}
+                                </span>
+                              )}
+                            </span>
+                            {openLifestyleAccordions.caregiverTips ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                          </button>
+                          {openLifestyleAccordions.caregiverTips && (
+                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white">
+                              {Array.isArray(disease.lifestyleAndDailySupport?.caregiverTips) && disease.lifestyleAndDailySupport.caregiverTips.length > 0 ? (
+                                <ul className="space-y-2">
+                                  {disease.lifestyleAndDailySupport.caregiverTips.map((tip: string, idx: number) => (
+                                    <li key={idx} className="flex items-start gap-2 text-xs text-[#112250] font-semibold">
+                                      <CheckCircle className="h-4 w-4 text-[#112250] shrink-0 mt-0.5" />
+                                      <span className="break-words"><LinkifiedText text={tip} /></span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p className="text-xs text-[#3B507D] italic">Daily care advice currently being updated.</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Accordion 5: Community Links & Support Resources */}
+                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => toggleLifestyleAccordion("community")}
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                          >
+                            <span className="flex items-center gap-2.5">
+                              <Users className="h-4 w-4 text-[#112250]" />
+                              <span>5. Community Links & Patient Support Resources</span>
+                              {communityResources.length > 0 && (
+                                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]">
+                                  {communityResources.length}
+                                </span>
+                              )}
+                            </span>
+                            {openLifestyleAccordions.community ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                          </button>
+                          {openLifestyleAccordions.community && (
+                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white space-y-4">
+                              {communityResources.map((resource: any, index: number) => (
+                                <article key={`${resource.name}-${index}`} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-5">
+                                  <div className="flex items-start gap-3">
+                                    <Users className="mt-0.5 h-5 w-5 shrink-0 text-[#112250]" />
+                                    <div className="min-w-0">
+                                      <h4 className="font-heading text-sm font-black text-[#112250]">{resource.name}</h4>
+                                      {resource.category && <p className="mt-0.5 text-xs font-bold text-[#3B507D]">{resource.category}</p>}
+                                    </div>
+                                  </div>
+                                  {resource.description && (
+                                    <p className="mt-2 text-xs font-medium leading-relaxed text-[#112250]">
+                                      <LinkifiedText text={resource.description} />
+                                    </p>
+                                  )}
+                                  {Array.isArray(resource.links) && resource.links.length > 0 ? (
+                                    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#E7E2CE] pt-2">
+                                      {resource.links.map((link: any, linkIndex: number) => (
+                                        <a key={`${link.url}-${linkIndex}`} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#112250] hover:underline">
+                                          <span>{link.label || "Visit resource"}</span><ExternalLink className="h-3.5 w-3.5" />
+                                        </a>
+                                      ))}
+                                    </div>
+                                  ) : resource.url ? (
+                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 border-t border-[#E7E2CE] pt-2 text-xs font-bold text-[#112250] hover:underline">
+                                      <span>Visit resource</span><ExternalLink className="h-3.5 w-3.5" />
+                                    </a>
+                                  ) : null}
+                                </article>
+                              ))}
+                              {communityResources.length === 0 && disease.lifestyleAndDailySupport?.community && (
+                                <p className="text-xs text-[#112250] leading-relaxed">
+                                  <LinkifiedText text={disease.lifestyleAndDailySupport.community} />
+                                </p>
+                              )}
+                              {communityResources.length === 0 && !disease.lifestyleAndDailySupport?.community && (
+                                <p className="text-xs text-[#3B507D] italic">Community resources currently being updated.</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
 
-              {/* ── 9. FAQS TAB ── */}
+              {/* ── 7. FAQS TAB ── */}
               {activeTab === "faqs" && (
                 <motion.div key="faqs" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <HelpCircle className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Frequently Asked Questions (FAQs)
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Structured Q&A pairs extracted from clinical documentation.
-                    </p>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <HelpCircle className="h-5 w-5 text-[#112250]" />
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Frequently Asked Questions (FAQs)
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Structured clinical Q&A extracted from research documentation.
+                        </p>
+                      </div>
+                    </div>
 
-                    {faqsList.length > 0 ? (
+                    {faqsBlocks && faqsBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={faqsBlocks} />
+                    ) : faqsList.length > 0 ? (
                       <div className="space-y-3">
                         {faqsList.map((faq: any, idx: number) => {
                           const isOpen = openFaqIndices[idx] ?? (idx === 0);
@@ -984,18 +1215,27 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 </motion.div>
               )}
 
-              {/* ── 10. FACTS VS MYTHS TAB ── */}
+              {/* ── 8. FACTS VS MYTHS TAB ── */}
               {activeTab === "myths" && (
                 <motion.div key="myths" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Facts vs. Myths
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Paired myth statements and corresponding verified medical facts.
-                    </p>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <Lightbulb className="h-5 w-5 text-[#112250]" />
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Facts vs. Myths
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Paired medical misconceptions and evidence-based facts.
+                        </p>
+                      </div>
+                    </div>
 
-                    {mythsList.length > 0 ? (
+                    {mythsBlocks && mythsBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={mythsBlocks} />
+                    ) : mythsList.length > 0 ? (
                       <div className="space-y-4">
                         {mythsList.map((item: any, idx: number) => {
                           const mythText = item.myth || item.statement || "Common Myth";
@@ -1035,18 +1275,27 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 </motion.div>
               )}
 
-              {/* ── 11. SPECIALIST DIRECTORY TAB ── */}
+              {/* ── 9. SPECIALIST DIRECTORY TAB ── */}
               {activeTab === "specialists" && (
                 <motion.div key="specialists" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <Stethoscope className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Specialist Directory
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Specialist details are shown as provided in this condition's source records.
-                    </p>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <Stethoscope className="h-5 w-5 text-[#112250]" />
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Specialist Directory
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Medical specialists and clinical experts for this condition.
+                        </p>
+                      </div>
+                    </div>
 
-                    {specialistsList.length > 0 ? (
+                    {specialistsBlocks && specialistsBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={specialistsBlocks} />
+                    ) : specialistsList.length > 0 ? (
                       <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
                         {specialistsList.map((spec: any, idx: number) => {
                           return (
@@ -1125,18 +1374,27 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 </motion.div>
               )}
 
-              {/* ── 12. SOURCES & LINKS TAB ── */}
-              {activeTab === "overview" && sourcesList.length > 0 && (
+              {/* ── 10. SOURCES & LINKS TAB ── */}
+              {activeTab === "overview" && (sourcesBlocks?.length ? true : sourcesList.length > 0) && (
                 <motion.div key="sources" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
                   <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250] mb-2 flex items-center gap-2">
-                      <ExternalLink className="h-5 w-5 sm:h-6 sm:w-6 text-[#112250] shrink-0" /> Disease Sources & External References
-                    </h2>
-                    <p className="text-xs font-medium text-[#3B507D] mb-6">
-                      Detected websites, clinical trials, academic publications, and official registry citations.
-                    </p>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
+                        <ExternalLink className="h-5 w-5 text-[#112250]" />
+                      </div>
+                      <div>
+                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
+                          Disease Sources & External References
+                        </h2>
+                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
+                          Detected websites, clinical trials, academic publications, and official registry citations.
+                        </p>
+                      </div>
+                    </div>
 
-                    {sourcesList.length > 0 ? (
+                    {sourcesBlocks && sourcesBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={sourcesBlocks} />
+                    ) : sourcesList.length > 0 ? (
                       <div className="space-y-3">
                         {sourcesList.map((src: any, idx: number) => {
                           const title = src.title || src.name || `Reference ${idx + 1}`;

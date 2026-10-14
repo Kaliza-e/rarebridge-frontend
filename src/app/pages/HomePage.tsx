@@ -500,8 +500,8 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => onNav("directory")}
-            className="rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2"
+            onClick={() => window.dispatchEvent(new CustomEvent("open-ai-assistant"))}
+            className="rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2 cursor-pointer"
           >
             <BrainCircuit className="h-5 w-5 text-[#E7E2CE]" />
             <span>Ask Zebra Assistant</span>

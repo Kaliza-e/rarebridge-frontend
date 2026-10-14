@@ -97,6 +97,17 @@ export default function CommunityPage() {
   const [selectedFeature, setSelectedFeature] = useState<typeof COMMUNITY_FEATURES[0] | null>(null);
   const [likes, setLikes] = useState<Record<number, number>>({ 0: 48, 1: 62, 2: 75 });
   const [hasLiked, setHasLiked] = useState<Record<number, boolean>>({});
+  
+  // Discussions state
+  const [discussions, setDiscussions] = useState(RECENT_DISCUSSIONS);
+  const [isCreatingTopic, setIsCreatingTopic] = useState(false);
+  const [newTopicTitle, setNewTopicTitle] = useState("");
+  const [newTopicAuthor, setNewTopicAuthor] = useState("");
+  const [newTopicTag, setNewTopicTag] = useState("Caregiver Tips");
+  const [selectedDiscussion, setSelectedDiscussion] = useState<typeof RECENT_DISCUSSIONS[0] | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [joinedSuccess, setJoinedSuccess] = useState(false);
+  const [joinEmail, setJoinEmail] = useState("");
 
   const toggleLike = (index: number) => {
     if (hasLiked[index]) {
@@ -106,6 +117,43 @@ export default function CommunityPage() {
       setLikes((prev) => ({ ...prev, [index]: prev[index] + 1 }));
       setHasLiked((prev) => ({ ...prev, [index]: true }));
     }
+  };
+
+  const handleCreateTopic = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTopicTitle.trim()) return;
+    const author = newTopicAuthor.trim() || "Caregiver Community Member";
+    const newEntry = {
+      topic: newTopicTitle.trim(),
+      author,
+      replies: 0,
+      tag: newTopicTag,
+    };
+    setDiscussions((prev) => [newEntry, ...prev]);
+    setNewTopicTitle("");
+    setNewTopicAuthor("");
+    setIsCreatingTopic(false);
+  };
+
+  const handleAddReply = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!replyText.trim() || !selectedDiscussion) return;
+    setDiscussions((prev) =>
+      prev.map((d) => (d.topic === selectedDiscussion.topic ? { ...d, replies: d.replies + 1 } : d))
+    );
+    setSelectedDiscussion((prev) => (prev ? { ...prev, replies: prev.replies + 1 } : null));
+    setReplyText("");
+  };
+
+  const handleJoinCircle = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!joinEmail.trim()) return;
+    setJoinedSuccess(true);
+    setTimeout(() => {
+      setJoinedSuccess(false);
+      setSelectedFeature(null);
+      setJoinEmail("");
+    }, 2000);
   };
 
   return (
@@ -314,16 +362,20 @@ export default function CommunityPage() {
                 Trending Caregiver Discussions
               </h3>
             </div>
-            <button className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors shadow-xs">
+            <button
+              onClick={() => setIsCreatingTopic(true)}
+              className="inline-flex items-center gap-2 rounded-lg bg-[#112250] px-4 py-2 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shadow-xs cursor-pointer"
+            >
               <MessageCircle className="h-4 w-4" />
               <span>Start New Topic</span>
             </button>
           </div>
 
           <div className="space-y-4">
-            {RECENT_DISCUSSIONS.map((disc, idx) => (
+            {discussions.map((disc, idx) => (
               <div
                 key={idx}
+                onClick={() => setSelectedDiscussion(disc)}
                 className="flex items-center justify-between gap-4 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE] hover:bg-white hover:border-[#112250] transition-all cursor-pointer shadow-xs"
               >
                 <div className="flex items-center gap-3">
@@ -358,7 +410,10 @@ export default function CommunityPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              onClick={() => setSelectedFeature(null)}
+              onClick={() => {
+                setSelectedFeature(null);
+                setJoinedSuccess(false);
+              }}
               className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
             />
 
@@ -370,8 +425,11 @@ export default function CommunityPage() {
               className="relative w-full max-w-lg rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
             >
               <button
-                onClick={() => setSelectedFeature(null)}
-                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                onClick={() => {
+                  setSelectedFeature(null);
+                  setJoinedSuccess(false);
+                }}
+                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
@@ -389,23 +447,198 @@ export default function CommunityPage() {
                 {selectedFeature.detail}
               </p>
 
-              <div className="mt-6 space-y-3 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE]">
-                <h4 className="text-xs font-black uppercase text-[#112250]">Express Interest to Join</h4>
-                <input
-                  type="email"
-                  placeholder="Enter your email address..."
-                  className="w-full rounded-lg border border-[#E7E2CE] bg-white px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium"
-                />
+              {joinedSuccess ? (
+                <div className="mt-6 flex items-center gap-3 rounded-lg bg-emerald-50 p-4 border border-emerald-200 text-emerald-800 text-sm font-bold">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
+                  <span>Thank you! Your invitation to join this circle has been sent.</span>
+                </div>
+              ) : (
+                <form onSubmit={handleJoinCircle} className="mt-6 space-y-4">
+                  <div className="space-y-2 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE]">
+                    <h4 className="text-xs font-black uppercase text-[#112250]">Express Interest to Join</h4>
+                    <input
+                      type="email"
+                      required
+                      value={joinEmail}
+                      onChange={(e) => setJoinEmail(e.target.value)}
+                      placeholder="Enter your email address..."
+                      className="w-full rounded-lg border border-[#E7E2CE] bg-white px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium"
+                    />
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="submit"
+                      className="flex-1 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md cursor-pointer"
+                    >
+                      Join Circle
+                    </button>
+                  </div>
+                </form>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ================= MODAL FOR CREATING TOPIC ================= */}
+      <AnimatePresence>
+        {isCreatingTopic && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <motion.div
+              variants={overlayBackdropVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              onClick={() => setIsCreatingTopic(false)}
+              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+            />
+
+            <motion.div
+              variants={modalPanelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="relative w-full max-w-lg rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
+            >
+              <button
+                onClick={() => setIsCreatingTopic(false)}
+                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <h3 className="font-heading font-black text-2xl text-[#112250]">
+                Start a New Discussion
+              </h3>
+              <p className="mt-1 text-xs text-[#3B507D] font-medium">
+                Share questions, tips, or experiences with rare disease caregivers worldwide.
+              </p>
+
+              <form onSubmit={handleCreateTopic} className="mt-6 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#112250] mb-1">Topic Title</label>
+                  <input
+                    type="text"
+                    required
+                    value={newTopicTitle}
+                    onChange={(e) => setNewTopicTitle(e.target.value)}
+                    placeholder="e.g. Tips for managing daily therapy schedules..."
+                    className="w-full rounded-lg border border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-[#112250] mb-1">Your Name</label>
+                    <input
+                      type="text"
+                      value={newTopicAuthor}
+                      onChange={(e) => setNewTopicAuthor(e.target.value)}
+                      placeholder="e.g. Elena M."
+                      className="w-full rounded-lg border border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#112250] mb-1">Category Tag</label>
+                    <select
+                      value={newTopicTag}
+                      onChange={(e) => setNewTopicTag(e.target.value)}
+                      className="w-full rounded-lg border border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
+                    >
+                      <option value="Caregiver Tips">Caregiver Tips</option>
+                      <option value="School & Advocacy">School & Advocacy</option>
+                      <option value="Practical Guides">Practical Guides</option>
+                      <option value="Diagnosis Journey">Diagnosis Journey</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsCreatingTopic(false)}
+                    className="flex-1 rounded-lg border border-[#E7E2CE] bg-white px-4 py-3 text-xs font-bold text-[#3B507D] hover:bg-[#F5F4F0] cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 rounded-lg bg-[#112250] px-4 py-3 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md cursor-pointer"
+                  >
+                    Post Topic
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ================= MODAL FOR VIEWING DISCUSSION THREAD ================= */}
+      <AnimatePresence>
+        {selectedDiscussion && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <motion.div
+              variants={overlayBackdropVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              onClick={() => setSelectedDiscussion(null)}
+              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+            />
+
+            <motion.div
+              variants={modalPanelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="relative w-full max-w-lg rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
+            >
+              <button
+                onClick={() => setSelectedDiscussion(null)}
+                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <span className="rounded-md bg-[#E7E2CE]/60 px-3 py-1 text-xs font-bold text-[#112250]">
+                {selectedDiscussion.tag}
+              </span>
+
+              <h3 className="font-heading font-black text-xl text-[#112250] mt-2">
+                {selectedDiscussion.topic}
+              </h3>
+              <p className="text-xs text-[#3B507D] font-medium mt-1">
+                Started by {selectedDiscussion.author} • {selectedDiscussion.replies} community responses
+              </p>
+
+              <div className="mt-4 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE] text-xs text-[#112250] leading-relaxed">
+                "Our family found that having a clear daily checklist and staying in touch with other parents gave us the confidence to advocate effectively at each clinical visit."
               </div>
 
-              <div className="mt-6 flex gap-3">
-                <button
-                  onClick={() => setSelectedFeature(null)}
-                  className="flex-1 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
-                >
-                  Join Circle
-                </button>
-              </div>
+              <form onSubmit={handleAddReply} className="mt-6 space-y-3">
+                <label className="block text-xs font-bold text-[#112250]">Share Advice or Reply</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    required
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="Type your encouraging reply..."
+                    className="flex-1 rounded-lg border border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-[#112250] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shadow-xs cursor-pointer flex items-center gap-1.5"
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                    <span>Reply</span>
+                  </button>
+                </div>
+              </form>
             </motion.div>
           </div>
         )}

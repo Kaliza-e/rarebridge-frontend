@@ -21,10 +21,15 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"parent" | "specialist">("parent");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onNav) onNav("home");
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      if (onNav) onNav("home");
+    }, 600);
   };
 
   return (
@@ -170,9 +175,10 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
 
               <button
                 type="submit"
-                className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-all shadow-md"
+                disabled={isSubmitting}
+                className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-all shadow-md cursor-pointer disabled:opacity-70"
               >
-                <span>Create Free Account</span>
+                <span>{isSubmitting ? "Creating Account..." : "Create Free Account"}</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
             </form>
@@ -181,7 +187,7 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
               Already have an account?{" "}
               <button
                 onClick={() => onNav?.("signin")}
-                className="font-bold text-[#112250] hover:underline"
+                className="font-bold text-[#112250] hover:underline cursor-pointer"
               >
                 Sign In
               </button>

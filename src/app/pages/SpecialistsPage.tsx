@@ -24,12 +24,29 @@ import {
   overlayBackdropVariants,
 } from "../utils/animations";
 
-interface SpecialistWithDisease extends Specialist {
+export interface UnifiedSpecialist extends Specialist {
   disease: string;
   diseaseNumber: string;
+  diseases: Array<{ name: string; diseaseNumber: string }>;
 }
 
 const SPECIALISTS_PER_PAGE = 9;
+
+function normalizeDoctorKey(name: string, org?: string): string {
+  const cleanName = (name || '')
+    .toLowerCase()
+    .replace(/^dr\.?\s+|^prof\.?\s+/i, '')
+    .replace(/,\s*m\.?d\.?.*$/i, '')
+    .replace(/[^a-z0-9]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const cleanOrg = (org || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return `${cleanName}|${cleanOrg}`;
+}
 
 function renderAdditionalContent(nodes?: ContentNode[]): React.ReactNode {
   if (!nodes?.length) return null;
@@ -47,13 +64,13 @@ function renderAdditionalContent(nodes?: ContentNode[]): React.ReactNode {
 }
 
 export default function SpecialistsPage() {
-  const [specialists, setSpecialists] = useState<SpecialistWithDisease[]>([]);
+  const [specialists, setSpecialists] = useState<UnifiedSpecialist[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [retryToken, setRetryToken] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedSpecialist, setSelectedSpecialist] = useState<SpecialistWithDisease | null>(null);
+  const [selectedSpecialist, setSelectedSpecialist] = useState<UnifiedSpecialist | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -62,57 +79,43 @@ export default function SpecialistsPage() {
         setLoading(true);
         setLoadError(false);
         const diseases = await apiService.getDiseases();
-        const extracted = new Map<string, SpecialistWithDisease>();
+        const extracted = new Map<string, UnifiedSpecialist>();
 
         diseases.forEach((disease) => {
-          if (!disease || typeof disease !== "object") {
-            console.error("Ignoring malformed disease record while loading specialists", disease);
-            return;
-          }
-          if (disease.specialists != null && !Array.isArray(disease.specialists)) {
-            console.error("Ignoring malformed specialist list for disease record", {
-              diseaseNumber: disease.diseaseNumber,
-              disease: disease.name,
-            });
-            return;
-          }
+          if (!disease || typeof disease !== "object") return;
           if (Array.isArray(disease.specialists)) {
             disease.specialists.forEach((spec) => {
-              if (!spec || typeof spec !== "object" || typeof spec.name !== "string" ||
-                  !spec.name.trim() || typeof disease.name !== "string" || !disease.name.trim()) {
-                console.error("Ignoring malformed source specialist record", {
-                  diseaseNumber: disease.diseaseNumber,
-                  specialist: spec,
-                });
+              if (!spec || typeof spec !== "object" || typeof spec.name !== "string" || !spec.name.trim()) {
                 return;
               }
-              const record: SpecialistWithDisease = {
-                ...spec,
-                disease: disease.name.trim(),
-                diseaseNumber: disease.diseaseNumber,
-              };
-              const identity = JSON.stringify([
-                record.diseaseNumber || record.disease,
-                record.name,
-                record.profession,
-                record.specialization,
-                record.organization,
-                record.location,
-                record.contact,
-                record.publications,
-                record.photoUrl,
-                record.sources,
-                record.links,
-                record.additionalContent,
-              ]);
-              if (extracted.has(identity)) {
-                console.warn("Ignoring exact duplicate source specialist record", {
-                  diseaseNumber: record.diseaseNumber,
-                  name: record.name,
-                });
-                return;
+              const diseaseName = (disease.name || "").trim();
+              const diseaseNum = disease.diseaseNumber || "";
+              const key = normalizeDoctorKey(spec.name, spec.organization);
+
+              if (extracted.has(key)) {
+                const existing = extracted.get(key)!;
+                // Add disease if not present
+                if (diseaseName && !existing.diseases.some((d) => d.name.toLowerCase() === diseaseName.toLowerCase())) {
+                  existing.diseases.push({ name: diseaseName, diseaseNumber: diseaseNum });
+                }
+                // Merge missing contact info
+                if (!existing.contact && spec.contact) existing.contact = spec.contact;
+                if (!existing.location && spec.location) existing.location = spec.location;
+                if (!existing.publications && spec.publications) existing.publications = spec.publications;
+                if (Array.isArray(spec.sources) && spec.sources.length > 0) {
+                  const currSources = new Set(existing.sources || []);
+                  spec.sources.forEach((s) => currSources.add(s));
+                  existing.sources = Array.from(currSources);
+                }
+              } else {
+                const record: UnifiedSpecialist = {
+                  ...spec,
+                  disease: diseaseName,
+                  diseaseNumber: diseaseNum,
+                  diseases: diseaseName ? [{ name: diseaseName, diseaseNumber: diseaseNum }] : [],
+                };
+                extracted.set(key, record);
               }
-              extracted.set(identity, record);
             });
           }
         });
@@ -135,7 +138,7 @@ export default function SpecialistsPage() {
     };
   }, [retryToken]);
 
-  const cleanSpecialistInfo = (spec: SpecialistWithDisease) => {
+  const cleanSpecialistInfo = (spec: UnifiedSpecialist) => {
     return {
       rawName: spec.name,
       profession: spec.profession?.trim() || "",
@@ -153,6 +156,7 @@ export default function SpecialistsPage() {
       s.specialization?.toLowerCase().includes(q) ||
       s.location?.toLowerCase().includes(q) ||
       s.disease?.toLowerCase().includes(q) ||
+      s.diseases?.some((d) => d.name.toLowerCase().includes(q)) ||
       s.publications?.toLowerCase().includes(q);
 
     return matchSearch;
@@ -311,28 +315,31 @@ export default function SpecialistsPage() {
 
               return (
                 <motion.article
-                  key={JSON.stringify([
-                    spec.diseaseNumber,
-                    spec.name,
-                    spec.profession,
-                    spec.specialization,
-                    spec.organization,
-                    spec.location,
-                    spec.contact,
-                    spec.publications,
-                    spec.sources,
-                  ])}
+                  key={`${spec.name}-${spec.organization}`}
                   variants={fadeUpVariants}
-                  className="flex min-w-0 flex-col rounded-xl border border-[#E3E0D7] bg-white p-5 transition-colors hover:border-[#A9B2C5] sm:p-6"
+                  className="flex min-w-0 flex-col rounded-xl border border-[#E3E0D7] bg-white p-5 transition-colors hover:border-[#A9B2C5] sm:p-6 shadow-xs"
                 >
                   <div>
                     <div className="mb-4 flex min-w-0 items-start gap-4">
                       <SpecialistAvatar name={rawName} photoUrl={spec.photoUrl} />
                       <div className="min-w-0 flex-1">
-                        <span className="inline-block max-w-full break-words rounded-md bg-[#F5F4F0] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#112250]">
-                          {spec.disease}
-                        </span>
-                        <h2 className="mt-2 break-words font-heading text-lg font-bold leading-snug text-[#112250]">
+                        <div className="flex flex-wrap gap-1.5 mb-1.5">
+                          {spec.diseases && spec.diseases.length > 0 ? (
+                            spec.diseases.map((d, dIdx) => (
+                              <span
+                                key={dIdx}
+                                className="inline-block max-w-full break-words rounded-md bg-[#F5F4F0] px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]"
+                              >
+                                {d.name}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="inline-block max-w-full break-words rounded-md bg-[#F5F4F0] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#112250]">
+                              {spec.disease}
+                            </span>
+                          )}
+                        </div>
+                        <h2 className="break-words font-heading text-lg font-bold leading-snug text-[#112250]">
                           {rawName}
                         </h2>
                         {profession && <p className="mt-1 break-words text-sm font-semibold text-[#3B507D]">{profession}</p>}
@@ -453,11 +460,24 @@ export default function SpecialistsPage() {
                     <div className="flex items-start gap-4">
                       <SpecialistAvatar name={rawName} photoUrl={selectedSpecialist.photoUrl} className="h-20 w-20" />
                       <div className="min-w-0">
-                        <span className="rounded-md bg-[#E7E2CE]/70 px-3 py-1 text-xs font-bold text-[#112250]">
-                          {selectedSpecialist.disease}
-                        </span>
-                        <h2 className="mt-1.5 break-words font-heading text-2xl font-bold text-[#112250]">{rawName}</h2>
-                        {profession && <p className="mt-1 break-words text-sm font-semibold text-[#3B507D]">{profession}</p>}
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                          {selectedSpecialist.diseases && selectedSpecialist.diseases.length > 0 ? (
+                            selectedSpecialist.diseases.map((d, dIdx) => (
+                              <span
+                                key={dIdx}
+                                className="rounded-md bg-[#E7E2CE]/70 px-2.5 py-0.5 text-xs font-bold text-[#112250] border border-[#E7E2CE]"
+                              >
+                                {d.name}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="rounded-md bg-[#E7E2CE]/70 px-3 py-1 text-xs font-bold text-[#112250]">
+                              {selectedSpecialist.disease}
+                            </span>
+                          )}
+                        </div>
+                        <h2 className="mt-1 break-words font-heading text-2xl font-bold text-[#112250]">{rawName}</h2>
+                        {profession && <p className="mt-0.5 break-words text-sm font-semibold text-[#3B507D]">{profession}</p>}
                       </div>
                     </div>
 

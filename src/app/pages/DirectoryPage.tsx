@@ -89,6 +89,24 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
     };
   }, [query, cat]);
 
+function matchesCategory(d: any, category: string): boolean {
+  if (category === "All") return true;
+  const target = category.toLowerCase().trim();
+
+  if (Array.isArray(d.categories)) {
+    if (d.categories.some((c: string) => String(c).toLowerCase().trim() === target)) return true;
+  }
+  if (Array.isArray(d.categoryBadges)) {
+    if (d.categoryBadges.some((c: string) => String(c).toLowerCase().trim() === target)) return true;
+  }
+  if (typeof d.category === "string") {
+    const parts = d.category.split(/[,/]+/).map((s: string) => s.trim().toLowerCase());
+    if (parts.includes(target) || d.category.toLowerCase().trim() === target) return true;
+  }
+
+  return false;
+}
+
   const filtered = diseases.filter((d) => {
     const q = query.trim().toLowerCase();
 
@@ -99,8 +117,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
       (Boolean(d.shortDesc) && String(d.shortDesc).toLowerCase().includes(q)) ||
       (Boolean(d.orphaCode) && String(d.orphaCode).toLowerCase().includes(q));
 
-    const matchC =
-      cat === "All" || (d as any).categoryBadges?.includes(cat) || d.category === cat;
+    const matchC = matchesCategory(d, cat);
 
     const matchS =
       status === "All Status" || (d as any).researchStatus === status;
@@ -234,19 +251,32 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
                 <Filter className="h-4 w-4" />
                 Category:
               </span>
-              {CATEGORY_FILTERS.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setCat(category)}
-                  className={`px-3 py-1.5 text-xs font-semibold transition-all ${
-                    cat === category
-                      ? "border-b-2 border-[#112250] text-[#112250] bg-transparent font-bold"
-                      : "border-b-2 border-transparent text-[#3B507D] bg-transparent hover:text-[#112250] hover:border-[#E7E2CE]"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+              {CATEGORY_FILTERS.map((category) => {
+                const count = category === "All"
+                  ? diseases.length
+                  : diseases.filter((d) => matchesCategory(d, category)).length;
+                const isActive = cat === category;
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setCat(category)}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                      isActive
+                        ? "bg-[#112250] text-white font-bold shadow-xs"
+                        : "text-[#3B507D] bg-[#F5F4F0] hover:text-[#112250] hover:bg-[#E7E2CE]/60"
+                    }`}
+                  >
+                    <span>{category}</span>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                        isActive ? "bg-white/20 text-white" : "bg-black/5 text-[#3B507D]"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* Status Select & Reset */}

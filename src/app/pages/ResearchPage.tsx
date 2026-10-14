@@ -300,8 +300,8 @@ export default function ResearchPage() {
           </div>
 
           <button
-            onClick={() => {}}
-            className="relative z-10 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2"
+            onClick={() => window.dispatchEvent(new CustomEvent("open-ai-assistant"))}
+            className="relative z-10 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2 cursor-pointer"
           >
             <BrainCircuit className="h-5 w-5 text-[#E7E2CE]" />
             <span>Summarize Research Paper</span>

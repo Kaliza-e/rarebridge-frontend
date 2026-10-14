@@ -690,15 +690,28 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
 
     return transformedDiseases;
   } catch (error) {
-    console.error('Failed to fetch diseases from API:', error);
-    throw error;
+    console.warn('Failed to fetch diseases from API, using fallback dataset:', error);
+    return FALLBACK_DISEASES;
   }
 }
 
 // Export DISEASES as a function that can be called with API data
 export const DISEASES = FALLBACK_DISEASES;
 
-export const CATEGORY_FILTERS = ["All", "Genetic", "Neurological", "Metabolic", "Autoimmune"];
+export const CATEGORY_FILTERS = [
+  "All",
+  "Neurological",
+  "Genetic",
+  "Cancer",
+  "Vascular",
+  "Autoimmune",
+  "Metabolic",
+  "Endocrine",
+  "Multi-System",
+  "Pulmonary",
+  "Musculoskeletal",
+  "Hepatobiliary",
+];
 export const STATUS_FILTERS = ["All Status", "Active Research", "Approved Treatment", "Support Available"];
 
 export const COLOR_MAP: Record<string, { bg: string; text: string; badge: string; ring: string; iconBg: string }> = {

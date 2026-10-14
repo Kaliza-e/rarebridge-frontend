@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   Lock,
@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   ArrowLeft,
+  X,
 } from "lucide-react";
 import { EdelweissFlower, OrganicWavyLine } from "../components/common/Visuals";
 
@@ -21,10 +22,29 @@ export default function SignInPage({ onNav }: SignInPageProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"parent" | "specialist">("parent");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onNav) onNav("home");
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      if (onNav) onNav("home");
+    }, 600);
+  };
+
+  const handleForgotSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail.trim()) return;
+    setForgotSuccess(true);
+    setTimeout(() => {
+      setForgotSuccess(false);
+      setShowForgotModal(false);
+      setForgotEmail("");
+    }, 2500);
   };
 
   return (
@@ -152,16 +172,21 @@ export default function SignInPage({ onNav }: SignInPageProps) {
                   <input type="checkbox" className="rounded text-[#112250]" />
                   Remember me
                 </label>
-                <a href="#forgot" className="text-[#112250] hover:underline">
+                <button
+                  type="button"
+                  onClick={() => setShowForgotModal(true)}
+                  className="text-[#112250] hover:underline cursor-pointer"
+                >
                   Forgot password?
-                </a>
+                </button>
               </div>
 
               <button
                 type="submit"
-                className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-all shadow-md"
+                disabled={isSubmitting}
+                className="w-full mt-2 inline-flex items-center justify-center gap-2 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-all shadow-md cursor-pointer disabled:opacity-70"
               >
-                <span>Sign In to Account</span>
+                <span>{isSubmitting ? "Signing In..." : "Sign In to Account"}</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
             </form>
@@ -170,7 +195,7 @@ export default function SignInPage({ onNav }: SignInPageProps) {
               Don't have a RareBridge account yet?{" "}
               <button
                 onClick={() => onNav?.("signup")}
-                className="font-bold text-[#112250] hover:underline"
+                className="font-bold text-[#112250] hover:underline cursor-pointer"
               >
                 Create Account
               </button>
@@ -178,6 +203,79 @@ export default function SignInPage({ onNav }: SignInPageProps) {
           </div>
         </motion.div>
       </div>
+
+      {/* Forgot Password Modal */}
+      <AnimatePresence>
+        {showForgotModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <div
+              onClick={() => {
+                setShowForgotModal(false);
+                setForgotSuccess(false);
+              }}
+              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+            />
+
+            <div className="relative w-full max-w-md rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto">
+              <button
+                onClick={() => {
+                  setShowForgotModal(false);
+                  setForgotSuccess(false);
+                }}
+                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <h3 className="font-heading font-black text-2xl text-[#112250]">Reset Password</h3>
+              <p className="mt-1 text-xs text-[#3B507D] font-medium leading-relaxed">
+                Enter your account email address. We'll send instructions to safely recover and reset your credentials.
+              </p>
+
+              {forgotSuccess ? (
+                <div className="mt-6 flex items-center gap-3 rounded-lg bg-emerald-50 p-4 border border-emerald-200 text-emerald-800 text-sm font-bold">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
+                  <span>Password reset link sent! Please check your inbox.</span>
+                </div>
+              ) : (
+                <form onSubmit={handleForgotSubmit} className="mt-6 space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-[#112250] mb-1.5">Email Address</label>
+                    <div className="flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white transition-all">
+                      <Mail className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
+                      <input
+                        type="email"
+                        required
+                        value={forgotEmail}
+                        onChange={(e) => setForgotEmail(e.target.value)}
+                        placeholder="name@familycare.org"
+                        className="w-full bg-transparent text-sm text-[#112250] outline-none font-medium placeholder:text-[#3B507D]/60"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotModal(false)}
+                      className="flex-1 rounded-lg border border-[#E7E2CE] bg-white px-4 py-3 text-xs font-bold text-[#3B507D] hover:bg-[#F5F4F0] cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 rounded-lg bg-[#112250] px-4 py-3 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md cursor-pointer"
+                    >
+                      Send Reset Link
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
