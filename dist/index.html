@@ -19,9 +19,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- RareBridge typography: Inter for interface text, Nunito for headings -->
+  <!-- RareBridge typography: Manrope for headings, Nunito Sans for body text & UI -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,400;1,6..12,600&display=swap"
     rel="stylesheet" />
 
   <!-- Google Material Symbols & Material Icons -->
@@ -35,9 +35,11 @@
     body {
       height: 100%;
       margin: 0;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: "Nunito Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: #F8F7F2;
       color: #112250;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     h1,
@@ -47,15 +49,25 @@
     h5,
     h6,
     .font-heading {
-      font-family: "Nunito", sans-serif;
+      font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -0.025em;
     }
 
+    button,
+    input,
+    select,
+    textarea,
+    nav,
+    p,
+    span,
+    a,
+    label,
     .font-callout,
     .font-badge,
     .font-highlight,
     .font-body,
     .font-sans {
-      font-family: "Inter", sans-serif;
+      font-family: "Nunito Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     #root {
@@ -100,8 +112,11 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/index-pZDDvvtH.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CxBPHY2g.css">
+  <script type="module" crossorigin src="/assets/index-Cx5Y_GRN.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/vendor-react-S-d7L67U.js">
+  <link rel="modulepreload" crossorigin href="/assets/vendor-motion-Bm9bbz3v.js">
+  <link rel="modulepreload" crossorigin href="/assets/vendor-pdf-C5fbmBTG.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-DMHf_y6t.css">
 </head>
 
 <body>

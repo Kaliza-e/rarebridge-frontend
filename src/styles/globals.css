@@ -55,6 +55,8 @@
   background-color: #f8f7f2;
   color: #112250;
   font-family: var(--rb-font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .rb-content-layer {
@@ -63,29 +65,40 @@
 }
 
 .rb-content-layer :is(h1, h2, h3, h4, h5, h6),
+:is(h1, h2, h3, h4, h5, h6),
 .font-heading {
   font-family: var(--rb-font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
-.rb-app-shell .text-xs {
-  font-size: 0.8125rem !important;
-  line-height: 1.45;
-}
-
-.rb-app-shell [class~="text-[10px]"],
-.rb-app-shell [class~="text-[11px]"] {
-  font-size: 0.75rem !important;
-  line-height: 1.4;
-}
-
+/* Body text, navigation, buttons, forms, and general UI */
+p,
+span,
+a,
+button,
+input,
+select,
+textarea,
+label,
+nav,
 .font-callout,
 .font-badge,
 .font-highlight,
 .font-body,
 .font-sans {
-  font-family: var(--rb-font-body) !important;
+  font-family: var(--rb-font-body);
+}
+
+.rb-app-shell .text-xs {
+  font-size: 0.8125rem !important;
+  line-height: 1.5;
+}
+
+.rb-app-shell [class~="text-[10px]"],
+.rb-app-shell [class~="text-[11px]"] {
+  font-size: 0.75rem !important;
+  line-height: 1.45;
 }
 
 .rb-zebra-background {

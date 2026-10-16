@@ -189,7 +189,7 @@ export default function Navbar({
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b border-[#BEB7A7]/30 bg-[#F8F7F2]/85 font-heading backdrop-blur-xl transition-[background-color,box-shadow] duration-200 ${
+      className={`sticky top-0 z-50 border-b border-[#BEB7A7]/30 bg-[#F8F7F2]/85 font-sans backdrop-blur-xl transition-[background-color,box-shadow] duration-200 ${
         scrolled
           ? "bg-[#F8F7F2]/95 shadow-[0_4px_20px_rgba(17,34,80,0.04)]"
           : ""

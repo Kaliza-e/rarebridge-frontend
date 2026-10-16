@@ -23,8 +23,9 @@
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --ring: #beb7a7;
-  --rb-font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --rb-font-display: "Nunito", sans-serif;
+  --rb-font-body: "Nunito Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --rb-font-display: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --rb-font-heading: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --chart-1: #112250;
   --chart-2: #3b507d;
   --chart-3: #10b981;
@@ -457,52 +458,79 @@
   }
 
   h1 {
+    font-family: var(--rb-font-display);
     font-size: var(--text-2xl);
-    font-weight: 600;
-    line-height: 1.25;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
   }
 
   h2 {
+    font-family: var(--rb-font-display);
     font-size: var(--text-xl);
-    font-weight: 600;
-    line-height: 1.3;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
   }
 
   h3 {
+    font-family: var(--rb-font-display);
     font-size: var(--text-lg);
     font-weight: 600;
-    line-height: 1.35;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
   }
 
   h4 {
+    font-family: var(--rb-font-display);
     font-size: var(--text-base);
     font-weight: 600;
-    line-height: 1.4;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
   }
 
   label {
+    font-family: var(--rb-font-body);
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
   button {
+    font-family: var(--rb-font-body);
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
   }
 
-  input {
+  input,
+  select,
+  textarea {
+    font-family: var(--rb-font-body);
     font-size: var(--text-base);
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
 }
 
-:is(.font-black, .font-extrabold, .font-bold) {
+/* Typography Scale Weights */
+.font-black,
+.font-extrabold {
+  font-weight: 800 !important;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.font-semibold {
   font-weight: 600 !important;
 }
 
-:is(.font-semibold, .font-medium) {
+.font-medium {
   font-weight: 500 !important;
+}
+
+.font-normal {
+  font-weight: 400 !important;
 }

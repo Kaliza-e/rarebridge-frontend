@@ -336,7 +336,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                     <EdelweissFlower size={20} />
                   </div>
                   <h3 className="font-heading font-black text-3xl tracking-tight">{stat.number}</h3>
-                  <p className="font-heading font-bold text-sm mt-1">{stat.label}</p>
+                  <p className="font-sans font-bold text-sm mt-1">{stat.label}</p>
                   <p className="font-sans text-xs opacity-80 mt-0.5">{stat.subtext}</p>
                 </motion.div>
               );

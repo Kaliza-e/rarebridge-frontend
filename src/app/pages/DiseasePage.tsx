@@ -208,7 +208,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     : (disease && typeof disease.causes === "object" && disease.causes !== null
         ? Object.entries(disease.causes).map(([key, val]) => ({ title: `${key.toUpperCase()} CAUSE`, explanation: String(val) }))
         : (disease && typeof disease.causes === "string" && disease.causes.trim()
-            ? [{ title: "Primary Causes & Genetic Inheritance", explanation: disease.causes }]
+            ? [{ title: "Primary Causes & Genetic Inheritance", explanation: disease.causes.replace(/^<!--rbm:[^>]*-->\s*/, "") }]
             : []));
 
   const typesList = disease && Array.isArray(disease.typesStructured) && disease.typesStructured.length > 0
@@ -221,28 +221,51 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
             severity: t.severity
           }))
         : (disease?.typesAndSymptomsRaw
-            ? disease.typesAndSymptomsRaw.split(/\r?\n|•/).map((l: string) => l.trim()).filter(Boolean).map((line: string) => {
-                const colon = line.indexOf(':');
-                return colon > 0
-                  ? { title: line.substring(0, colon).trim(), description: line.substring(colon + 1).trim() }
-                  : { title: "Subtype / Clinical Form", description: line };
-              })
+            ? disease.typesAndSymptomsRaw.split(/\r?\n|•/)
+                .map((l: string) => l.trim())
+                .filter((l: string) => Boolean(l) && !l.startsWith('<!--rbm:'))
+                .map((line: string) => {
+                  const cleaned = line.replace(/[*_#`]/g, '').trim();
+                  const colon = cleaned.indexOf(':');
+                  return colon > 0
+                    ? { title: cleaned.substring(0, colon).trim(), description: cleaned.substring(colon + 1).trim() }
+                    : { title: "Subtype / Clinical Form", description: cleaned };
+                })
             : (disease && Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0
-                ? disease.typesAndSymptoms.map((s: string) => {
-                    const colon = s.indexOf(':');
-                    return colon > 0
-                      ? { title: s.substring(0, colon).trim(), description: s.substring(colon + 1).trim() }
-                      : { title: "Subtype / Clinical Form", description: s };
-                  })
+                ? disease.typesAndSymptoms
+                    .map((s: string) => (typeof s === "string" ? s : ""))
+                    .filter((s: string) => Boolean(s) && !s.startsWith('<!--rbm:'))
+                    .map((s: string) => {
+                      const cleaned = s.replace(/[*_#`]/g, '').trim();
+                      const colon = cleaned.indexOf(':');
+                      return colon > 0
+                        ? { title: cleaned.substring(0, colon).trim(), description: cleaned.substring(colon + 1).trim() }
+                        : { title: "Subtype / Clinical Form", description: cleaned };
+                    })
                 : [])));
 
-  const symptomsList = disease && Array.isArray(disease.symptomsStructured) && disease.symptomsStructured.length > 0
-    ? disease.symptomsStructured
-    : (disease && !disease.typesAndSymptomsSections?.length && Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0
-        ? disease.typesAndSymptoms.map((s: string) => ({ name: s }))
-        : (disease && Array.isArray(disease.symptoms) && disease.symptoms.length > 0
-            ? disease.symptoms.map((s: string) => ({ name: s }))
-            : []));
+  const symptomsList = (
+    disease && Array.isArray(disease.symptomsStructured) && disease.symptomsStructured.length > 0
+      ? disease.symptomsStructured
+      : (disease && Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0
+          ? disease.typesAndSymptoms
+          : (disease && Array.isArray(disease.symptoms) && disease.symptoms.length > 0
+              ? disease.symptoms
+              : (disease?.typesAndSymptomsRaw
+                  ? disease.typesAndSymptomsRaw.split(/\r?\n/)
+                  : [])))
+  )
+    .map((sym: any) => {
+      const rawText = typeof sym === "string" ? sym : sym?.name || "";
+      const cleaned = rawText
+        .replace(/^<!--rbm:[^>]*-->\s*/, "")
+        .replace(/^#+\s*/, "")
+        .replace(/[*_#`]/g, "")
+        .replace(/^[•·▪▸►\-–—]\s*/, "")
+        .trim();
+      return cleaned ? { name: cleaned } : null;
+    })
+    .filter(Boolean);
 
   const diagnosticSteps = disease && Array.isArray(disease.diagnosis) && disease.diagnosis.length > 0
     ? disease.diagnosis
@@ -548,7 +571,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                             {Array.isArray(disease.parsedDiseaseModel?.overview) ? (
                               <RichTextRunsRenderer runs={disease.parsedDiseaseModel.overview} />
                             ) : (
-                              <LinkifiedText text={disease.overview || disease.shortDesc || "Comprehensive overview currently being updated."} />
+                              <LinkifiedText text={(typeof disease.overview === "string" ? disease.overview.replace(/^<!--rbm:[^>]*-->\s*/, "") : disease.overview) || disease.shortDesc || "Comprehensive overview currently being updated."} />
                             )}
                           </p>
                         )}
