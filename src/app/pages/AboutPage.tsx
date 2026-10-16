@@ -102,7 +102,7 @@ export default function AboutPage({ onNav }: AboutPageProps) {
   const [selectedMember, setSelectedMember] = useState<typeof TEAM[0] | null>(null);
 
   return (
-    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
       <OrganicWavyLine side="left" />
       <OrganicWavyLine side="right" />
 
@@ -261,9 +261,18 @@ export default function AboutPage({ onNav }: AboutPageProps) {
             {TEAM.map((member, i) => (
               <motion.div
                 key={i}
+                role="button"
+                tabIndex={0}
+                aria-label={`View full biography for ${member.name}, ${member.role}`}
                 whileHover={{ y: -6 }}
                 onClick={() => setSelectedMember(member)}
-                className="group cursor-pointer overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 text-center hover:bg-white hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] transition-all flex flex-col justify-between"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectedMember(member);
+                  }
+                }}
+                className="group cursor-pointer overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 text-center hover:bg-white hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="mx-auto h-28 w-28 rounded-full overflow-hidden border-4 border-white shadow-[0_0_15px_rgba(231,226,206,0.8)] mb-3 group-hover:scale-105 transition-transform bg-white">
@@ -371,6 +380,6 @@ export default function AboutPage({ onNav }: AboutPageProps) {
           </div>
         )}
       </AnimatePresence>
-    </main>
+    </div>
   );
 }

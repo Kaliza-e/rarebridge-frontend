@@ -14,6 +14,7 @@ import {
 
 import { apiService, Specialist } from "../services/api.service";
 import type { ContentNode, Disease as ApiDisease } from "../services/api.service";
+import { fetchDiseasesFromAPI, DISEASES } from "../data";
 import { renderTextWithLinks, RichTextRunsRenderer } from "../utils/link-helper";
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
 import { EdelweissFlower } from "../components/common/Visuals";
@@ -78,7 +79,22 @@ export default function SpecialistsPage() {
       try {
         setLoading(true);
         setLoadError(false);
-        const diseases = await apiService.getDiseases();
+        let diseases: any[] = [];
+        try {
+          const apiDiseases = await apiService.getDiseases();
+          if (Array.isArray(apiDiseases) && apiDiseases.length > 0) {
+            diseases = apiDiseases;
+          } else {
+            diseases = await fetchDiseasesFromAPI();
+          }
+        } catch {
+          diseases = await fetchDiseasesFromAPI();
+        }
+
+        if (!diseases || diseases.length === 0) {
+          diseases = DISEASES as any[];
+        }
+
         const extracted = new Map<string, UnifiedSpecialist>();
 
         diseases.forEach((disease) => {
@@ -185,7 +201,7 @@ export default function SpecialistsPage() {
   };
 
   return (
-    <main className="relative z-10 min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
+    <div className="relative z-10 min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
       {/* ================= HERO SECTION ================= */}
       <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
         <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
@@ -533,6 +549,6 @@ export default function SpecialistsPage() {
           </div>
         )}
       </AnimatePresence>
-    </main>
+    </div>
   );
 }

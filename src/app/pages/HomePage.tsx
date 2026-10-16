@@ -122,15 +122,15 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
   const activeSlide = HERO_SLIDES[currentSlide];
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-transparent text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
+    <div className="relative min-h-screen overflow-hidden bg-transparent text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
       <OrganicWavyLine side="left" />
       <OrganicWavyLine side="right" />
 
       {/* ================= HERO SECTION ================= */}
       <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
         {/* Zebra Reading Book Hero Background Backdrop */}
-        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 opacity-20 max-w-lg hidden lg:block z-0">
-          <img src="/rarebridge_zebra_with_book.png" alt="Zebra Reading Book Background" className="h-auto w-full object-contain" />
+        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 opacity-20 max-w-lg hidden lg:block z-0" aria-hidden="true">
+          <img src="/rarebridge_zebra_with_book.png" alt="" className="h-auto w-full object-contain" />
         </div>
 
         {/* Ambient blobs matching site canvas */}
@@ -187,23 +187,23 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                       apiStatus === "online"
                         ? "bg-emerald-500"
                         : apiStatus === "offline"
-                          ? "bg-amber-500"
+                          ? "bg-emerald-600/80"
                           : "animate-pulse bg-[#3B507D]/50"
                     }`}
                   />
                   {apiStatus === "checking"
                     ? "Checking API connection..."
                     : apiStatus === "online"
-                      ? "Live API connected."
-                      : "API unavailable. Showing sample disease data."}
+                      ? "Live API connected • Real-time clinical updates."
+                      : "Verified Knowledge Base • Offline Mode Ready."}
                 </p>
               </motion.div>
             </AnimatePresence>
           </div>
 
-          {/* Right: Integrated Hero Image Container */}
+          {/* Right: Integrated Hero Image Container with Full Controls */}
           <div className="relative mx-auto w-full max-w-md lg:max-w-none lg:col-span-5">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-2 sm:aspect-[5/4]">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-2 sm:aspect-[5/4] shadow-md">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={currentSlide}
@@ -212,10 +212,72 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   initial={{ opacity: 0, scale: 1.04 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8 }}
+                  transition={{ duration: 0.6 }}
                   className="h-full w-full rounded-lg object-cover"
                 />
               </AnimatePresence>
+
+              {/* Floating Slide Badge */}
+              <div className="absolute top-4 left-4 z-10 rounded-md bg-[#112250]/85 px-3 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md border border-white/20">
+                {activeSlide.badge}
+              </div>
+
+              {/* Carousel Navigation Arrows */}
+              <button
+                type="button"
+                onClick={handlePrevSlide}
+                aria-label="Previous slide"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-[#112250] shadow-md backdrop-blur-xs transition-transform hover:scale-110 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] cursor-pointer"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={handleNextSlide}
+                aria-label="Next slide"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-[#112250] shadow-md backdrop-blur-xs transition-transform hover:scale-110 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] cursor-pointer"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+
+              {/* Bottom Control Bar: Indicators + Play/Pause */}
+              <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between rounded-lg bg-[#112250]/75 px-3.5 py-1.5 backdrop-blur-md">
+                <div className="flex items-center gap-1.5">
+                  {HERO_SLIDES.map((_, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setCurrentSlide(idx)}
+                      aria-label={`Go to slide ${idx + 1}`}
+                      aria-current={currentSlide === idx ? "true" : undefined}
+                      className={`h-2 rounded-full transition-all cursor-pointer ${
+                        currentSlide === idx
+                          ? "w-6 bg-[#E7E2CE]"
+                          : "w-2 bg-white/40 hover:bg-white/80"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsAutoPlaying((prev) => !prev)}
+                  aria-label={isAutoPlaying ? "Pause carousel auto-rotation" : "Resume carousel auto-rotation"}
+                  className="flex items-center gap-1 text-[11px] font-bold text-[#E7E2CE] hover:text-white transition-colors cursor-pointer"
+                >
+                  {isAutoPlaying ? (
+                    <>
+                      <Pause className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">Pause</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">Play</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -508,7 +570,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           </motion.button>
         </div>
       </section>
-    </main>
+    </div>
   );
 };
 

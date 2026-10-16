@@ -10,7 +10,7 @@ export function SpanRenderer({ spans, className = '' }: SpanRendererProps) {
   if (!spans || spans.length === 0) return null;
 
   return (
-    <span className={className}>
+    <span className={`font-body ${className}`}>
       {spans.map((span, index) => {
         let content: React.ReactNode = span.t;
 
@@ -21,7 +21,7 @@ export function SpanRenderer({ spans, className = '' }: SpanRendererProps) {
           content = <em key="i">{content}</em>;
         }
         if (span.b) {
-          content = <strong key="b" className="font-bold text-[#112250]">{content}</strong>;
+          content = <strong key="b" className="font-bold font-body text-[#112250]">{content}</strong>;
         }
         if (span.href) {
           content = (

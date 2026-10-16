@@ -82,8 +82,10 @@
 
 .font-callout,
 .font-badge,
-.font-highlight {
-  font-family: var(--rb-font-body);
+.font-highlight,
+.font-body,
+.font-sans {
+  font-family: var(--rb-font-body) !important;
 }
 
 .rb-zebra-background {

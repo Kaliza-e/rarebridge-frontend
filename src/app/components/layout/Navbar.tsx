@@ -36,8 +36,6 @@ const NAV_ICONS: Record<string, React.ElementType> = {
 interface NavbarProps {
   onNav: (view: string) => void;
   activeView: string;
-  textSize?: "default" | "larger" | "largest";
-  setTextSize?: (size: "default" | "larger" | "largest") => void;
 }
 
 export default function Navbar({
@@ -213,7 +211,7 @@ export default function Navbar({
             <button
               type="button"
               onClick={() => handleNavigation("signin")}
-              className="flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-[#112250] px-4 text-xs font-bold text-white transition-colors hover:bg-[#3B507D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] shadow-sm"
+              className="flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-[#112250] px-4 text-xs font-bold text-white transition-colors hover:bg-[#3B507D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] shadow-sm cursor-pointer"
             >
               Sign In
             </button>
@@ -264,6 +262,8 @@ export default function Navbar({
                 <div className="space-y-1">
                   {NAV_LINKS.map(renderMobileLink)}
                 </div>
+
+
 
                 <div className="mt-3 border-t border-[#112250]/10 pt-3 flex gap-2">
                   <button

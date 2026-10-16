@@ -36,16 +36,43 @@ type View =
   | "signin"
   | "signup";
 
-export default function App() {
-  const [view, setView] = useState<View>("home");
+function parseUrl(): { view: View; diseaseId: string | null } {
+  if (typeof window === "undefined") return { view: "home", diseaseId: null };
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  if (path === "/" || path === "") return { view: "home", diseaseId: null };
+  if (path === "/directory") return { view: "directory", diseaseId: null };
+  if (path === "/about") return { view: "about", diseaseId: null };
+  if (path === "/research") return { view: "research", diseaseId: null };
+  if (path === "/specialists") return { view: "specialists", diseaseId: null };
+  if (path === "/community") return { view: "community", diseaseId: null };
+  if (path === "/signin") return { view: "signin", diseaseId: null };
+  if (path === "/signup") return { view: "signup", diseaseId: null };
+  if (path.startsWith("/disease/")) {
+    const id = path.replace("/disease/", "");
+    return { view: "disease", diseaseId: id || null };
+  }
+  return { view: "home", diseaseId: null };
+}
 
-  const [selectedDisease, setSelectedDisease] =
-    useState<string | null>(null);
+export default function App() {
+  const [view, setView] = useState<View>(() => parseUrl().view);
+  const [selectedDisease, setSelectedDisease] = useState<string | null>(() => parseUrl().diseaseId);
 
   const playPopSound = usePopSound();
   const playChimeSound = useChimeSound();
   const playSparkleSound = useSparkleSound();
 
+  // Synchronize browser back/forward history
+  useEffect(() => {
+    const onPopState = () => {
+      const parsed = parseUrl();
+      setView(parsed.view);
+      setSelectedDisease(parsed.diseaseId);
+    };
+
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   useEffect(() => {
     const handleGlobalClick = (event: MouseEvent) => {
@@ -103,10 +130,13 @@ export default function App() {
       "signup",
     ];
 
-    if (allowedViews.includes(v as View)) {
-      setView(v as View);
-    } else {
-      setView("home");
+    const targetView = allowedViews.includes(v as View) ? (v as View) : "home";
+    setView(targetView);
+    setSelectedDisease(null);
+
+    const targetPath = targetView === "home" ? "/" : `/${targetView}`;
+    if (typeof window !== "undefined" && window.location.pathname !== targetPath) {
+      window.history.pushState({ view: targetView }, "", targetPath);
     }
 
     // Scroll back to the top when navigating
@@ -123,6 +153,11 @@ export default function App() {
     setSelectedDisease(id);
     setView("disease");
 
+    const targetPath = `/disease/${id}`;
+    if (typeof window !== "undefined" && window.location.pathname !== targetPath) {
+      window.history.pushState({ view: "disease", diseaseId: id }, "", targetPath);
+    }
+
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -136,36 +171,27 @@ export default function App() {
     setSelectedDisease(null);
     setView("directory");
 
+    if (typeof window !== "undefined" && window.location.pathname !== "/directory") {
+      window.history.pushState({ view: "directory" }, "", "/directory");
+    }
+
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   }
 
-  // Accessibility Text-Size Control State ('default' | 'larger' | 'largest')
-  const [textSize, setTextSize] = useState<"default" | "larger" | "largest">(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("rb_text_size_preference");
-      if (saved === "larger" || saved === "largest" || saved === "default") {
-        return saved;
+  // Reset any custom root font size preference
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.style.fontSize = "";
+      try {
+        localStorage.removeItem("rb_text_size_preference");
+      } catch (e) {
+        // Ignore
       }
     }
-    return "default";
-  });
-
-  useEffect(() => {
-    const scaleMap = {
-      default: "100%",
-      larger: "112.5%",
-      largest: "125%",
-    };
-    document.documentElement.style.fontSize = scaleMap[textSize];
-    try {
-      localStorage.setItem("rb_text_size_preference", textSize);
-    } catch (e) {
-      // Ignore storage errors
-    }
-  }, [textSize]);
+  }, []);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -309,8 +335,6 @@ export default function App() {
           <Navbar
             onNav={handleNav}
             activeView={view}
-            textSize={textSize}
-            setTextSize={setTextSize}
           />
 
           {/* Main content */}

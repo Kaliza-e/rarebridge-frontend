@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 import {
-  ArrowUpRight,
-  Heart,
-  ShieldCheck,
-  Sparkles,
-  Mail,
-  CheckCircle2,
-  BookOpen,
-  Microscope,
-  Stethoscope,
-  Users,
   ArrowUp,
   Instagram,
+  Twitter,
+  Linkedin,
+  Facebook,
+  CheckCircle2,
   MapPin,
 } from "lucide-react";
-import { ZebraMascot } from "../common/Visuals";
-import { SectionDivider } from "../common/SectionDivider";
 
 interface FooterProps {
   onNav?: (view: string) => void;
@@ -46,193 +38,251 @@ export default function Footer({ onNav }: FooterProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const footerColumns = [
-    {
-      title: "Explore Library",
-      links: [
-        { name: "Disease Directory", view: "directory" },
-        { name: "Specialist Directory", view: "specialists" },
-        { name: "Research & Clinical Trials", view: "research" },
-        { name: "Caregiver Community", view: "community" },
-      ],
-    },
-    {
-      title: "Medical & Mission",
-      links: [
-        { name: "Our Mission & Story", view: "about" },
-        { name: "Plain-Language Integrity", view: "about" },
-        { name: "Genetics Education", view: "directory" },
-        { name: "Frequently Asked Questions", view: "directory" },
-      ],
-    },
+  const quickLinks = [
+    { name: "Disease Directory", view: "directory" },
+    { name: "Specialist Directory", view: "specialists" },
+    { name: "Research & Clinical Trials", view: "research" },
+    { name: "Caregiver Community", view: "community" },
+  ];
+
+  const supportLinks = [
+    { name: "Plain-Language Integrity", view: "about" },
+    { name: "Medical Advisory Board", view: "about" },
+    { name: "Source Transparency", view: "about" },
+    { name: "Caregiver Wellness", view: "community" },
+  ];
+
+  const serviceLinks = [
+    { name: "Genetics Education", view: "directory" },
+    { name: "Subtypes & Symptoms", view: "directory" },
+    { name: "Approved Therapies", view: "research" },
+    { name: "Frequently Asked Questions", view: "directory" },
+  ];
+
+  const aboutLinks = [
+    { name: "Our Mission & Story", view: "about" },
+    { name: "Leadership & Team", view: "about" },
+    { name: "Family Stories", view: "community" },
+    { name: "Contact Us", view: "about" },
   ];
 
   return (
-    <footer className="rb-footer relative isolate overflow-hidden text-white pt-6 font-body">
-      {/* Top Organic Sweeping Divider */}
-      <SectionDivider variant="wave" className="-mt-7 mb-6 text-[#112250]" />
+    <footer className="relative isolate text-white font-body mt-24 sm:mt-28">
+      {/* ================= FLOATING OVERLAPPING NEWSLETTER BANNER ================= */}
+      <div className="relative z-20 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 -mb-16 sm:-mb-20">
+        <div className="rounded-2xl sm:rounded-3xl bg-[#1E3B75] border border-white/20 px-6 py-8 sm:px-12 sm:py-10 shadow-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-6 backdrop-blur-md">
+          <div className="max-w-md">
+            <h3 className="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              Subscribe to our newsletter
+            </h3>
+            <p className="mt-1.5 text-xs sm:text-sm text-[#D6E0F5] font-medium leading-relaxed">
+              Monthly plain-language trial summaries, specialist updates, and compassionate caregiver guides.
+            </p>
+          </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-8 pt-4 sm:px-8 lg:px-12">
-        {/* ================= FOOTER NEWSLETTER BANNER ================= */}
-        <div className="relative overflow-hidden rounded-xl border-2 border-white/20 bg-white/10 p-6 sm:p-8 mb-10 backdrop-blur-md shadow-lg">
-          <div className="grid items-center gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
-              <div className="mb-2 inline-flex items-center gap-2 rounded-md bg-white/15 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#E7E2CE] font-heading border border-white/20">
-                <Mail className="w-3.5 h-3.5 text-[#E7E2CE]" /> Stay Connected
+          <div className="w-full md:w-auto">
+            {subscribed ? (
+              <div className="flex items-center gap-2.5 rounded-full bg-white px-6 py-3 text-xs sm:text-sm font-bold text-[#112250] shadow-lg">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>Subscribed! Thank you for staying connected.</span>
               </div>
-              <h3 className="font-heading text-xl font-black text-white sm:text-2xl">
-                Clinical Updates & Research Digest
-              </h3>
-              <p className="font-body mt-1.5 text-xs leading-relaxed text-[#D6E0F5] max-w-md font-medium">
-                Monthly plain-language trial summaries, specialist updates, and compassionate caregiver wellness guides.
-              </p>
-            </div>
-
-            <div>
-              {subscribed ? (
-                <div className="flex items-center gap-2 rounded-lg bg-[#E7E2CE] p-3.5 text-xs font-bold text-[#112250] font-heading shadow-md">
-                  <CheckCircle2 className="w-5 h-5 text-[#112250] shrink-0" />
-                  <span>Subscribed! Thank you for staying connected with RareBridge.</span>
-                </div>
-              ) : (
-                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2.5">
-                  <input
-                    type="email"
-                    required
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="Enter your email address..."
-                    className="font-body flex-1 rounded-lg border border-white/25 bg-white/15 px-4 py-3 text-xs text-white outline-none font-medium placeholder:text-[#A0ADC6] focus:border-[#E7E2CE] transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    className="font-heading shrink-0 rounded-lg bg-[#E7E2CE] px-6 py-3 text-xs font-black text-[#112250] hover:bg-white transition-all shadow-md cursor-pointer"
-                  >
-                    Subscribe
-                  </button>
-                </form>
-              )}
-            </div>
+            ) : (
+              <form
+                onSubmit={handleSubscribe}
+                className="relative flex items-center w-full md:w-[400px] lg:w-[440px] rounded-full bg-white p-1.5 pl-5 shadow-lg"
+              >
+                <input
+                  type="email"
+                  required
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  placeholder="Enter your email"
+                  aria-label="Enter your email address"
+                  className="w-full bg-transparent text-xs sm:text-sm text-[#112250] placeholder:text-[#3B507D]/60 outline-none font-medium pr-3"
+                />
+                <button
+                  type="submit"
+                  className="shrink-0 rounded-full bg-[#112250] px-6 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-sm cursor-pointer"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* ================= MAIN NAVIGATION & BRAND GRID ================= */}
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-10">
-          {/* Brand & Mission Column */}
-          <div className="lg:col-span-6 space-y-4">
-            <a
-              href="/"
-              onClick={(e) => handleLinkClick(e, "home")}
-              aria-label="RareBridge home"
-              className="group inline-flex items-center gap-3 rounded-lg outline-none"
-            >
-              <img
-                src="/logo-transparent.png"
-                alt="RareBridge Logo"
-                className="h-20 sm:h-24 w-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
-            </a>
+      {/* ================= DARK FOOTER BODY ================= */}
+      <div className="bg-[#0E1C42] pt-24 sm:pt-28 pb-10 border-t border-[#1E3B75]/40">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          {/* Main Grid: Brand + 4 Link Columns */}
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 pb-12 border-b border-white/10">
+            {/* Brand Column */}
+            <div className="sm:col-span-2 lg:col-span-4 space-y-4">
+              <a
+                href="/"
+                onClick={(e) => handleLinkClick(e, "home")}
+                aria-label="RareBridge home"
+                className="group inline-flex items-center gap-2 outline-none"
+              >
+                <img
+                  src="/logo-transparent.png"
+                  alt="RareBridge Logo"
+                  className="h-14 sm:h-16 w-auto object-contain drop-shadow-md group-hover:scale-105 transition-transform"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </a>
 
-            <p className="font-body max-w-md text-xs leading-relaxed text-[#D6E0F5] font-medium">
-              RareBridge shares plain-language disease information, source-listed specialist records, and links to peer-support resources.
+              <p className="text-xs sm:text-sm leading-relaxed text-[#D6E0F5]/85 max-w-sm font-medium">
+                RareBridge is an educational platform providing plain-language rare condition guidance, source-listed specialist records, and compassionate caregiver support.
+              </p>
+
+              <div className="flex items-center gap-2 text-xs text-[#E7E2CE] font-semibold pt-1">
+                <MapPin size={14} className="text-[#E7E2CE]" aria-hidden="true" />
+                <span>Rwanda, Africa</span>
+              </div>
+            </div>
+
+            {/* Quick links */}
+            <div className="lg:col-span-2 space-y-3">
+              <h4 className="font-heading text-sm font-bold text-white tracking-wide">
+                Quick links
+              </h4>
+              <ul className="space-y-2.5 text-xs text-[#D6E0F5]/80 font-medium">
+                {quickLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={`#${link.view}`}
+                      onClick={(e) => handleLinkClick(e, link.view)}
+                      className="hover:text-white transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Support */}
+            <div className="lg:col-span-2 space-y-3">
+              <h4 className="font-heading text-sm font-bold text-white tracking-wide">
+                Support
+              </h4>
+              <ul className="space-y-2.5 text-xs text-[#D6E0F5]/80 font-medium">
+                {supportLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={`#${link.view}`}
+                      onClick={(e) => handleLinkClick(e, link.view)}
+                      className="hover:text-white transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Service */}
+            <div className="lg:col-span-2 space-y-3">
+              <h4 className="font-heading text-sm font-bold text-white tracking-wide">
+                Service
+              </h4>
+              <ul className="space-y-2.5 text-xs text-[#D6E0F5]/80 font-medium">
+                {serviceLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={`#${link.view}`}
+                      onClick={(e) => handleLinkClick(e, link.view)}
+                      className="hover:text-white transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* About us */}
+            <div className="lg:col-span-2 space-y-3">
+              <h4 className="font-heading text-sm font-bold text-white tracking-wide">
+                About us
+              </h4>
+              <ul className="space-y-2.5 text-xs text-[#D6E0F5]/80 font-medium">
+                {aboutLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={`#${link.view}`}
+                      onClick={(e) => handleLinkClick(e, link.view)}
+                      className="hover:text-white transition-colors"
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* ================= BOTTOM BAR ================= */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-[#D6E0F5]/70 font-medium text-center sm:text-left">
+              © {new Date().getFullYear()} RareBridge. All rights reserved.
             </p>
 
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-1 text-xs font-semibold text-[#D6E0F5]">
-              <a
-                href="https://www.instagram.com/rarebridge_/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-2 transition-colors hover:bg-white/20 hover:text-white"
-                aria-label="Visit RareBridge on Instagram"
+            <div className="flex items-center gap-3">
+              {/* Social Capsule matching Image 2 */}
+              <div className="flex items-center gap-3.5 rounded-full bg-white/10 border border-white/15 px-4 py-1.5 backdrop-blur-xs">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="text-[#D6E0F5] hover:text-white transition-colors"
+                >
+                  <Facebook size={14} />
+                </a>
+                <a
+                  href="https://twitter.com/rarebridge"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Twitter"
+                  className="text-[#D6E0F5] hover:text-white transition-colors"
+                >
+                  <Twitter size={14} />
+                </a>
+                <a
+                  href="https://www.instagram.com/rarebridge_/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="text-[#D6E0F5] hover:text-white transition-colors"
+                >
+                  <Instagram size={14} />
+                </a>
+                <a
+                  href="https://linkedin.com/company/rarebridge"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  className="text-[#D6E0F5] hover:text-white transition-colors"
+                >
+                  <Linkedin size={14} />
+                </a>
+              </div>
+
+              {/* Scroll to Top */}
+              <button
+                type="button"
+                onClick={scrollToTop}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E7E2CE] text-[#112250] hover:bg-white transition-colors cursor-pointer shadow-xs"
+                aria-label="Scroll to top"
               >
-                <Instagram size={15} aria-hidden="true" />
-                <span>@rarebridge_</span>
-                <ArrowUpRight size={13} aria-hidden="true" />
-              </a>
-              <span className="inline-flex items-center gap-2">
-                <MapPin size={15} className="text-[#E7E2CE]" aria-hidden="true" />
-                <span>Rwanda, Africa</span>
-              </span>
+                <ArrowUp size={15} />
+              </button>
             </div>
-
-            {/* Care Message & Medical Integrity Badges */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="inline-flex items-center gap-2.5 rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-xs">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#E7E2CE]/30 text-[#E7E2CE]">
-                  <Heart size={14} />
-                </div>
-                <div>
-                  <p className="font-heading text-xs font-extrabold text-white">Made with Care</p>
-                  <p className="font-body text-[11px] text-[#D6E0F5]/80 font-medium">For rare families everywhere</p>
-                </div>
-              </div>
-
-              <div className="inline-flex items-center gap-2.5 rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 backdrop-blur-xs">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#E7E2CE]/30 text-[#E7E2CE]">
-                  <ShieldCheck size={14} />
-                </div>
-                <div>
-                  <p className="font-heading text-xs font-extrabold text-white">Source transparency</p>
-                  <p className="font-body text-[11px] text-[#D6E0F5]/80 font-medium">References shown where available</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Navigation Columns */}
-          <div className="grid grid-cols-2 gap-8 lg:col-span-6">
-            {footerColumns.map((column) => (
-              <div key={column.title}>
-                <h4 className="font-heading mb-4 text-xs font-black uppercase tracking-wider text-[#E7E2CE]">
-                  {column.title}
-                </h4>
-                <ul className="space-y-3 font-body text-xs font-medium">
-                  {column.links.map((link) => (
-                    <li key={link.name}>
-                      <a
-                        href={`#${link.view}`}
-                        onClick={(e) => handleLinkClick(e, link.view)}
-                        className="group inline-flex items-center gap-1.5 text-[#D6E0F5] transition-all duration-200 hover:text-white"
-                      >
-                        <span>{link.name}</span>
-                        <ArrowUpRight
-                          size={13}
-                          className="opacity-60 transition-opacity duration-200 group-hover:opacity-100 text-[#E7E2CE]"
-                        />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="my-8 h-px bg-white/20" />
-
-        {/* ================= COPYRIGHT & FOOTER BAR ================= */}
-        <div className="flex flex-col items-center justify-between gap-4 pt-2 sm:flex-row">
-          <p className="font-body text-center text-xs text-[#D6E0F5]/80 sm:text-left font-medium">
-            © {new Date().getFullYear()} RareBridge. Educational platform for rare condition guidance & caregiver support.
-          </p>
-          <div className="flex items-center gap-3">
-            <span className="font-heading text-xs font-bold text-[#E7E2CE]">
-              Every rare journey matters
-            </span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 shadow-xs">
-              <ZebraMascot size={20} />
-            </div>
-            <button
-              onClick={scrollToTop}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E7E2CE] text-[#112250] hover:bg-white transition-colors cursor-pointer shadow-xs"
-              aria-label="Scroll to top"
-            >
-              <ArrowUp size={16} />
-            </button>
           </div>
         </div>
       </div>

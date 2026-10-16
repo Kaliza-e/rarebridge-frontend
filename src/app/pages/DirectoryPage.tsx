@@ -26,6 +26,7 @@ import {
   Microscope,
   BrainCircuit,
   ArrowRight,
+  ChevronLeft,
   ChevronRight,
   Layers,
   CheckCircle2,
@@ -141,7 +142,7 @@ function matchesCategory(d: any, category: string): boolean {
   }
 
   return (
-    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
       <OrganicWavyLine side="left" />
       <OrganicWavyLine side="right" />
 
@@ -176,6 +177,7 @@ function matchesCategory(d: any, category: string): boolean {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search by condition name, symptom, or ORPHA code..."
+                    aria-label="Search conditions by name, symptom, or ORPHA code"
                     className="w-full bg-transparent px-3 py-2 text-sm text-[#112250] outline-none placeholder:text-[#3B507D]/60 font-medium sm:text-base"
                   />
                   {query && (
@@ -199,37 +201,34 @@ function matchesCategory(d: any, category: string): boolean {
 
             {/* Right Card / Graphic */}
             <div className="lg:col-span-5">
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="absolute -inset-4 -z-10 rounded-2xl bg-gradient-to-br from-[#E7E2CE] via-[#F5F4F0] to-[#3B507D]/15" />
-                <div className="relative z-10 overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 shadow-xl shadow-[#112250]/5">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
-                      <BookOpen className="h-6 w-6 text-[#112250]" />
-                    </div>
-                    <EdelweissFlower size={36} />
+              <div className="mx-auto max-w-md rounded-xl border-2 border-[#E7E2CE] bg-white p-7 text-[#112250] sm:p-8 lg:max-w-none">
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250]">
+                    <BookOpen className="h-6 w-6 text-[#112250]" />
                   </div>
+                  <EdelweissFlower size={36} />
+                </div>
 
-                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
-                    <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
-                    Source-Based Disease Information
-                  </span>
+                <span className="mb-3 inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250]">
+                  <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
+                  Source-Based Disease Information
+                </span>
 
-                  <h3 className="font-heading font-black text-2xl text-[#112250]">
-                    Explore Condition Records
-                  </h3>
-                  <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
-                    Disease information is organized from available source records and displayed with its source structure.
-                  </p>
+                <h3 className="font-heading font-black text-2xl text-[#112250]">
+                  Explore Condition Records
+                </h3>
+                <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                  Disease information is organized from available source records and displayed with its source structure.
+                </p>
 
-                  <div className="mt-6 space-y-2.5 border-t border-[#F5F4F0] pt-4 text-xs font-bold text-[#112250]">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
-                      <span>Plain-language medical breakdowns</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
-                      <span>Gene Therapy & Clinical Trial updates</span>
-                    </div>
+                <div className="mt-6 space-y-2.5 border-t border-[#E7E2CE] pt-4 text-xs font-bold text-[#112250]">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                    <span>Plain-language medical breakdowns</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                    <span>Gene Therapy & Clinical Trial updates</span>
                   </div>
                 </div>
               </div>
@@ -284,7 +283,8 @@ function matchesCategory(d: any, category: string): boolean {
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] outline-none hover:border-[#112250] transition-colors"
+                aria-label="Filter conditions by research status"
+                className="rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] outline-none hover:border-[#112250] transition-colors cursor-pointer"
               >
                 {STATUS_FILTERS.map((s) => (
                   <option key={s} value={s}>
@@ -365,17 +365,19 @@ function matchesCategory(d: any, category: string): boolean {
             <button
               disabled={safeCurrentPage === 1}
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors cursor-pointer disabled:cursor-not-allowed"
               aria-label="Previous Page"
             >
-              ←
+              <ChevronLeft className="h-4 w-4" />
             </button>
 
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`flex h-11 min-w-[2.75rem] items-center justify-center rounded-lg border-2 px-3 text-sm font-black transition-all ${
+                aria-label={`Go to page ${page}`}
+                aria-current={safeCurrentPage === page ? "page" : undefined}
+                className={`flex h-11 min-w-[2.75rem] items-center justify-center rounded-lg border-2 px-3 text-sm font-black transition-all cursor-pointer ${
                   safeCurrentPage === page
                     ? "border-[#112250] bg-[#112250] text-white shadow-md shadow-[#112250]/20"
                     : "border-[#E7E2CE] bg-white text-[#112250] hover:bg-[#F5F4F0]"
@@ -388,14 +390,14 @@ function matchesCategory(d: any, category: string): boolean {
             <button
               disabled={safeCurrentPage === totalPages}
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors cursor-pointer disabled:cursor-not-allowed"
               aria-label="Next Page"
             >
-              →
+              <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         )}
       </section>
-    </main>
+    </div>
   );
 }

@@ -33,7 +33,7 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
   };
 
   return (
-    <main className="relative min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] flex items-center justify-center overflow-hidden">
       <OrganicWavyLine side="left" />
       <OrganicWavyLine side="right" />
 
@@ -123,12 +123,13 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[#112250] mb-1.5">
+                <label htmlFor="signup-name" className="block text-xs font-bold text-[#112250] mb-1.5">
                   Full Name
                 </label>
                 <div className="relative flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
-                  <User className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
+                  <User className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" aria-hidden="true" />
                   <input
+                    id="signup-name"
                     type="text"
                     required
                     value={fullName}
@@ -140,12 +141,13 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#112250] mb-1.5">
+                <label htmlFor="signup-email" className="block text-xs font-bold text-[#112250] mb-1.5">
                   Email Address
                 </label>
                 <div className="relative flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
-                  <Mail className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
+                  <Mail className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" aria-hidden="true" />
                   <input
+                    id="signup-email"
                     type="email"
                     required
                     value={email}
@@ -157,12 +159,13 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#112250] mb-1.5">
+                <label htmlFor="signup-password" className="block text-xs font-bold text-[#112250] mb-1.5">
                   Password
                 </label>
                 <div className="relative flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
-                  <Lock className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
+                  <Lock className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" aria-hidden="true" />
                   <input
+                    id="signup-password"
                     type="password"
                     required
                     value={password}
@@ -195,6 +198,6 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
           </div>
         </motion.div>
       </div>
-    </main>
+    </div>
   );
 }

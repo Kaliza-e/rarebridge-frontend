@@ -48,7 +48,7 @@ export default function SignInPage({ onNav }: SignInPageProps) {
   };
 
   return (
-    <main className="relative min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] flex items-center justify-center overflow-hidden">
+    <div className="relative min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] flex items-center justify-center overflow-hidden">
       <OrganicWavyLine side="left" />
       <OrganicWavyLine side="right" />
 
@@ -134,12 +134,13 @@ export default function SignInPage({ onNav }: SignInPageProps) {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[#112250] mb-1.5">
+                <label htmlFor="signin-email" className="block text-xs font-bold text-[#112250] mb-1.5">
                   Email Address
                 </label>
                 <div className="relative flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
-                  <Mail className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
+                  <Mail className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" aria-hidden="true" />
                   <input
+                    id="signin-email"
                     type="email"
                     required
                     value={email}
@@ -151,12 +152,13 @@ export default function SignInPage({ onNav }: SignInPageProps) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#112250] mb-1.5">
+                <label htmlFor="signin-password" className="block text-xs font-bold text-[#112250] mb-1.5">
                   Password
                 </label>
                 <div className="relative flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white focus-within:shadow-[0_0_20px_rgba(59,80,125,0.15)] transition-all">
-                  <Lock className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
+                  <Lock className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" aria-hidden="true" />
                   <input
+                    id="signin-password"
                     type="password"
                     required
                     value={password}
@@ -168,8 +170,8 @@ export default function SignInPage({ onNav }: SignInPageProps) {
               </div>
 
               <div className="flex items-center justify-between text-xs font-bold">
-                <label className="flex items-center gap-2 cursor-pointer text-[#3B507D]">
-                  <input type="checkbox" className="rounded text-[#112250]" />
+                <label htmlFor="signin-remember" className="flex items-center gap-2 cursor-pointer text-[#3B507D]">
+                  <input id="signin-remember" type="checkbox" className="rounded text-[#112250]" />
                   Remember me
                 </label>
                 <button
@@ -241,10 +243,11 @@ export default function SignInPage({ onNav }: SignInPageProps) {
               ) : (
                 <form onSubmit={handleForgotSubmit} className="mt-6 space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-[#112250] mb-1.5">Email Address</label>
+                    <label htmlFor="forgot-email" className="block text-xs font-bold text-[#112250] mb-1.5">Email Address</label>
                     <div className="flex items-center rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-3 focus-within:border-[#112250] focus-within:bg-white transition-all">
-                      <Mail className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" />
+                      <Mail className="h-4 w-4 text-[#3B507D] mr-2.5 shrink-0" aria-hidden="true" />
                       <input
+                        id="forgot-email"
                         type="email"
                         required
                         value={forgotEmail}
@@ -276,6 +279,6 @@ export default function SignInPage({ onNav }: SignInPageProps) {
           </div>
         )}
       </AnimatePresence>
-    </main>
+    </div>
   );
 }

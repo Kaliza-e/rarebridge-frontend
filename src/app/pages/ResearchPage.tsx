@@ -77,7 +77,7 @@ export default function ResearchPage() {
   });
 
   return (
-    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
       <OrganicWavyLine side="left" />
       <OrganicWavyLine side="right" />
 
@@ -229,6 +229,9 @@ export default function ResearchPage() {
                     variants={fadeUpVariants}
                     whileHover={{ y: -6, scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View clinical trial details for ${d.name}`}
                     onClick={() =>
                       setSelectedResearch({
                         diseaseName: d.name,
@@ -239,7 +242,20 @@ export default function ResearchPage() {
                         stage: phaseBadge,
                       })
                     }
-                    className="group cursor-pointer rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 transition-all duration-200 hover:bg-white hover:border-[#112250] flex flex-col justify-between"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedResearch({
+                          diseaseName: d.name,
+                          category: d.category,
+                          researchName: leadResearch.name,
+                          why: leadResearch.why,
+                          url: (leadResearch as any).url,
+                          stage: phaseBadge,
+                        });
+                      }
+                    }}
+                    className="group cursor-pointer rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 transition-all duration-200 hover:bg-white hover:border-[#112250] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2">
@@ -373,6 +389,6 @@ export default function ResearchPage() {
           </div>
         )}
       </AnimatePresence>
-    </main>
+    </div>
   );
 }

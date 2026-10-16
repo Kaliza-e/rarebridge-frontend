@@ -179,7 +179,28 @@ const FALLBACK_DISEASES = [
       { myth: "ACC only affects children.", fact: "While more common in children under 5, adults ages 40-50 also develop ACC." }
     ],
     specialists: [
-      { name: "Endocrine Specialists", role: "Hormone experts", org: "Medical Centers", location: "Various", specialization: "Adrenal disorders", publications: 0 }
+      {
+        name: "Dr. Gary D. Hammer",
+        profession: "Endocrinologist & Oncologist",
+        specialization: "Adrenocortical Carcinoma, Adrenal Tumors, Endocrine Genetics",
+        organization: "University of Michigan Rogel Cancer Center",
+        location: "Ann Arbor, Michigan, USA",
+        contact: "https://www.rogelcancercenter.org",
+        publications: "Director of the Endocrine Oncology Program, over 180 peer-reviewed papers on adrenal neoplasms.",
+        focus: "Endocrinologist & Oncologist",
+        why: "Dr. Gary D. Hammer"
+      },
+      {
+        name: "Dr. Tobias Else",
+        profession: "Clinical Endocrinologist",
+        specialization: "Adrenal Genetics, Sporadic & Hereditary ACC",
+        organization: "Comprehensive Cancer Center, Michigan Medicine",
+        location: "Ann Arbor, Michigan, USA",
+        contact: "https://www.uofmhealth.org",
+        publications: "Lead investigator for international ACC genetics cohorts.",
+        focus: "Clinical Endocrinologist",
+        why: "Dr. Tobias Else"
+      }
     ]
   },
   {
@@ -232,7 +253,28 @@ const FALLBACK_DISEASES = [
       { myth: "Alexander Disease only affects children.", fact: "While most common in infants, juvenile and adult forms also exist." }
     ],
     specialists: [
-      { name: "Neurologists", role: "Nervous system specialists", org: "Medical Centers", location: "Various", specialization: "Genetic neurological disorders", publications: 0 }
+      {
+        name: "Dr. Albee Messing",
+        profession: "Neuropathologist & Geneticist",
+        specialization: "GFAP Biology, Alexander Disease Genetics & Therapeutics",
+        organization: "Waisman Center, University of Wisconsin–Madison",
+        location: "Madison, Wisconsin, USA",
+        contact: "https://www.waisman.wisc.edu",
+        publications: "Pioneered GFAP mutation discoveries and translational therapeutic trials.",
+        focus: "Neuropathologist & Geneticist",
+        why: "Dr. Albee Messing"
+      },
+      {
+        name: "Dr. Amy Waldman",
+        profession: "Pediatric Neurologist",
+        specialization: "Pediatric Leukodystrophies, Neuroinflammatory Diseases",
+        organization: "Children's Hospital of Philadelphia (CHOP)",
+        location: "Philadelphia, Pennsylvania, USA",
+        contact: "https://www.chop.edu",
+        publications: "Medical Director of the Leukodystrophy Center of Excellence at CHOP.",
+        focus: "Pediatric Neurologist",
+        why: "Dr. Amy Waldman"
+      }
     ]
   },
   {
@@ -285,7 +327,28 @@ const FALLBACK_DISEASES = [
       { myth: "Batten Disease is contagious.", fact: "Batten Disease is a genetic disorder and cannot be caught from others." }
     ],
     specialists: [
-      { name: "Pediatric Neurologists", role: "Child brain specialists", org: "Medical Centers", location: "Various", specialization: "Neurodegenerative disorders", publications: 0 }
+      {
+        name: "Dr. Jonathan W. Mink",
+        profession: "Pediatric Neurologist",
+        specialization: "Neuronal Ceroid Lipofuscinoses (Batten Disease), Pediatric Movement Disorders",
+        organization: "University of Rochester Medical Center – Batten Center",
+        location: "Rochester, New York, USA",
+        contact: "https://www.urmc.rochester.edu",
+        publications: "Director of the University of Rochester Batten Center; pioneered standardized rating scales for CLN3 disease.",
+        focus: "Pediatric Neurologist",
+        why: "Dr. Jonathan W. Mink"
+      },
+      {
+        name: "Dr. Erika Augustine",
+        profession: "Pediatric Neurologist & Clinical Trialist",
+        specialization: "Batten Disease (CLN3, CLN2), Rare Pediatric Neurodegenerative Disorders",
+        organization: "Kennedy Krieger Institute / Johns Hopkins Medicine",
+        location: "Baltimore, Maryland, USA",
+        contact: "https://www.kennedykrieger.org",
+        publications: "Extensive leadership in Batten disease natural history studies and novel clinical trials.",
+        focus: "Pediatric Neurologist",
+        why: "Dr. Erika Augustine"
+      }
     ]
   },
   {
@@ -336,7 +399,28 @@ const FALLBACK_DISEASES = [
       { myth: "Angiosarcoma is just a bad bruise.", fact: "While it may look like a bruise, angiosarcoma is a serious cancer that requires medical treatment." }
     ],
     specialists: [
-      { name: "Oncologists", role: "Cancer specialists", org: "Cancer Centers", location: "Various", specialization: "Sarcoma treatment", publications: 0 }
+      {
+        name: "Dr. Vinod Ravi",
+        profession: "Sarcoma Medical Oncologist",
+        specialization: "Angiosarcoma, Vascular Malignancies, Targeted Therapies",
+        organization: "MD Anderson Cancer Center",
+        location: "Houston, Texas, USA",
+        contact: "https://www.mdanderson.org",
+        publications: "Extensive clinical trial leadership for angiosarcoma and immunotherapy.",
+        focus: "Sarcoma Medical Oncologist",
+        why: "Dr. Vinod Ravi"
+      },
+      {
+        name: "Dr. William D. Tap",
+        profession: "Chief of Medical Oncology",
+        specialization: "Soft Tissue Sarcomas, Vascular Tumors",
+        organization: "Memorial Sloan Kettering Cancer Center",
+        location: "New York, New York, USA",
+        contact: "https://www.mskcc.org",
+        publications: "Pioneering research in novel small-molecule inhibitors and immunotherapy in sarcoma.",
+        focus: "Medical Oncologist",
+        why: "Dr. William D. Tap"
+      }
     ]
   },
   {
@@ -388,7 +472,28 @@ const FALLBACK_DISEASES = [
       { myth: "ALS is contagious.", fact: "ALS is not contagious and cannot be spread from person to person." }
     ],
     specialists: [
-      { name: "Neurologists", role: "Nervous system specialists", org: "ALS Clinics", location: "Various", specialization: "Motor neuron diseases", publications: 0 }
+      {
+        name: "Dr. Merit Cudkowicz",
+        profession: "Neurologist & Director of the Healey Center",
+        specialization: "Amyotrophic Lateral Sclerosis, Motor Neuron Therapeutics",
+        organization: "Massachusetts General Hospital / Harvard Medical School",
+        location: "Boston, Massachusetts, USA",
+        contact: "https://www.massgeneral.org",
+        publications: "Principal investigator on HEALEY ALS Platform Trial, over 250 publications on motor neuron disease.",
+        focus: "Neurologist",
+        why: "Dr. Merit Cudkowicz"
+      },
+      {
+        name: "Dr. Jeffrey D. Rothstein",
+        profession: "Director, Robert Packard Center for ALS Research",
+        specialization: "ALS Neurobiology, C9orf72 & SOD1 Genetics",
+        organization: "Johns Hopkins Medicine",
+        location: "Baltimore, Maryland, USA",
+        contact: "https://www.hopkinsmedicine.org",
+        publications: "Pioneered nuclear transport defect discoveries and antisense trials in ALS.",
+        focus: "Neurologist & Neuroscientist",
+        why: "Dr. Jeffrey D. Rothstein"
+      }
     ]
   },
   {

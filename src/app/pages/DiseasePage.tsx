@@ -355,7 +355,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   }
 
   return (
-    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
       <OrganicWavyLine side="left" />
       <OrganicWavyLine side="right" />
 
@@ -404,19 +404,19 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
 
                       return (
                         <>
-                          <div className="mt-2 text-xs sm:text-sm font-medium text-[#3B507D] leading-relaxed max-w-2xl">
+                          <div className="font-sans mt-2 text-xs sm:text-sm font-medium text-[#3B507D] leading-relaxed max-w-2xl">
                             <span>{heroOverviewSnippet}</span>
                             {isOverviewLong && (
                               <button
                                 type="button"
                                 onClick={() => setShowHeroMore(!showHeroMore)}
-                                className="ml-2 font-bold text-[#112250] hover:text-[#3B507D] underline cursor-pointer"
+                                className="font-sans ml-2 font-bold text-[#112250] hover:text-[#3B507D] underline cursor-pointer"
                               >
                                 {showHeroMore ? "Show less" : "Read more"}
                               </button>
                             )}
                           </div>
-                          <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#3B507D]">
+                          <div className="font-sans mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#3B507D]">
                             <span className="font-bold text-[#112250]">Specialty Focus:</span>
                             <span>{disease.category || "Rare Disease Specialization"}</span>
                             {specialistsList.length > 0 && (
@@ -425,7 +425,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                                 <button
                                   type="button"
                                   onClick={() => navigateToTab("specialists")}
-                                  className="font-semibold text-[#112250] hover:underline cursor-pointer"
+                                  className="font-sans font-semibold text-[#112250] hover:underline cursor-pointer"
                                 >
                                   {specialistsList.length} Specialist{specialistsList.length > 1 ? "s" : ""} Available
                                 </button>
@@ -1504,6 +1504,6 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

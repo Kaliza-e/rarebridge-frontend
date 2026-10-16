@@ -3,7 +3,7 @@ import {
   Bot, Star,
   AlertCircle, Stethoscope, ClipboardList, Syringe, Users as UsersIcon, Microscope as MicroscopeIcon,
   Thermometer, HeartPulse, Pill, Users, FlaskConical, UserCircle, BookOpen, Sparkles, Zap, Trophy, Target,
-  Flame, Award, CheckCircle, XCircle, Lock, Download, Heart, Brain, Dna, Activity
+  Flame, Award, CheckCircle, XCircle, Lock, Download, Heart, Brain, Dna, Activity, ArrowRight
 } from "lucide-react";
 import { Disease } from "../../data";
 import { generateDiseasePDF } from "../../utils/pdf-generator";
@@ -527,7 +527,7 @@ export function AIAssistant() {
               <p className="font-bold text-white text-sm leading-none font-heading">RareBridge AI</p>
               <p className="text-[#D6E0F5] text-xs mt-0.5 font-medium">Ask anything about rare diseases</p>
             </div>
-            <button onClick={() => setOpen(false)} className="text-[#D6E0F5] hover:text-white transition-colors p-1 cursor-pointer">
+            <button type="button" onClick={() => setOpen(false)} aria-label="Close AI Assistant" className="text-[#D6E0F5] hover:text-white transition-colors p-1 cursor-pointer">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
@@ -550,7 +550,7 @@ export function AIAssistant() {
           {/* Quick questions */}
           <div className="px-4 py-2 bg-white border-t border-[#E7E2CE] flex gap-2 overflow-x-auto scrollbar-none">
             {QUICK.map(q => (
-              <button key={q} onClick={() => send(q)} className="shrink-0 px-3 py-1.5 rounded-full bg-[#F5F4F0] text-[#112250] text-xs font-semibold hover:bg-[#112250] hover:text-white transition-colors whitespace-nowrap border border-[#E7E2CE] cursor-pointer">
+              <button key={q} type="button" onClick={() => send(q)} className="shrink-0 px-3 py-1.5 rounded-full bg-[#F5F4F0] text-[#112250] text-xs font-semibold hover:bg-[#112250] hover:text-white transition-colors whitespace-nowrap border border-[#E7E2CE] cursor-pointer">
                 {q}
               </button>
             ))}
@@ -565,9 +565,10 @@ export function AIAssistant() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && send(input)}
                 placeholder="Ask a question…"
+                aria-label="Ask RareBridge AI a question"
                 className="flex-1 bg-transparent text-xs sm:text-sm text-[#112250] placeholder-[#3B507D]/60 outline-none font-medium"
               />
-              <button onClick={() => send(input)} className="w-7 h-7 rounded-lg bg-[#112250] flex items-center justify-center hover:bg-[#3B507D] transition-colors shrink-0 cursor-pointer">
+              <button type="button" onClick={() => send(input)} aria-label="Send message to AI assistant" className="w-7 h-7 rounded-lg bg-[#112250] flex items-center justify-center hover:bg-[#3B507D] transition-colors shrink-0 cursor-pointer">
                 <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
               </button>
             </div>
@@ -783,8 +784,17 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
 
   return (
     <div
-      className="group relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#112250] cursor-pointer flex flex-col justify-between"
+      role="button"
+      tabIndex={0}
+      aria-label={`View ${disease.name} condition guide and research`}
+      className="group relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#112250] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] focus-visible:ring-offset-2 cursor-pointer flex flex-col justify-between"
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
     >
       <div className={`relative isolate flex h-40 w-full flex-col justify-between overflow-hidden bg-gradient-to-br ${visual.background} p-4 sm:p-5`}>
         <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.14),transparent_55%)]" />
@@ -815,7 +825,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
 
         <div className="font-sans flex items-center justify-between border-t border-[#E7E2CE] pt-3 text-xs font-black text-[#112250] group-hover:text-[#3B507D]">
           <span>View Overview & Research</span>
-          <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
         </div>
       </div>
     </div>

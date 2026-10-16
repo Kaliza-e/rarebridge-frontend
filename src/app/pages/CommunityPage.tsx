@@ -157,7 +157,7 @@ export default function CommunityPage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
       <OrganicWavyLine side="left" />
       <OrganicWavyLine side="right" />
 
@@ -375,8 +375,17 @@ export default function CommunityPage() {
             {discussions.map((disc, idx) => (
               <div
                 key={idx}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open discussion: ${disc.topic}`}
                 onClick={() => setSelectedDiscussion(disc)}
-                className="flex items-center justify-between gap-4 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE] hover:bg-white hover:border-[#112250] transition-all cursor-pointer shadow-xs"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelectedDiscussion(disc);
+                  }
+                }}
+                className="flex items-center justify-between gap-4 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE] hover:bg-white hover:border-[#112250] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] transition-all cursor-pointer shadow-xs"
               >
                 <div className="flex items-center gap-3">
                   <div className="rounded-lg bg-[#112250] p-2 text-[#E7E2CE] shrink-0">
@@ -643,6 +652,6 @@ export default function CommunityPage() {
           </div>
         )}
       </AnimatePresence>
-    </main>
+    </div>
   );
 }

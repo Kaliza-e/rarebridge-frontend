@@ -13,19 +13,19 @@ export function BlockRenderer({ block, className = '' }: BlockRendererProps) {
   switch (block.type) {
     case 'paragraph':
       return (
-        <p className={`font-sans text-sm sm:text-base leading-relaxed text-[#3B507D] mb-3 last:mb-0 ${className}`}>
+        <p className={`font-body text-sm sm:text-base leading-relaxed text-[#3B507D] mb-3 last:mb-0 ${className}`}>
           <SpanRenderer spans={block.spans} />
         </p>
       );
 
     case 'labeled':
       return (
-        <div className={`mb-3.5 last:mb-0 ${className}`}>
+        <div className={`mb-3.5 last:mb-0 font-body ${className}`}>
           <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2">
-            <span className="font-heading text-sm sm:text-base font-bold text-[#112250] shrink-0">
+            <span className="font-body text-sm sm:text-base font-bold text-[#112250] shrink-0">
               {block.label}:
             </span>
-            <div className="font-sans text-sm sm:text-base leading-relaxed text-[#3B507D]">
+            <div className="font-body text-sm sm:text-base leading-relaxed text-[#3B507D]">
               <SpanRenderer spans={block.body} />
             </div>
           </div>
@@ -34,7 +34,7 @@ export function BlockRenderer({ block, className = '' }: BlockRendererProps) {
 
     case 'list':
       return (
-        <div className={`mb-4 last:mb-0 ${className}`}>
+        <div className={`mb-4 last:mb-0 font-body ${className}`}>
           {block.label && (
             <h4 className="font-heading text-sm sm:text-base font-bold text-[#112250] mb-2.5">
               {block.label}
@@ -44,7 +44,7 @@ export function BlockRenderer({ block, className = '' }: BlockRendererProps) {
             {block.items.map((item, idx) => (
               <li
                 key={idx}
-                className="flex items-start gap-3 font-sans text-sm sm:text-base leading-relaxed text-[#3B507D]"
+                className="flex items-start gap-3 font-body text-sm sm:text-base leading-relaxed text-[#3B507D]"
                 style={{ paddingLeft: `${(item.level || 0) * 1.25}rem` }}
               >
                 <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#112250] shrink-0" />
@@ -192,14 +192,14 @@ function OrgCard({ record, className = '' }: { record: RecordBlock; className?: 
           </div>
 
           {focusField && (
-            <div className="text-sm font-sans text-[#3B507D] leading-relaxed pl-9">
+            <div className="text-sm font-body text-[#3B507D] leading-relaxed pl-9">
               <span className="font-semibold text-[#112250]">Focus Area: </span>
               <SpanRenderer spans={focusField.body} />
             </div>
           )}
 
           {otherFields.map((f, idx) => (
-            <div key={idx} className="text-sm font-sans text-[#3B507D] leading-relaxed pl-9">
+            <div key={idx} className="text-sm font-body text-[#3B507D] leading-relaxed pl-9">
               <span className="font-semibold text-[#112250]">{f.label}: </span>
               <SpanRenderer spans={f.body} />
             </div>
