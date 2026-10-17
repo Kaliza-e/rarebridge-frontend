@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { EdelweissFlower, OrganicWavyLine, ZebraMascot } from "../components/common/Visuals";
-import SectionDivider from "../components/common/SectionDivider";
+import { EdelweissFlower } from "../components/common/Visuals";
+import { DrippingScallopDivider } from "../components/common/DrippingScallopDivider";
 import {
   Users,
   Heart,
@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   X,
   Send,
-  ThumbsUp,
   MessageCircle,
 } from "lucide-react";
 import { fadeUpVariants, staggerContainerVariants, modalPanelVariants, overlayBackdropVariants } from "../utils/animations";
@@ -97,7 +96,7 @@ export default function CommunityPage() {
   const [selectedFeature, setSelectedFeature] = useState<typeof COMMUNITY_FEATURES[0] | null>(null);
   const [likes, setLikes] = useState<Record<number, number>>({ 0: 48, 1: 62, 2: 75 });
   const [hasLiked, setHasLiked] = useState<Record<number, boolean>>({});
-  
+
   // Discussions state
   const [discussions, setDiscussions] = useState(RECENT_DISCUSSIONS);
   const [isCreatingTopic, setIsCreatingTopic] = useState(false);
@@ -157,16 +156,9 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
-      <OrganicWavyLine side="left" />
-      <OrganicWavyLine side="right" />
-
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#BCE0F5] selection:text-[#112250]">
       {/* ================= HERO BANNER ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
-        {/* Background ambient blobs matching Homepage */}
-        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
-
+      <section className="relative overflow-hidden bg-transparent pt-8 pb-12 sm:pt-12 sm:pb-16">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             {/* Left Content */}
@@ -176,22 +168,23 @@ export default function CommunityPage() {
               transition={{ duration: 0.5 }}
               className="lg:col-span-7"
             >
-              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
-                A Safe Haven for Families
-              </span>
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
+                <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
+                <span>A Safe Haven for Families</span>
+              </div>
 
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-[#112250]">
                 You Are Never Alone On Your Rare Journey
               </h1>
 
-              <p className="font-sans mt-3 max-w-xl text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium">
-                RareBridge connects parents, caregivers, and pediatric advocates to share wisdom, emotional support, and practical caregiving advice.
+              <p className="font-sans mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-[#243B6B]/80 font-medium">
+                RareBridge connects parents, caregivers, and pediatric advocates to share wisdom, emotional support, and practical caregiving advice in a safe, compassionate environment.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <button
                   onClick={() => setSelectedFeature(COMMUNITY_FEATURES[0])}
-                  className="inline-flex items-center gap-2.5 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                  className="inline-flex items-center gap-2.5 rounded-full bg-[#112250] px-7 py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#243B6B] hover:shadow-lg transition-all cursor-pointer"
                 >
                   <Users className="h-5 w-5 text-white" />
                   <span>Join Parent Support Circle</span>
@@ -207,15 +200,15 @@ export default function CommunityPage() {
               className="lg:col-span-5"
             >
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 text-[#112250] shadow-xl">
+                <div className="relative overflow-hidden rounded-3xl border border-[#BCE0F5] bg-white p-8 text-[#112250] shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
+                    <div className="rounded-2xl bg-[#EDF6FC] border border-[#BCE0F5] p-3 text-[#112250] shadow-xs">
                       <Heart className="h-6 w-6 text-[#112250]" />
                     </div>
                     <EdelweissFlower size={36} />
                   </div>
 
-                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
                     <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
                     120K+ Families Supported
                   </span>
@@ -223,17 +216,17 @@ export default function CommunityPage() {
                   <h3 className="font-heading font-black text-2xl text-[#112250]">
                     Compassionate Peer Support
                   </h3>
-                  <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
+                  <p className="font-sans text-sm text-[#243B6B]/80 mt-2 font-medium leading-relaxed">
                     Built by rare disease parents for rare disease parents. Safe, moderated, and focused on practical hope.
                   </p>
 
-                  <div className="mt-6 space-y-2.5 border-t border-[#E7E2CE] pt-4 text-xs font-bold text-[#112250]">
+                  <div className="mt-6 space-y-2.5 border-t border-[#EDF6FC] pt-4 text-xs font-bold text-[#112250]">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <CheckCircle2 className="h-4 w-4 text-[#112250]" />
                       <span>Moderated support circles</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <CheckCircle2 className="h-4 w-4 text-[#112250]" />
                       <span>Caregiver mental health & wellness toolkits</span>
                     </div>
                   </div>
@@ -244,13 +237,17 @@ export default function CommunityPage() {
         </div>
       </section>
 
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-2">
+        <DrippingScallopDivider color="blue" height={36} className="opacity-80" />
+      </div>
+
       {/* ================= WAYS TO CONNECT ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center max-w-xl mx-auto">
-          <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
-            Community Resources
-          </span>
-          <h2 className="mt-1 text-3xl font-black text-[#112250] sm:text-4xl font-heading">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#112250] mb-3 shadow-xs">
+            <span>Community Resources</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-black text-[#112250] font-heading">
             Ways to Connect & Participate
           </h2>
         </div>
@@ -270,24 +267,24 @@ export default function CommunityPage() {
                 whileHover={{ y: -6, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedFeature(feat)}
-                className="group cursor-pointer rounded-xl border-2 border-[#E7E2CE] bg-white p-6 shadow-sm hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] transition-all flex flex-col justify-between"
+                className="group cursor-pointer rounded-2xl border border-[#BCE0F5] bg-white p-6 shadow-xs hover:border-[#112250] hover:shadow-md transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#F5F4F0] text-[#112250] mb-4 group-hover:bg-[#112250] group-hover:text-[#E7E2CE] transition-colors shadow-xs">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#EDF6FC] border border-[#BCE0F5] text-[#112250] mb-4 group-hover:bg-[#112250] group-hover:text-white transition-colors shadow-xs">
                     <IconComp className="h-6 w-6" />
                   </div>
-                  <span className="rounded-md bg-[#F5F4F0] px-3 py-1 text-[10px] font-bold text-[#3B507D] uppercase tracking-wider border border-[#E7E2CE]">
+                  <span className="rounded-full bg-[#EDF6FC] px-3 py-1 text-[10px] font-bold text-[#112250] uppercase tracking-wider border border-[#BCE0F5]">
                     {feat.tag}
                   </span>
-                  <h3 className="font-heading font-black text-xl text-[#112250] mt-3 group-hover:text-[#3B507D]">
+                  <h3 className="font-heading font-black text-xl text-[#112250] mt-3 group-hover:text-[#243B6B]">
                     {feat.title}
                   </h3>
-                  <p className="mt-2 text-xs text-[#3B507D] font-medium leading-relaxed">
+                  <p className="mt-2 text-xs text-[#243B6B]/80 font-medium leading-relaxed">
                     {feat.description}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-3 border-t border-[#F5F4F0] flex items-center justify-between text-xs font-bold text-[#112250]">
+                <div className="mt-6 pt-3 border-t border-[#EDF6FC] flex items-center justify-between text-xs font-bold text-[#112250]">
                   <span>Explore Circle</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
@@ -299,12 +296,12 @@ export default function CommunityPage() {
 
       {/* ================= MEMBER STORIES ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
-        <div className="rounded-xl bg-white p-8 sm:p-12 border-2 border-[#E7E2CE] shadow-sm">
+        <div className="rounded-3xl bg-white p-8 sm:p-12 border border-[#BCE0F5] shadow-xs">
           <div className="mb-10 text-center max-w-xl mx-auto">
-            <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
-              Real Experiences
-            </span>
-            <h2 className="mt-1 font-heading text-3xl font-black text-[#112250]">
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#112250] mb-3 shadow-xs">
+              <span>Real Experiences</span>
+            </div>
+            <h2 className="font-heading text-3xl font-black text-[#112250]">
               Family & Caregiver Voices
             </h2>
           </div>
@@ -314,13 +311,13 @@ export default function CommunityPage() {
               <motion.div
                 key={i}
                 whileHover={{ y: -4 }}
-                className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 flex flex-col justify-between hover:bg-white hover:border-[#112250] hover:shadow-[0_10px_30px_rgba(17,34,80,0.1)] transition-all"
+                className="rounded-2xl border border-[#BCE0F5] bg-[#F8FBFE] p-6 flex flex-col justify-between hover:bg-white hover:border-[#112250] hover:shadow-sm transition-all"
               >
-                <p className="text-xs text-[#3B507D] font-medium leading-relaxed italic mb-4">
+                <p className="text-xs text-[#243B6B]/85 font-medium leading-relaxed italic mb-4">
                   "{story.quote}"
                 </p>
 
-                <div className="flex items-center justify-between border-t border-[#E7E2CE] pt-3">
+                <div className="flex items-center justify-between border-t border-[#EDF6FC] pt-3">
                   <div className="flex items-center gap-3">
                     <img
                       src={story.avatar}
@@ -329,15 +326,15 @@ export default function CommunityPage() {
                     />
                     <div>
                       <h4 className="font-black text-xs text-[#112250]">{story.name}</h4>
-                      <p className="text-[10px] text-[#3B507D] font-bold">{story.condition}</p>
+                      <p className="text-[10px] text-[#243B6B]/70 font-bold">{story.condition}</p>
                     </div>
                   </div>
 
                   <button
                     onClick={() => toggleLike(i)}
-                    className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-md border transition-all ${hasLiked[i]
+                    className={`flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full border transition-all cursor-pointer ${hasLiked[i]
                       ? "bg-[#D4183D] text-white border-[#D4183D] shadow-xs animate-pulse"
-                      : "bg-white text-[#3B507D] border-[#E7E2CE] hover:border-[#112250]"
+                      : "bg-white text-[#243B6B] border-[#BCE0F5] hover:border-[#112250]"
                       }`}
                   >
                     <Heart className="h-3.5 w-3.5 fill-current" />
@@ -352,19 +349,19 @@ export default function CommunityPage() {
 
       {/* ================= RECENT DISCUSSIONS FEED ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
-        <div className="rounded-xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] shadow-sm">
-          <div className="flex items-center justify-between mb-6 border-b border-[#F5F4F0] pb-4">
+        <div className="rounded-3xl bg-white p-8 sm:p-10 border border-[#BCE0F5] shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-[#EDF6FC] pb-5">
             <div>
-              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
-                Active Conversations
-              </span>
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-[#112250] mb-2 shadow-xs">
+                <span>Active Conversations</span>
+              </div>
               <h3 className="font-heading font-black text-2xl text-[#112250]">
                 Trending Caregiver Discussions
               </h3>
             </div>
             <button
               onClick={() => setIsCreatingTopic(true)}
-              className="inline-flex items-center gap-2 rounded-lg bg-[#112250] px-4 py-2 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shadow-xs cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-full bg-[#112250] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#243B6B] transition-colors shadow-xs cursor-pointer self-start sm:self-auto"
             >
               <MessageCircle className="h-4 w-4" />
               <span>Start New Topic</span>
@@ -385,22 +382,22 @@ export default function CommunityPage() {
                     setSelectedDiscussion(disc);
                   }
                 }}
-                className="flex items-center justify-between gap-4 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE] hover:bg-white hover:border-[#112250] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] transition-all cursor-pointer shadow-xs"
+                className="flex items-center justify-between gap-4 rounded-2xl bg-[#F8FBFE] p-4 sm:p-5 border border-[#BCE0F5] hover:bg-white hover:border-[#112250] hover:shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] transition-all cursor-pointer"
               >
                 <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-[#112250] p-2 text-[#E7E2CE] shrink-0">
+                  <div className="rounded-xl bg-[#112250] p-2.5 text-white shrink-0">
                     <MessageSquare className="h-4 w-4" />
                   </div>
                   <div>
-                    <span className="rounded-md bg-white px-2.5 py-0.5 text-[10px] font-bold text-[#3B507D] uppercase border border-[#E7E2CE]">
+                    <span className="rounded-full bg-white px-3 py-0.5 text-[10px] font-bold text-[#112250] uppercase border border-[#BCE0F5]">
                       {disc.tag}
                     </span>
-                    <h4 className="font-black text-sm text-[#112250] mt-1">{disc.topic}</h4>
-                    <p className="text-xs text-[#3B507D]">Posted by {disc.author}</p>
+                    <h4 className="font-black text-sm text-[#112250] mt-1.5">{disc.topic}</h4>
+                    <p className="text-xs text-[#243B6B]/70 font-medium">Posted by {disc.author}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs font-bold text-[#3B507D] shrink-0">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#243B6B] shrink-0">
                   <MessageCircle className="h-4 w-4" />
                   <span>{disc.replies} replies</span>
                 </div>
@@ -431,39 +428,39 @@ export default function CommunityPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-lg rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
+              className="relative w-full max-w-lg rounded-3xl border border-[#BCE0F5] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
             >
               <button
                 onClick={() => {
                   setSelectedFeature(null);
                   setJoinedSuccess(false);
                 }}
-                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors cursor-pointer"
+                className="absolute top-5 right-5 rounded-full bg-[#EDF6FC] p-2 text-[#112250] hover:bg-[#BCE0F5] transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
               </button>
 
-              <span className="rounded-md bg-[#E7E2CE]/60 px-3 py-1 text-xs font-bold text-[#112250]">
+              <span className="rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250]">
                 {selectedFeature.tag}
               </span>
 
-              <h3 className="font-heading font-black text-2xl text-[#112250] mt-2">
+              <h3 className="font-heading font-black text-2xl text-[#112250] mt-3">
                 {selectedFeature.title}
               </h3>
 
-              <p className="mt-3 text-sm text-[#3B507D] leading-relaxed font-medium">
+              <p className="mt-3 text-sm text-[#243B6B]/80 leading-relaxed font-medium">
                 {selectedFeature.detail}
               </p>
 
               {joinedSuccess ? (
-                <div className="mt-6 flex items-center gap-3 rounded-lg bg-emerald-50 p-4 border border-emerald-200 text-emerald-800 text-sm font-bold">
+                <div className="mt-6 flex items-center gap-3 rounded-2xl bg-emerald-50 p-4 border border-emerald-200 text-emerald-800 text-sm font-bold">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
                   <span>Thank you! Your invitation to join this circle has been sent.</span>
                 </div>
               ) : (
                 <form onSubmit={handleJoinCircle} className="mt-6 space-y-4">
-                  <div className="space-y-2 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE]">
+                  <div className="space-y-2 rounded-2xl bg-[#F8FBFE] p-4 border border-[#BCE0F5]">
                     <h4 className="text-xs font-black uppercase text-[#112250]">Express Interest to Join</h4>
                     <input
                       type="email"
@@ -471,14 +468,14 @@ export default function CommunityPage() {
                       value={joinEmail}
                       onChange={(e) => setJoinEmail(e.target.value)}
                       placeholder="Enter your email address..."
-                      className="w-full rounded-lg border border-[#E7E2CE] bg-white px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium"
+                      className="w-full rounded-xl border border-[#BCE0F5] bg-white px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:border-[#112250]"
                     />
                   </div>
 
                   <div className="flex gap-3">
                     <button
                       type="submit"
-                      className="flex-1 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md cursor-pointer"
+                      className="flex-1 rounded-full bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#243B6B] transition-colors shadow-md cursor-pointer"
                     >
                       Join Circle
                     </button>
@@ -508,11 +505,11 @@ export default function CommunityPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-lg rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
+              className="relative w-full max-w-lg rounded-3xl border border-[#BCE0F5] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
             >
               <button
                 onClick={() => setIsCreatingTopic(false)}
-                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors cursor-pointer"
+                className="absolute top-5 right-5 rounded-full bg-[#EDF6FC] p-2 text-[#112250] hover:bg-[#BCE0F5] transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
@@ -521,7 +518,7 @@ export default function CommunityPage() {
               <h3 className="font-heading font-black text-2xl text-[#112250]">
                 Start a New Discussion
               </h3>
-              <p className="mt-1 text-xs text-[#3B507D] font-medium">
+              <p className="mt-1 text-xs text-[#243B6B]/80 font-medium">
                 Share questions, tips, or experiences with rare disease caregivers worldwide.
               </p>
 
@@ -534,7 +531,7 @@ export default function CommunityPage() {
                     value={newTopicTitle}
                     onChange={(e) => setNewTopicTitle(e.target.value)}
                     placeholder="e.g. Tips for managing daily therapy schedules..."
-                    className="w-full rounded-lg border border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
+                    className="w-full rounded-xl border border-[#BCE0F5] bg-[#F8FBFE] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
                   />
                 </div>
 
@@ -546,7 +543,7 @@ export default function CommunityPage() {
                       value={newTopicAuthor}
                       onChange={(e) => setNewTopicAuthor(e.target.value)}
                       placeholder="e.g. Elena M."
-                      className="w-full rounded-lg border border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
+                      className="w-full rounded-xl border border-[#BCE0F5] bg-[#F8FBFE] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
                     />
                   </div>
                   <div>
@@ -554,7 +551,7 @@ export default function CommunityPage() {
                     <select
                       value={newTopicTag}
                       onChange={(e) => setNewTopicTag(e.target.value)}
-                      className="w-full rounded-lg border border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
+                      className="w-full rounded-xl border border-[#BCE0F5] bg-[#F8FBFE] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
                     >
                       <option value="Caregiver Tips">Caregiver Tips</option>
                       <option value="School & Advocacy">School & Advocacy</option>
@@ -568,13 +565,13 @@ export default function CommunityPage() {
                   <button
                     type="button"
                     onClick={() => setIsCreatingTopic(false)}
-                    className="flex-1 rounded-lg border border-[#E7E2CE] bg-white px-4 py-3 text-xs font-bold text-[#3B507D] hover:bg-[#F5F4F0] cursor-pointer"
+                    className="flex-1 rounded-full border border-[#BCE0F5] bg-white px-4 py-3 text-xs font-bold text-[#243B6B] hover:bg-[#EDF6FC] cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 rounded-lg bg-[#112250] px-4 py-3 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md cursor-pointer"
+                    className="flex-1 rounded-full bg-[#112250] px-4 py-3 text-xs font-bold text-white hover:bg-[#243B6B] transition-colors shadow-md cursor-pointer"
                   >
                     Post Topic
                   </button>
@@ -603,28 +600,28 @@ export default function CommunityPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-lg rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
+              className="relative w-full max-w-lg rounded-3xl border border-[#BCE0F5] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto"
             >
               <button
                 onClick={() => setSelectedDiscussion(null)}
-                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors cursor-pointer"
+                className="absolute top-5 right-5 rounded-full bg-[#EDF6FC] p-2 text-[#112250] hover:bg-[#BCE0F5] transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
               </button>
 
-              <span className="rounded-md bg-[#E7E2CE]/60 px-3 py-1 text-xs font-bold text-[#112250]">
+              <span className="rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250]">
                 {selectedDiscussion.tag}
               </span>
 
-              <h3 className="font-heading font-black text-xl text-[#112250] mt-2">
+              <h3 className="font-heading font-black text-xl text-[#112250] mt-3">
                 {selectedDiscussion.topic}
               </h3>
-              <p className="text-xs text-[#3B507D] font-medium mt-1">
+              <p className="text-xs text-[#243B6B]/80 font-medium mt-1">
                 Started by {selectedDiscussion.author} • {selectedDiscussion.replies} community responses
               </p>
 
-              <div className="mt-4 rounded-lg bg-[#F5F4F0] p-4 border border-[#E7E2CE] text-xs text-[#112250] leading-relaxed">
+              <div className="mt-4 rounded-2xl bg-[#F8FBFE] p-4 border border-[#BCE0F5] text-xs text-[#112250] leading-relaxed">
                 "Our family found that having a clear daily checklist and staying in touch with other parents gave us the confidence to advocate effectively at each clinical visit."
               </div>
 
@@ -637,11 +634,11 @@ export default function CommunityPage() {
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     placeholder="Type your encouraging reply..."
-                    className="flex-1 rounded-lg border border-[#E7E2CE] bg-[#F5F4F0] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
+                    className="flex-1 rounded-xl border border-[#BCE0F5] bg-[#F8FBFE] px-3.5 py-2.5 text-xs text-[#112250] outline-none font-medium focus:bg-white focus:border-[#112250]"
                   />
                   <button
                     type="submit"
-                    className="rounded-lg bg-[#112250] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shadow-xs cursor-pointer flex items-center gap-1.5"
+                    className="rounded-full bg-[#112250] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#243B6B] transition-colors shadow-xs cursor-pointer flex items-center gap-1.5"
                   >
                     <Send className="h-3.5 w-3.5" />
                     <span>Reply</span>

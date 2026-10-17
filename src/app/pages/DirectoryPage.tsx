@@ -12,7 +12,6 @@ import {
   ZebraEmptyState,
   DiseaseCard,
   EdelweissFlower,
-  OrganicWavyLine,
 } from "../components/common/Visuals";
 
 import { SectionDivider } from "../components/common/SectionDivider";
@@ -90,23 +89,23 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
     };
   }, [query, cat]);
 
-function matchesCategory(d: any, category: string): boolean {
-  if (category === "All") return true;
-  const target = category.toLowerCase().trim();
+  function matchesCategory(d: any, category: string): boolean {
+    if (category === "All") return true;
+    const target = category.toLowerCase().trim();
 
-  if (Array.isArray(d.categories)) {
-    if (d.categories.some((c: string) => String(c).toLowerCase().trim() === target)) return true;
-  }
-  if (Array.isArray(d.categoryBadges)) {
-    if (d.categoryBadges.some((c: string) => String(c).toLowerCase().trim() === target)) return true;
-  }
-  if (typeof d.category === "string") {
-    const parts = d.category.split(/[,/]+/).map((s: string) => s.trim().toLowerCase());
-    if (parts.includes(target) || d.category.toLowerCase().trim() === target) return true;
-  }
+    if (Array.isArray(d.categories)) {
+      if (d.categories.some((c: string) => String(c).toLowerCase().trim() === target)) return true;
+    }
+    if (Array.isArray(d.categoryBadges)) {
+      if (d.categoryBadges.some((c: string) => String(c).toLowerCase().trim() === target)) return true;
+    }
+    if (typeof d.category === "string") {
+      const parts = d.category.split(/[,/]+/).map((s: string) => s.trim().toLowerCase());
+      if (parts.includes(target) || d.category.toLowerCase().trim() === target) return true;
+    }
 
-  return false;
-}
+    return false;
+  }
 
   const filtered = diseases.filter((d) => {
     const q = query.trim().toLowerCase();
@@ -142,35 +141,29 @@ function matchesCategory(d: any, category: string): boolean {
   }
 
   return (
-    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
-      <OrganicWavyLine side="left" />
-      <OrganicWavyLine side="right" />
-
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250] overflow-hidden">
       {/* ================= HERO BANNER ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
-        {/* Background ambient blobs matching Homepage */}
-        <div className="pointer-events-none absolute -top-20 -right-12 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
-
+      <section className="relative overflow-hidden bg-transparent pt-10 pb-14 lg:pt-14 lg:pb-16">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             {/* Left Content */}
             <div className="lg:col-span-7">
-              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
-                Comprehensive Knowledge Base
-              </span>
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
+                <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+                <span>Comprehensive Knowledge Base</span>
+              </div>
 
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight text-[#112250]">
                 Rare Disease Library & Medical Guides
               </h1>
 
-              <p className="font-sans mt-3 text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium max-w-2xl">
+              <p className="font-sans mt-3 text-base sm:text-lg leading-relaxed text-[#3B507D] font-medium max-w-2xl">
                 Explore 7,000+ conditions simplified into plain language with symptoms, genetic causes, approved treatments, and active trial updates.
               </p>
 
               {/* Search Box */}
               <div className="mt-8 max-w-2xl">
-                <div className="relative flex items-center rounded-xl border-2 border-[#E7E2CE] bg-white p-2 focus-within:border-[#112250] transition-all">
+                <div className="relative flex items-center rounded-full border border-[#BCE0F5] bg-white p-2 shadow-sm focus-within:border-[#112250] transition-all">
                   <Search className="ml-3 h-5 w-5 text-[#3B507D] shrink-0" />
                   <input
                     type="search"
@@ -183,15 +176,15 @@ function matchesCategory(d: any, category: string): boolean {
                   {query && (
                     <button
                       onClick={() => setQuery("")}
-                      className="mr-2 rounded-lg bg-[#F5F4F0] p-2 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                      className="mr-2 rounded-full bg-[#EDF6FC] p-2 text-xs font-bold text-[#112250] hover:bg-[#DDF0FA] transition-colors cursor-pointer"
                       aria-label="Clear search query"
                     >
                       <X className="h-4 w-4" />
                     </button>
                   )}
                   <button
-                    onClick={() => {}}
-                    className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-[#112250] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0"
+                    onClick={() => { }}
+                    className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#112250] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#1e3a7a] transition-colors shrink-0 shadow-xs cursor-pointer"
                   >
                     <span>Search</span>
                   </button>
@@ -201,16 +194,16 @@ function matchesCategory(d: any, category: string): boolean {
 
             {/* Right Card / Graphic */}
             <div className="lg:col-span-5">
-              <div className="mx-auto max-w-md rounded-xl border-2 border-[#E7E2CE] bg-white p-7 text-[#112250] sm:p-8 lg:max-w-none">
+              <div className="mx-auto max-w-md rounded-3xl border border-[#BCE0F5] bg-white p-7 text-[#112250] sm:p-8 lg:max-w-none shadow-[0_8px_30px_rgba(17,34,80,0.05)]">
                 <div className="mb-6 flex items-center justify-between">
-                  <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250]">
+                  <div className="rounded-2xl bg-[#EDF6FC] p-3 text-[#112250]">
                     <BookOpen className="h-6 w-6 text-[#112250]" />
                   </div>
                   <EdelweissFlower size={36} />
                 </div>
 
-                <span className="mb-3 inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250]">
-                  <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
+                <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250]">
+                  <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
                   Source-Based Disease Information
                 </span>
 
@@ -221,13 +214,13 @@ function matchesCategory(d: any, category: string): boolean {
                   Disease information is organized from available source records and displayed with its source structure.
                 </p>
 
-                <div className="mt-6 space-y-2.5 border-t border-[#E7E2CE] pt-4 text-xs font-bold text-[#112250]">
+                <div className="mt-6 space-y-2.5 border-t border-[#EDF6FC] pt-4 text-xs font-bold text-[#112250]">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                    <CheckCircle2 className="h-4 w-4 text-[#243B6B]" />
                     <span>Plain-language medical breakdowns</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                    <CheckCircle2 className="h-4 w-4 text-[#243B6B]" />
                     <span>Gene Therapy & Clinical Trial updates</span>
                   </div>
                 </div>
@@ -237,12 +230,14 @@ function matchesCategory(d: any, category: string): boolean {
         </div>
       </section>
 
-      <SectionDivider variant="wave" className="-mt-1 text-[#F5F4F0]" />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-2">
+        <SectionDivider variant="scallop" color="blue" className="opacity-80" />
+      </div>
 
       {/* ================= FILTERS & LISTING SECTION ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         {/* Category Pills & Status Select */}
-        <div className="mb-8 rounded-xl border-2 border-[#E7E2CE] bg-white p-6">
+        <div className="mb-8 rounded-3xl border border-[#BCE0F5] bg-white p-6 shadow-xs">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             {/* Categories scrollable */}
             <div className="flex flex-wrap items-center gap-2">
@@ -259,17 +254,15 @@ function matchesCategory(d: any, category: string): boolean {
                   <button
                     key={category}
                     onClick={() => setCat(category)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                      isActive
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all cursor-pointer ${isActive
                         ? "bg-[#112250] text-white font-bold shadow-xs"
-                        : "text-[#3B507D] bg-[#F5F4F0] hover:text-[#112250] hover:bg-[#E7E2CE]/60"
-                    }`}
+                        : "text-[#112250] bg-[#EDF6FC] hover:bg-[#DDF0FA]"
+                      }`}
                   >
                     <span>{category}</span>
                     <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                        isActive ? "bg-white/20 text-white" : "bg-black/5 text-[#3B507D]"
-                      }`}
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${isActive ? "bg-white/20 text-white" : "bg-black/5 text-[#3B507D]"
+                        }`}
                     >
                       {count}
                     </span>
@@ -284,7 +277,7 @@ function matchesCategory(d: any, category: string): boolean {
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 aria-label="Filter conditions by research status"
-                className="rounded-lg border-2 border-[#E7E2CE] bg-[#F5F4F0] px-4 py-2 text-xs font-bold text-[#112250] outline-none hover:border-[#112250] transition-colors cursor-pointer"
+                className="rounded-full border border-[#BCE0F5] bg-[#FAF9F5] px-4 py-2 text-xs font-bold text-[#112250] outline-none hover:border-[#112250] transition-colors cursor-pointer"
               >
                 {STATUS_FILTERS.map((s) => (
                   <option key={s} value={s}>
@@ -296,7 +289,7 @@ function matchesCategory(d: any, category: string): boolean {
               {(cat !== "All" || status !== "All Status" || query) && (
                 <button
                   onClick={clearFilters}
-                  className="rounded-lg border border-[#D4183D]/30 bg-[#FDE8E8] px-3.5 py-2 text-xs font-bold text-[#D4183D] hover:bg-[#D4183D] hover:text-white transition-all"
+                  className="rounded-full border border-[#D4183D]/30 bg-[#FDE8E8] px-4 py-2 text-xs font-bold text-[#D4183D] hover:bg-[#D4183D] hover:text-white transition-all cursor-pointer"
                 >
                   Clear filters
                 </button>
@@ -318,7 +311,7 @@ function matchesCategory(d: any, category: string): boolean {
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div
                 key={n}
-                className="h-64 animate-pulse rounded-xl bg-white border-2 border-[#E7E2CE]"
+                className="h-64 animate-pulse rounded-2xl bg-white border border-[#BCE0F5]"
               />
             ))}
           </div>
@@ -335,7 +328,7 @@ function matchesCategory(d: any, category: string): boolean {
                 variants={fadeUpVariants}
                 whileHover={{ y: -6, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                className="h-full rounded-xl transition-all"
+                className="h-full rounded-2xl transition-all"
               >
                 <DiseaseCard
                   disease={disease}
@@ -345,14 +338,14 @@ function matchesCategory(d: any, category: string): boolean {
             ))}
           </motion.div>
         ) : (
-          <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-8 sm:p-12 text-center">
+          <div className="rounded-3xl border border-[#BCE0F5] bg-white p-8 sm:p-12 text-center shadow-xs">
             <ZebraEmptyState
               message="No conditions match your search criteria"
               sub="Try broadening your keywords or clearing selected category filters."
             />
             <button
               onClick={clearFilters}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#1e3a7a] transition-colors cursor-pointer shadow-xs"
             >
               <span>Reset All Filters</span>
             </button>
@@ -365,7 +358,7 @@ function matchesCategory(d: any, category: string): boolean {
             <button
               disabled={safeCurrentPage === 1}
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors cursor-pointer disabled:cursor-not-allowed"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#BCE0F5] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#EDF6FC] transition-colors cursor-pointer disabled:cursor-not-allowed shadow-xs"
               aria-label="Previous Page"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -377,11 +370,10 @@ function matchesCategory(d: any, category: string): boolean {
                 onClick={() => setCurrentPage(page)}
                 aria-label={`Go to page ${page}`}
                 aria-current={safeCurrentPage === page ? "page" : undefined}
-                className={`flex h-11 min-w-[2.75rem] items-center justify-center rounded-lg border-2 px-3 text-sm font-black transition-all cursor-pointer ${
-                  safeCurrentPage === page
+                className={`flex h-11 min-w-[2.75rem] items-center justify-center rounded-full border px-3 text-sm font-black transition-all cursor-pointer shadow-xs ${safeCurrentPage === page
                     ? "border-[#112250] bg-[#112250] text-white shadow-md shadow-[#112250]/20"
-                    : "border-[#E7E2CE] bg-white text-[#112250] hover:bg-[#F5F4F0]"
-                }`}
+                    : "border-[#BCE0F5] bg-white text-[#112250] hover:bg-[#EDF6FC]"
+                  }`}
               >
                 {page}
               </button>
@@ -390,7 +382,7 @@ function matchesCategory(d: any, category: string): boolean {
             <button
               disabled={safeCurrentPage === totalPages}
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              className="flex h-11 w-11 items-center justify-center rounded-lg border-2 border-[#E7E2CE] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#F5F4F0] transition-colors cursor-pointer disabled:cursor-not-allowed"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#BCE0F5] bg-white text-sm font-bold text-[#112250] disabled:opacity-30 hover:bg-[#EDF6FC] transition-colors cursor-pointer disabled:cursor-not-allowed shadow-xs"
               aria-label="Next Page"
             >
               <ChevronRight className="h-4 w-4" />

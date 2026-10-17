@@ -5,6 +5,7 @@ import {
   Building2,
   Search,
   X,
+  Sparkles,
   ExternalLink,
   ChevronRight,
   ChevronLeft,
@@ -18,6 +19,7 @@ import { fetchDiseasesFromAPI, DISEASES } from "../data";
 import { renderTextWithLinks, RichTextRunsRenderer } from "../utils/link-helper";
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
 import { EdelweissFlower } from "../components/common/Visuals";
+import { DrippingScallopDivider } from "../components/common/DrippingScallopDivider";
 import {
   fadeUpVariants,
   staggerContainerVariants,
@@ -201,28 +203,26 @@ export default function SpecialistsPage() {
   };
 
   return (
-    <div className="relative z-10 min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
+    <div className="relative z-10 min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250]">
       {/* ================= HERO SECTION ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
-        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
-
+      <section className="relative overflow-hidden bg-transparent pt-10 pb-14 lg:pt-14 lg:pb-16">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
-              <span className="mb-2 block text-xs font-bold uppercase tracking-widest text-[#3B507D]">
-                Specialist Directory
-              </span>
-              <h1 className="font-heading text-2xl font-extrabold leading-tight tracking-tight text-[#112250] sm:text-3xl lg:text-4xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
+                <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+                <span>Specialist Directory</span>
+              </div>
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight text-[#112250]">
                 Specialists by condition
               </h1>
-              <p className="mt-3 max-w-xl text-sm font-medium leading-relaxed text-[#3B507D] sm:text-base">
+              <p className="mt-3 max-w-xl text-base sm:text-lg font-medium leading-relaxed text-[#3B507D]">
                 Browse specialist records and disease associations from the source data. Optional profile details appear only when provided.
               </p>
 
               <div className="mt-7 max-w-2xl">
                 <label htmlFor="specialist-search" className="sr-only">Search specialists</label>
-                <div className="flex items-center rounded-xl border border-[#D9D5C8] bg-white p-2 transition-colors focus-within:border-[#3B507D] focus-within:ring-2 focus-within:ring-[#3B507D]/20">
+                <div className="flex items-center rounded-full border border-[#BCE0F5] bg-white p-2 shadow-sm transition-colors focus-within:border-[#112250]">
                   <Search className="ml-3 h-5 w-5 shrink-0 text-[#3B507D]" aria-hidden="true" />
                   <input
                     id="specialist-search"
@@ -243,7 +243,7 @@ export default function SpecialistsPage() {
                         setCurrentPage(1);
                       }}
                       aria-label="Clear specialist search"
-                      className="mr-1 rounded-lg p-2 text-[#112250] hover:bg-[#F5F4F0]"
+                      className="mr-1 rounded-full p-2 text-[#112250] hover:bg-[#EDF6FC] cursor-pointer"
                     >
                       <X className="h-4 w-4" aria-hidden="true" />
                     </button>
@@ -253,14 +253,15 @@ export default function SpecialistsPage() {
             </div>
 
             <div className="lg:col-span-5">
-              <div className="mx-auto max-w-md rounded-xl border-2 border-[#E7E2CE] bg-white p-7 text-[#112250] sm:p-8 lg:max-w-none">
+              <div className="mx-auto max-w-md rounded-3xl border border-[#BCE0F5] bg-white p-7 text-[#112250] sm:p-8 lg:max-w-none shadow-[0_8px_30px_rgba(17,34,80,0.05)]">
                 <div className="mb-6 flex items-center justify-between">
-                  <div className="rounded-lg bg-[#F5F4F0] p-3">
+                  <div className="rounded-2xl bg-[#EDF6FC] p-3">
                     <Building2 className="h-6 w-6 text-[#112250]" aria-hidden="true" />
                   </div>
                   <EdelweissFlower size={36} />
                 </div>
-                <span className="mb-3 inline-flex rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250]">
+                <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250]">
+                  <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
                   Explore the directory
                 </span>
                 <h2 className="font-heading text-2xl font-black text-[#112250]">
@@ -269,13 +270,13 @@ export default function SpecialistsPage() {
                 <p className="mt-2 text-sm font-medium leading-relaxed text-[#3B507D]">
                   Search condition-linked specialist records and review the profile details available in the source data.
                 </p>
-                <div className="mt-6 space-y-2.5 border-t border-[#E7E2CE] pt-4 text-xs font-bold text-[#112250]">
+                <div className="mt-6 space-y-2.5 border-t border-[#EDF6FC] pt-4 text-xs font-bold text-[#112250]">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#3B507D]" aria-hidden="true" />
+                    <CheckCircle2 className="h-4 w-4 text-[#243B6B]" aria-hidden="true" />
                     <span>Search by expertise, organization, and location</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#3B507D]" aria-hidden="true" />
+                    <CheckCircle2 className="h-4 w-4 text-[#243B6B]" aria-hidden="true" />
                     <span>Browse records associated with conditions</span>
                   </div>
                 </div>
@@ -284,6 +285,10 @@ export default function SpecialistsPage() {
           </div>
         </div>
       </section>
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-2">
+        <DrippingScallopDivider color="blue" height={36} className="opacity-80" />
+      </div>
 
       {/* ================= SPECIALIST LISTING ================= */}
       <section id="specialist-directory" className="scroll-mt-24 mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
@@ -303,18 +308,18 @@ export default function SpecialistsPage() {
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div
                 key={n}
-                className="h-52 animate-pulse rounded-xl bg-white border-2 border-[#E7E2CE]"
+                className="h-52 animate-pulse rounded-2xl bg-white border border-[#BCE0F5]"
               />
             ))}
           </div>
         ) : loadError ? (
-          <div role="alert" className="rounded-xl border border-[#D9D5C8] bg-white p-8 text-center">
+          <div role="alert" className="rounded-3xl border border-[#BCE0F5] bg-white p-8 text-center shadow-xs">
             <h2 className="font-heading text-lg font-bold text-[#112250]">Specialist records are unavailable</h2>
             <p className="mt-2 text-sm text-[#3B507D]">The directory could not load its source data. Please try again.</p>
             <button
               type="button"
               onClick={() => setRetryToken((token) => token + 1)}
-              className="mt-4 rounded-lg bg-[#112250] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#3B507D]"
+              className="mt-4 rounded-full bg-[#112250] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#1e3a7a] cursor-pointer shadow-xs"
             >
               Try again
             </button>
@@ -333,7 +338,7 @@ export default function SpecialistsPage() {
                 <motion.article
                   key={`${spec.name}-${spec.organization}`}
                   variants={fadeUpVariants}
-                  className="flex min-w-0 flex-col rounded-xl border border-[#E3E0D7] bg-white p-5 transition-colors hover:border-[#A9B2C5] sm:p-6 shadow-xs"
+                  className="flex min-w-0 flex-col rounded-2xl border border-[#BCE0F5] bg-white p-5 transition-all hover:border-[#112250] hover:shadow-[0_8px_24px_rgba(17,34,80,0.06)] sm:p-6 shadow-xs"
                 >
                   <div>
                     <div className="mb-4 flex min-w-0 items-start gap-4">
@@ -344,13 +349,13 @@ export default function SpecialistsPage() {
                             spec.diseases.map((d, dIdx) => (
                               <span
                                 key={dIdx}
-                                className="inline-block max-w-full break-words rounded-md bg-[#F5F4F0] px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]"
+                                className="inline-block max-w-full break-words rounded-full bg-[#EDF6FC] px-2.5 py-0.5 text-[10px] font-bold text-[#112250] border border-[#BCE0F5]"
                               >
                                 {d.name}
                               </span>
                             ))
                           ) : (
-                            <span className="inline-block max-w-full break-words rounded-md bg-[#F5F4F0] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#112250]">
+                            <span className="inline-block max-w-full break-words rounded-full bg-[#EDF6FC] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#112250] border border-[#BCE0F5]">
                               {spec.disease}
                             </span>
                           )}
@@ -362,7 +367,7 @@ export default function SpecialistsPage() {
                       </div>
                     </div>
 
-                    <div className="space-y-2 border-t border-[#F5F4F0] pt-3 text-xs text-[#3B507D] font-medium">
+                    <div className="space-y-2 border-t border-[#EDF6FC] pt-3 text-xs text-[#3B507D] font-medium">
                       {specialization && (
                         <div>
                           <p className="font-bold text-[#112250]">Specialty / expertise</p>
@@ -387,7 +392,7 @@ export default function SpecialistsPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedSpecialist(spec)}
-                    className="mt-5 flex min-h-11 items-center justify-between border-t border-[#F5F4F0] pt-3 text-left text-sm font-bold text-[#112250] hover:text-[#3B507D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B507D]"
+                    className="mt-5 flex min-h-11 items-center justify-between border-t border-[#EDF6FC] pt-3 text-left text-sm font-bold text-[#112250] hover:text-[#243B6B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#112250] cursor-pointer"
                   >
                     <span>View profile details</span>
                     <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -397,7 +402,7 @@ export default function SpecialistsPage() {
             })}
           </motion.div>
         ) : (
-          <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-12 text-center">
+          <div className="rounded-3xl border border-[#BCE0F5] bg-white p-12 text-center shadow-xs">
             <h3 className="font-heading text-xl font-bold text-[#112250]">No specialists found</h3>
             <p className="text-sm text-[#3B507D] mt-1">Try clearing your search terms.</p>
             <button
@@ -406,7 +411,7 @@ export default function SpecialistsPage() {
                 setSearchQuery("");
                 setCurrentPage(1);
               }}
-              className="mt-4 rounded-lg bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors"
+              className="mt-4 rounded-full bg-[#112250] px-6 py-3 text-sm font-bold text-white hover:bg-[#1e3a7a] transition-colors cursor-pointer shadow-xs"
             >
               Reset Filters
             </button>
@@ -419,7 +424,7 @@ export default function SpecialistsPage() {
               type="button"
               onClick={() => changePage(displayedPage - 1)}
               disabled={displayedPage === 1}
-              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#D9D5C8] bg-white px-4 py-2 text-sm font-bold text-[#112250] transition-colors hover:bg-[#F5F4F0] disabled:cursor-not-allowed disabled:opacity-45"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#BCE0F5] bg-white px-5 py-2 text-sm font-bold text-[#112250] transition-colors hover:bg-[#EDF6FC] disabled:cursor-not-allowed disabled:opacity-45 shadow-xs cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               Previous
@@ -431,7 +436,7 @@ export default function SpecialistsPage() {
               type="button"
               onClick={() => changePage(displayedPage + 1)}
               disabled={displayedPage === totalPages}
-              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#D9D5C8] bg-white px-4 py-2 text-sm font-bold text-[#112250] transition-colors hover:bg-[#F5F4F0] disabled:cursor-not-allowed disabled:opacity-45"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[#BCE0F5] bg-white px-5 py-2 text-sm font-bold text-[#112250] transition-colors hover:bg-[#EDF6FC] disabled:cursor-not-allowed disabled:opacity-45 shadow-xs cursor-pointer"
             >
               Next
               <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -458,11 +463,11 @@ export default function SpecialistsPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-xl rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 z-10 my-auto shadow-xl"
+              className="relative w-full max-w-xl rounded-3xl border border-[#BCE0F5] bg-white p-6 sm:p-8 z-10 my-auto shadow-2xl"
             >
               <button
                 onClick={() => setSelectedSpecialist(null)}
-                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                className="absolute top-5 right-5 rounded-full bg-[#EDF6FC] p-2 text-[#112250] hover:bg-[#DDF0FA] transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
@@ -481,13 +486,13 @@ export default function SpecialistsPage() {
                             selectedSpecialist.diseases.map((d, dIdx) => (
                               <span
                                 key={dIdx}
-                                className="rounded-md bg-[#E7E2CE]/70 px-2.5 py-0.5 text-xs font-bold text-[#112250] border border-[#E7E2CE]"
+                                className="rounded-full bg-[#EDF6FC] px-3 py-1 text-xs font-bold text-[#112250] border border-[#BCE0F5]"
                               >
                                 {d.name}
                               </span>
                             ))
                           ) : (
-                            <span className="rounded-md bg-[#E7E2CE]/70 px-3 py-1 text-xs font-bold text-[#112250]">
+                            <span className="rounded-full bg-[#EDF6FC] px-3 py-1 text-xs font-bold text-[#112250] border border-[#BCE0F5]">
                               {selectedSpecialist.disease}
                             </span>
                           )}
@@ -497,22 +502,22 @@ export default function SpecialistsPage() {
                       </div>
                     </div>
 
-                    <div className="mt-6 space-y-3 rounded-lg bg-[#F5F4F0] p-5 border border-[#E7E2CE] text-sm text-[#112250]">
+                    <div className="mt-6 space-y-3 rounded-2xl bg-[#EDF6FC]/60 p-5 border border-[#BCE0F5] text-sm text-[#112250]">
                       {specialization && <div className="break-words"><strong>Specialty / expertise:</strong> {specialization}</div>}
                       {selectedSpecialist.organization && <div className="flex items-center gap-3 font-semibold">
-                        <Building2 className="h-5 w-5 text-[#3B507D] shrink-0" />
+                        <Building2 className="h-5 w-5 text-[#243B6B] shrink-0" />
                         <span>{selectedSpecialist.organization}</span>
                       </div>}
                       {selectedSpecialist.location && <div className="flex items-center gap-3 font-semibold">
-                        <MapPin className="h-5 w-5 text-[#3B507D] shrink-0" />
+                        <MapPin className="h-5 w-5 text-[#243B6B] shrink-0" />
                         <span>{selectedSpecialist.location}</span>
                       </div>}
                       {selectedSpecialist.contact && <div className="flex items-start gap-3 font-semibold">
-                        <ExternalLink className="h-5 w-5 text-[#3B507D] shrink-0" />
+                        <ExternalLink className="h-5 w-5 text-[#243B6B] shrink-0" />
                         <span className="text-[#3B507D] break-words">{renderTextWithLinks(selectedSpecialist.contact)}</span>
                       </div>}
                       {selectedSpecialist.publications && <div className="flex items-start gap-3 font-semibold">
-                        <BookOpen className="h-5 w-5 shrink-0 text-[#3B507D]" />
+                        <BookOpen className="h-5 w-5 shrink-0 text-[#243B6B]" />
                         <span className="text-[#3B507D] break-words">{renderTextWithLinks(selectedSpecialist.publications)}</span>
                       </div>}
                     </div>
@@ -537,7 +542,7 @@ export default function SpecialistsPage() {
                     <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
                       <button
                         onClick={() => setSelectedSpecialist(null)}
-                        className="w-full rounded-lg border-2 border-[#E7E2CE] bg-white px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#F5F4F0] transition-colors"
+                        className="w-full rounded-full bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#1e3a7a] transition-colors shadow-md cursor-pointer"
                       >
                         Close
                       </button>

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Disease } from "../../data";
 import { generateDiseasePDF } from "../../utils/pdf-generator";
+export { DrippingScallopDivider } from "./DrippingScallopDivider";
 
 
 
@@ -504,24 +505,24 @@ export function AIAssistant() {
       {/* Floating button */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="ai-assistant-control fixed right-5 bottom-24 md:bottom-8 z-50 flex items-center gap-2 rounded-2xl bg-[#112250] px-4 py-3 text-sm font-bold text-white shadow-xl hover:bg-[#3B507D] transition-all duration-200 hover:-translate-y-0.5 group cursor-pointer border border-[#E7E2CE]/30"
+        className="ai-assistant-control fixed right-5 bottom-24 md:bottom-8 z-50 flex items-center gap-2 rounded-full bg-[#112250] px-5 py-3 text-sm font-bold text-white shadow-xl hover:bg-[#1e3a7a] transition-all duration-200 hover:-translate-y-0.5 group cursor-pointer border border-[#BCE0F5]/40"
         aria-label="Open AI Assistant"
       >
-        <Bot className="w-5 h-5 text-[#E7E2CE]" />
+        <Bot className="w-5 h-5 text-[#BCE0F5]" />
         <span className="hidden sm:inline">Ask RareBridge AI</span>
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E7E2CE] opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E7E2CE]" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BCE0F5] opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#BCE0F5]" />
         </span>
       </button>
 
       {/* Popup panel */}
       {open && (
-        <div className="fixed right-5 bottom-36 md:bottom-24 z-50 w-[340px] sm:w-[380px] rounded-xl bg-white border-2 border-[#E7E2CE] shadow-2xl flex flex-col overflow-hidden animate-fade-in">
+        <div className="fixed right-5 bottom-36 md:bottom-24 z-50 w-[340px] sm:w-[380px] rounded-3xl bg-white border border-[#BCE0F5] shadow-2xl flex flex-col overflow-hidden animate-fade-in">
           {/* Header */}
           <div className="flex items-center gap-3 bg-[#112250] px-5 py-4">
-            <div className="w-9 h-9 rounded-xl bg-[#3B507D] flex items-center justify-center shrink-0">
-              <Bot className="w-5 h-5 text-[#E7E2CE]" />
+            <div className="w-9 h-9 rounded-xl bg-[#1e3a7a] flex items-center justify-center shrink-0">
+              <Bot className="w-5 h-5 text-[#BCE0F5]" />
             </div>
             <div className="flex-1">
               <p className="font-bold text-white text-sm leading-none font-heading">RareBridge AI</p>
@@ -533,12 +534,12 @@ export function AIAssistant() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 max-h-64 scrollbar-none bg-[#F5F4F0]">
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 max-h-64 scrollbar-none bg-[#EDF6FC]/50">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed font-medium ${m.role === "user"
                   ? "bg-[#112250] text-white rounded-br-sm"
-                  : "bg-white text-[#112250] border border-[#E7E2CE] shadow-xs rounded-bl-sm"
+                  : "bg-white text-[#112250] border border-[#BCE0F5] shadow-xs rounded-bl-sm"
                   }`}>
                   {m.text}
                 </div>
@@ -548,9 +549,9 @@ export function AIAssistant() {
           </div>
 
           {/* Quick questions */}
-          <div className="px-4 py-2 bg-white border-t border-[#E7E2CE] flex gap-2 overflow-x-auto scrollbar-none">
+          <div className="px-4 py-2 bg-white border-t border-[#EDF6FC] flex gap-2 overflow-x-auto scrollbar-none">
             {QUICK.map(q => (
-              <button key={q} type="button" onClick={() => send(q)} className="shrink-0 px-3 py-1.5 rounded-full bg-[#F5F4F0] text-[#112250] text-xs font-semibold hover:bg-[#112250] hover:text-white transition-colors whitespace-nowrap border border-[#E7E2CE] cursor-pointer">
+              <button key={q} type="button" onClick={() => send(q)} className="shrink-0 px-3.5 py-1.5 rounded-full bg-[#EDF6FC] text-[#112250] text-xs font-semibold hover:bg-[#112250] hover:text-white transition-colors whitespace-nowrap border border-[#BCE0F5] cursor-pointer">
                 {q}
               </button>
             ))}
@@ -558,7 +559,7 @@ export function AIAssistant() {
 
           {/* Input */}
           <div className="px-4 pb-4 pt-2 bg-white">
-            <div className="flex items-center gap-2 bg-[#F5F4F0] rounded-xl border border-[#E7E2CE] px-3 py-2 focus-within:border-[#112250] focus-within:bg-white transition-colors">
+            <div className="flex items-center gap-2 bg-[#FAF9F5] rounded-full border border-[#BCE0F5] px-4 py-2 focus-within:border-[#112250] focus-within:bg-white transition-colors">
               <input
                 type="text"
                 value={input}
@@ -568,7 +569,7 @@ export function AIAssistant() {
                 aria-label="Ask RareBridge AI a question"
                 className="flex-1 bg-transparent text-xs sm:text-sm text-[#112250] placeholder-[#3B507D]/60 outline-none font-medium"
               />
-              <button type="button" onClick={() => send(input)} aria-label="Send message to AI assistant" className="w-7 h-7 rounded-lg bg-[#112250] flex items-center justify-center hover:bg-[#3B507D] transition-colors shrink-0 cursor-pointer">
+              <button type="button" onClick={() => send(input)} aria-label="Send message to AI assistant" className="w-7 h-7 rounded-full bg-[#112250] flex items-center justify-center hover:bg-[#1e3a7a] transition-colors shrink-0 cursor-pointer">
                 <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
               </button>
             </div>
@@ -787,7 +788,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
       role="button"
       tabIndex={0}
       aria-label={`View ${disease.name} condition guide and research`}
-      className="group relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#112250] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] focus-visible:ring-offset-2 cursor-pointer flex flex-col justify-between"
+      className="group relative overflow-hidden rounded-2xl border border-[#BCE0F5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#112250] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] focus-visible:ring-offset-2 cursor-pointer flex flex-col justify-between"
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -803,11 +804,11 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
         </div>
         <div className="relative z-10 flex h-full flex-col justify-between">
           <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-1.5 rounded-md border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md">
-              <IconComp className="h-3.5 w-3.5 text-[#E7E2CE]" aria-hidden="true" />
+            <div className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md">
+              <IconComp className="h-3.5 w-3.5 text-[#BCE0F5]" aria-hidden="true" />
               <span>{visual.categoryLabel}</span>
             </div>
-            <span className="shrink-0 rounded-lg border border-white/20 bg-white/10 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-sm backdrop-blur-md">
+            <span className="shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-sm backdrop-blur-md">
               {(disease as any).researchStatus || "Active Research"}
             </span>
           </div>
@@ -823,7 +824,7 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
           {disease.shortDesc || disease.overview?.simple || (typeof disease.overview === "string" ? disease.overview : "Plain-language medical summary.")}
         </p>
 
-        <div className="font-sans flex items-center justify-between border-t border-[#E7E2CE] pt-3 text-xs font-black text-[#112250] group-hover:text-[#3B507D]">
+        <div className="font-sans flex items-center justify-between border-t border-[#EDF6FC] pt-3 text-xs font-black text-[#112250] group-hover:text-[#3B507D]">
           <span>View Overview & Research</span>
           <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
         </div>

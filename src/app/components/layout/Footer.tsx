@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   MapPin,
 } from "lucide-react";
+import { DrippingScallopDivider } from "../common/DrippingScallopDivider";
 
 interface FooterProps {
   onNav?: (view: string) => void;
@@ -112,8 +113,13 @@ export default function Footer({ onNav }: FooterProps) {
         </div>
       </div>
 
+      {/* ================= SCALLOPED DRIPPING TRANSITION ================= */}
+      <div className="relative z-10 w-full overflow-hidden leading-none -mb-[1px]">
+        <DrippingScallopDivider color="#0E1C42" flip={true} height={42} />
+      </div>
+
       {/* ================= DARK FOOTER BODY ================= */}
-      <div className="bg-[#0E1C42] pt-24 sm:pt-28 pb-10 border-t border-[#1E3B75]/40">
+      <div className="bg-[#0E1C42] pt-20 sm:pt-24 pb-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           {/* Main Grid: Brand + 4 Link Columns */}
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8 pb-12 border-b border-white/10">

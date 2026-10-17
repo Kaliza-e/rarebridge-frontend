@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { EdelweissFlower, OrganicWavyLine, ZebraMascot } from "../components/common/Visuals";
+import { EdelweissFlower, ZebraMascot } from "../components/common/Visuals";
 import SectionDivider from "../components/common/SectionDivider";
 import {
   Heart,
@@ -102,16 +102,9 @@ export default function AboutPage({ onNav }: AboutPageProps) {
   const [selectedMember, setSelectedMember] = useState<typeof TEAM[0] | null>(null);
 
   return (
-    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
-      <OrganicWavyLine side="left" />
-      <OrganicWavyLine side="right" />
-
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250] overflow-hidden">
       {/* ================= HERO BANNER ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
-        {/* Background ambient blobs matching Homepage */}
-        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
-
+      <section className="relative overflow-hidden bg-transparent pt-10 pb-14 lg:pt-14 lg:pb-16">
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
             {/* Left Content */}
@@ -121,29 +114,30 @@ export default function AboutPage({ onNav }: AboutPageProps) {
               transition={{ duration: 0.5 }}
               className="lg:col-span-7"
             >
-              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
-                Our Purpose & Mission
-              </span>
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
+                <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+                <span>Our Purpose & Mission</span>
+              </div>
 
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
+              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight text-[#112250]">
                 Connecting Knowledge, Families & Care
               </h1>
 
-              <p className="font-sans mt-3 max-w-xl text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium">
+              <p className="font-sans mt-3 max-w-xl text-base sm:text-lg leading-relaxed text-[#3B507D] font-medium">
                 RareBridge was created to replace intimidating medical jargon with plain-language guidance, direct specialist connections, and a warm community for parents and children.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <button
                   onClick={() => onNav?.("directory")}
-                  className="inline-flex items-center gap-2.5 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                  className="inline-flex items-center gap-2.5 rounded-full bg-[#112250] px-7 py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#1e3a7a] transition-all cursor-pointer"
                 >
                   <span>Browse Conditions</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => onNav?.("community")}
-                  className="inline-flex items-center gap-2.5 rounded-lg border-2 border-[#112250] bg-transparent px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#112250]/10 transition-all"
+                  className="inline-flex items-center gap-2.5 rounded-full border-2 border-[#112250] bg-white px-7 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#EDF6FC] transition-all cursor-pointer"
                 >
                   <span>Join Support Community</span>
                 </button>
@@ -158,16 +152,16 @@ export default function AboutPage({ onNav }: AboutPageProps) {
               className="lg:col-span-5"
             >
               <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-8 text-[#112250] shadow-xl">
+                <div className="relative overflow-hidden rounded-3xl border border-[#BCE0F5] bg-white p-8 text-[#112250] shadow-[0_8px_30px_rgba(17,34,80,0.05)]">
                   <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-lg bg-[#F5F4F0] p-3 text-[#112250] shadow-sm">
+                    <div className="rounded-2xl bg-[#EDF6FC] p-3 text-[#112250]">
                       <Target className="h-6 w-6 text-[#112250]" />
                     </div>
                     <EdelweissFlower size={36} />
                   </div>
 
-                  <span className="inline-flex items-center gap-2 rounded-md bg-[#E7E2CE]/60 px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
-                    <Sparkles className="h-3.5 w-3.5 text-[#112250]" />
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
+                    <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
                     100% Free & Open Access
                   </span>
 
@@ -178,13 +172,13 @@ export default function AboutPage({ onNav }: AboutPageProps) {
                     Combining certified genetic research with empathetic peer networks so no caregiver walks alone.
                   </p>
 
-                  <div className="mt-6 space-y-2.5 border-t border-[#E7E2CE] pt-4 text-xs font-bold text-[#112250]">
+                  <div className="mt-6 space-y-2.5 border-t border-[#EDF6FC] pt-4 text-xs font-bold text-[#112250]">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <CheckCircle2 className="h-4 w-4 text-[#243B6B]" />
                       <span>7,000+ Rare Diseases documented</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#3B507D]" />
+                      <CheckCircle2 className="h-4 w-4 text-[#243B6B]" />
                       <span>Zero medical jargon barriers</span>
                     </div>
                   </div>
@@ -195,14 +189,17 @@ export default function AboutPage({ onNav }: AboutPageProps) {
         </div>
       </section>
 
-      <SectionDivider variant="wave" className="-mt-1 text-[#F5F4F0]" />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-2">
+        <SectionDivider variant="scallop" color="blue" className="opacity-80" />
+      </div>
 
       {/* ================= OUR CORE VALUES ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center max-w-xl mx-auto">
-          <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
-            Guiding Principles
-          </span>
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1 text-xs font-bold text-[#112250] mb-3">
+            <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+            <span>Guiding Principles</span>
+          </div>
           <h2 className="mt-1 font-heading text-3xl font-black text-[#112250] sm:text-4xl">
             What RareBridge Stands For
           </h2>
@@ -224,16 +221,16 @@ export default function AboutPage({ onNav }: AboutPageProps) {
                 key={i}
                 variants={fadeUpVariants}
                 whileHover={{ y: -6, scale: 1.01 }}
-                className="rounded-xl border-2 border-[#E7E2CE] bg-white p-6 shadow-sm hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] transition-all flex flex-col justify-between"
+                className="rounded-2xl border border-[#BCE0F5] bg-white p-6 shadow-xs hover:border-[#112250] hover:shadow-[0_8px_24px_rgba(17,34,80,0.06)] transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#F5F4F0] text-[#112250] mb-4 shadow-xs">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#EDF6FC] text-[#112250] mb-4">
                     <IconComp className="h-6 w-6" />
                   </div>
                   <h3 className="font-heading text-lg font-black text-[#112250]">{val.title}</h3>
                   <p className="mt-2 text-xs text-[#3B507D] font-medium leading-relaxed">{val.desc}</p>
                 </div>
-                <div className="mt-6 pt-3 border-t border-[#F5F4F0] flex justify-end">
+                <div className="mt-6 pt-3 border-t border-[#EDF6FC] flex justify-end">
                   <EdelweissFlower size={20} />
                 </div>
               </motion.div>
@@ -244,11 +241,12 @@ export default function AboutPage({ onNav }: AboutPageProps) {
 
       {/* ================= TEAM SECTION ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
-        <div className="rounded-xl bg-white p-8 sm:p-12 border-2 border-[#E7E2CE] shadow-sm">
+        <div className="rounded-3xl bg-white p-8 sm:p-12 border border-[#BCE0F5] shadow-xs">
           <div className="mb-10 text-center max-w-xl mx-auto">
-            <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
-              Leadership & Care
-            </span>
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1 text-xs font-bold text-[#112250] mb-3">
+              <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+              <span>Leadership & Care</span>
+            </div>
             <h2 className="mt-1 font-heading text-3xl font-black text-[#112250]">
               Our Dedicated Team
             </h2>
@@ -272,10 +270,10 @@ export default function AboutPage({ onNav }: AboutPageProps) {
                     setSelectedMember(member);
                   }
                 }}
-                className="group cursor-pointer overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-6 text-center hover:bg-white hover:border-[#112250] hover:shadow-[0_12px_35px_rgba(17,34,80,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] transition-all flex flex-col justify-between"
+                className="group cursor-pointer overflow-hidden rounded-2xl border border-[#BCE0F5] bg-[#FAF9F5] p-6 text-center hover:bg-white hover:border-[#112250] hover:shadow-[0_8px_24px_rgba(17,34,80,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="mx-auto h-28 w-28 rounded-full overflow-hidden border-4 border-white shadow-[0_0_15px_rgba(231,226,206,0.8)] mb-3 group-hover:scale-105 transition-transform bg-white">
+                  <div className="mx-auto h-28 w-28 rounded-full overflow-hidden border-4 border-white shadow-sm mb-3 group-hover:scale-105 transition-transform bg-white">
                     <img
                       src={member.avatar}
                       alt={member.name}
@@ -287,7 +285,7 @@ export default function AboutPage({ onNav }: AboutPageProps) {
                   <p className="mt-2 text-xs text-[#3B507D]/80 font-medium">{member.detail}</p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-[#E7E2CE] text-xs font-bold text-[#112250] group-hover:text-[#3B507D] flex items-center justify-center gap-1">
+                <div className="mt-4 pt-3 border-t border-[#EDF6FC] text-xs font-bold text-[#112250] group-hover:text-[#3B507D] flex items-center justify-center gap-1">
                   <span>View Bio</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </div>
@@ -300,9 +298,10 @@ export default function AboutPage({ onNav }: AboutPageProps) {
       {/* ================= PLATFORM ROADMAP MILESTONES ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
         <div className="mb-10 text-center max-w-xl mx-auto">
-          <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
-            Impact & Journey
-          </span>
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1 text-xs font-bold text-[#112250] mb-3">
+            <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+            <span>Impact & Journey</span>
+          </div>
           <h2 className="mt-1 font-heading text-3xl font-black text-[#112250]">
             Our Milestone Roadmap
           </h2>
@@ -312,7 +311,7 @@ export default function AboutPage({ onNav }: AboutPageProps) {
           {MILESTONES.map((ms, idx) => (
             <div
               key={idx}
-              className="relative rounded-xl border-2 border-[#E7E2CE] bg-white p-6 shadow-sm hover:border-[#112250] hover:shadow-[0_10px_30px_rgba(17,34,80,0.1)] transition-all"
+              className="relative rounded-2xl border border-[#BCE0F5] bg-white p-6 shadow-xs hover:border-[#112250] transition-all"
             >
               <span className="font-heading font-black text-3xl text-[#112250] opacity-30 block mb-2">
                 {ms.year}
@@ -344,17 +343,17 @@ export default function AboutPage({ onNav }: AboutPageProps) {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-lg rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto text-center"
+              className="relative w-full max-w-lg rounded-3xl border border-[#BCE0F5] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto text-center"
             >
               <button
                 onClick={() => setSelectedMember(null)}
-                className="absolute top-5 right-5 rounded-lg bg-[#F5F4F0] p-2 text-[#112250] hover:bg-[#E7E2CE] transition-colors"
+                className="absolute top-5 right-5 rounded-full bg-[#EDF6FC] p-2 text-[#112250] hover:bg-[#DDF0FA] transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="h-5 w-5" />
               </button>
 
-              <div className="mx-auto h-32 w-32 rounded-full overflow-hidden border-4 border-[#E7E2CE] shadow-md mb-4 bg-white">
+              <div className="mx-auto h-32 w-32 rounded-full overflow-hidden border-4 border-[#BCE0F5] shadow-md mb-4 bg-white">
                 <img
                   src={selectedMember.avatar}
                   alt={selectedMember.name}
@@ -366,13 +365,13 @@ export default function AboutPage({ onNav }: AboutPageProps) {
               <p className="text-sm font-bold text-[#3B507D]">{selectedMember.role}</p>
               <p className="text-xs font-semibold text-[#3B507D]/80 mt-0.5">{selectedMember.detail}</p>
 
-              <p className="mt-4 text-xs leading-relaxed text-[#112250] bg-[#F5F4F0] p-4 rounded-lg border border-[#E7E2CE] font-medium text-left">
+              <p className="mt-4 text-xs leading-relaxed text-[#112250] bg-[#EDF6FC]/60 p-4 rounded-2xl border border-[#BCE0F5] font-medium text-left">
                 {selectedMember.bio}
               </p>
 
               <button
                 onClick={() => setSelectedMember(null)}
-                className="mt-6 w-full rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shadow-md"
+                className="mt-6 w-full rounded-full bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#1e3a7a] transition-colors shadow-md cursor-pointer"
               >
                 Close Profile
               </button>

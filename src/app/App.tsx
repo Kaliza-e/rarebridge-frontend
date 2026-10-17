@@ -195,7 +195,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="rb-app-shell relative isolate min-h-screen bg-[#F8F7F2] text-[#112250] font-body">
+      <div className="rb-app-shell relative isolate min-h-screen bg-white text-[#112250] font-body">
         {/* Global styles */}
         <style>{`
         .scrollbar-none::-webkit-scrollbar {

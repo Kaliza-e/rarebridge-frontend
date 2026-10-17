@@ -10,8 +10,8 @@ import {
 import {
   DiseaseCard,
   EdelweissFlower,
-  OrganicWavyLine,
 } from "../components/common/Visuals";
+import { DrippingScallopDivider } from "../components/common/DrippingScallopDivider";
 
 import {
   BookOpen,
@@ -122,21 +122,9 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
   const activeSlide = HERO_SLIDES[currentSlide];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-transparent text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250]">
-      <OrganicWavyLine side="left" />
-      <OrganicWavyLine side="right" />
-
+    <div className="relative min-h-screen overflow-hidden bg-transparent text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250]">
       {/* ================= HERO SECTION ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-12 pb-16 lg:pt-16 lg:pb-20">
-        {/* Zebra Reading Book Hero Background Backdrop */}
-        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 opacity-20 max-w-lg hidden lg:block z-0" aria-hidden="true">
-          <img src="/rarebridge_zebra_with_book.png" alt="" className="h-auto w-full object-contain" />
-        </div>
-
-        {/* Ambient blobs matching site canvas */}
-        <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-[#E7E2CE]/70 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/3 -left-20 h-56 w-56 rounded-full bg-[#3B507D]/10 blur-3xl" />
-
+      <section className="relative overflow-hidden bg-transparent pt-10 pb-16 lg:pt-14 lg:pb-20">
         <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:items-center lg:px-8">
           {/* Left: Copy panel */}
           <div className="lg:col-span-7">
@@ -148,15 +136,16 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.4 }}
               >
-                <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D] mb-2 block">
-                  {activeSlide.tag}
-                </span>
+                <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
+                  <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+                  <span>{activeSlide.tag}</span>
+                </div>
 
-                <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight text-[#112250]">
+                <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight text-[#112250]">
                   {activeSlide.title}
                 </h1>
 
-                <p className="font-sans mt-3 max-w-xl text-sm sm:text-base leading-relaxed text-[#3B507D] font-medium">
+                <p className="font-sans mt-4 max-w-xl text-base sm:text-lg leading-relaxed text-[#3B507D] font-medium">
                   {activeSlide.subtitle}
                 </p>
 
@@ -165,7 +154,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => onNav("directory")}
-                    className="inline-flex items-center gap-2.5 rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-[#3B507D] transition-all"
+                    className="inline-flex items-center gap-2.5 rounded-full bg-[#112250] px-7 py-3.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(17,34,80,0.18)] hover:bg-[#1e3a7a] transition-all cursor-pointer"
                   >
                     <BookOpen className="h-5 w-5 text-white" />
                     <span>Browse Disease Library</span>
@@ -174,22 +163,21 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => onNav("community")}
-                    className="inline-flex items-center gap-2.5 rounded-lg border-2 border-[#112250] bg-transparent px-6 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#112250]/10 transition-all"
+                    className="inline-flex items-center gap-2.5 rounded-full border-2 border-[#112250] bg-white px-7 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#EDF6FC] transition-all cursor-pointer"
                   >
                     <Users className="h-5 w-5 text-[#112250]" />
                     <span>Join Caregiver Community</span>
                   </motion.button>
                 </div>
-                <p className="mt-3 text-xs font-medium text-[#3B507D]" role="status">
+                <p className="mt-4 text-xs font-medium text-[#3B507D]" role="status">
                   <span
                     aria-hidden="true"
-                    className={`mr-2 inline-block h-2 w-2 rounded-full ${
-                      apiStatus === "online"
+                    className={`mr-2 inline-block h-2 w-2 rounded-full ${apiStatus === "online"
                         ? "bg-emerald-500"
                         : apiStatus === "offline"
                           ? "bg-emerald-600/80"
                           : "animate-pulse bg-[#3B507D]/50"
-                    }`}
+                      }`}
                   />
                   {apiStatus === "checking"
                     ? "Checking API connection..."
@@ -203,7 +191,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
           {/* Right: Integrated Hero Image Container with Full Controls */}
           <div className="relative mx-auto w-full max-w-md lg:max-w-none lg:col-span-5">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-white p-2 sm:aspect-[5/4] shadow-md">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border-2 border-[#BCE0F5] bg-white p-2.5 sm:aspect-[5/4] shadow-[0_12px_36px_rgba(17,34,80,0.06)]">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={currentSlide}
@@ -213,12 +201,12 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="h-full w-full rounded-lg object-cover"
+                  className="h-full w-full rounded-2xl object-cover"
                 />
               </AnimatePresence>
 
               {/* Floating Slide Badge */}
-              <div className="absolute top-4 left-4 z-10 rounded-md bg-[#112250]/85 px-3 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md border border-white/20">
+              <div className="absolute top-4 left-4 z-10 rounded-full bg-[#112250]/85 px-3.5 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md border border-white/20">
                 {activeSlide.badge}
               </div>
 
@@ -227,7 +215,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 type="button"
                 onClick={handlePrevSlide}
                 aria-label="Previous slide"
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-[#112250] shadow-md backdrop-blur-xs transition-transform hover:scale-110 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] cursor-pointer"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[#112250] shadow-md backdrop-blur-xs transition-transform hover:scale-110 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] cursor-pointer"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
@@ -235,13 +223,13 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 type="button"
                 onClick={handleNextSlide}
                 aria-label="Next slide"
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-[#112250] shadow-md backdrop-blur-xs transition-transform hover:scale-110 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] cursor-pointer"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[#112250] shadow-md backdrop-blur-xs transition-transform hover:scale-110 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] cursor-pointer"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
 
               {/* Bottom Control Bar: Indicators + Play/Pause */}
-              <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between rounded-lg bg-[#112250]/75 px-3.5 py-1.5 backdrop-blur-md">
+              <div className="absolute bottom-4 inset-x-4 z-10 flex items-center justify-between rounded-full bg-[#112250]/80 px-4 py-2 backdrop-blur-md">
                 <div className="flex items-center gap-1.5">
                   {HERO_SLIDES.map((_, idx) => (
                     <button
@@ -250,11 +238,10 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                       onClick={() => setCurrentSlide(idx)}
                       aria-label={`Go to slide ${idx + 1}`}
                       aria-current={currentSlide === idx ? "true" : undefined}
-                      className={`h-2 rounded-full transition-all cursor-pointer ${
-                        currentSlide === idx
-                          ? "w-6 bg-[#E7E2CE]"
+                      className={`h-2 rounded-full transition-all cursor-pointer ${currentSlide === idx
+                          ? "w-6 bg-[#BCE0F5]"
                           : "w-2 bg-white/40 hover:bg-white/80"
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -263,7 +250,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   type="button"
                   onClick={() => setIsAutoPlaying((prev) => !prev)}
                   aria-label={isAutoPlaying ? "Pause carousel auto-rotation" : "Resume carousel auto-rotation"}
-                  className="flex items-center gap-1 text-[11px] font-bold text-[#E7E2CE] hover:text-white transition-colors cursor-pointer"
+                  className="flex items-center gap-1 text-[11px] font-bold text-[#BCE0F5] hover:text-white transition-colors cursor-pointer"
                 >
                   {isAutoPlaying ? (
                     <>
@@ -283,6 +270,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
         </div>
       </section>
 
+      {/* ================= BRAND SCALLOPED DRIPPING DIVIDER ================= */}
+      <div className="relative z-10 w-full overflow-hidden leading-none -mt-4 mb-2">
+        <DrippingScallopDivider color="blue" height={36} className="opacity-75" />
+      </div>
+
       {/* ================= IMPACT & KNOWLEDGE RIBBON ================= */}
       <section className="relative py-8 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
@@ -295,30 +287,34 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 icon: BookOpen,
                 bg: "bg-[#112250]",
                 text: "text-white",
+                iconBox: "bg-white/10 text-white",
               },
               {
                 number: "2,400+",
                 label: "Verified Specialists",
                 subtext: "Top metabolic & genetic experts",
                 icon: Stethoscope,
-                bg: "bg-white border-2 border-[#E7E2CE]",
+                bg: "bg-white border border-[#BCE0F5]",
                 text: "text-[#112250]",
+                iconBox: "bg-[#EDF6FC] text-[#112250]",
               },
               {
                 number: "850+",
                 label: "Research Trials",
                 subtext: "Gene therapy & pipeline updates",
                 icon: Microscope,
-                bg: "bg-white border-2 border-[#E7E2CE]",
+                bg: "bg-white border border-[#BCE0F5]",
                 text: "text-[#112250]",
+                iconBox: "bg-[#EDF6FC] text-[#112250]",
               },
               {
                 number: "120K+",
                 label: "Families Supported",
                 subtext: "Compassionate peer advocacy",
                 icon: HeartHandshake,
-                bg: "bg-[#3B507D]",
-                text: "text-white",
+                bg: "bg-[#EDF6FC] border border-[#BCE0F5]",
+                text: "text-[#112250]",
+                iconBox: "bg-white text-[#112250]",
               },
             ].map((stat, i) => {
               const IconComp = stat.icon;
@@ -327,17 +323,17 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   key={i}
                   whileHover={{ y: -3, scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`rounded-xl p-5 border-2 border-[#E7E2CE] transition-all duration-200 cursor-pointer ${stat.bg} ${stat.text}`}
+                  className={`rounded-2xl p-6 transition-all duration-200 cursor-pointer shadow-xs ${stat.bg} ${stat.text}`}
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <div className="rounded-lg bg-[#E7E2CE]/30 p-2 text-[#E7E2CE]">
+                    <div className={`rounded-xl p-2.5 ${stat.iconBox}`}>
                       <IconComp className="h-5 w-5 text-current" />
                     </div>
                     <EdelweissFlower size={20} />
                   </div>
                   <h3 className="font-heading font-black text-3xl tracking-tight">{stat.number}</h3>
                   <p className="font-sans font-bold text-sm mt-1">{stat.label}</p>
-                  <p className="font-sans text-xs opacity-80 mt-0.5">{stat.subtext}</p>
+                  <p className="font-sans text-xs opacity-75 mt-0.5">{stat.subtext}</p>
                 </motion.div>
               );
             })}
@@ -348,8 +344,8 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
       {/* ================= THE 4 PILLARS OF RAREBRIDGE ================= */}
       <section className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#E7E2CE]/60 px-4 py-1 text-xs font-bold text-[#112250] mb-3">
-            <Sparkles className="h-3.5 w-3.5 text-[#3B507D]" />
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1 text-xs font-bold text-[#112250] mb-3">
+            <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
             <span>Designed for Families & Children</span>
           </div>
           <h2 className="font-heading font-black text-3xl sm:text-4xl text-[#112250]">
@@ -360,16 +356,16 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {/* Card 1 */}
           <motion.div
             whileHover={{ y: -4 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            className="rounded-2xl bg-white p-6 border border-[#BCE0F5] hover:border-[#112250] hover:shadow-[0_8px_24px_rgba(17,34,80,0.06)] transition-all flex flex-col justify-between cursor-pointer"
             onClick={() => onNav("directory")}
           >
             <div>
-              <div className="rounded-lg bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+              <div className="rounded-xl bg-[#EDF6FC] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
                 <BookOpen className="h-6 w-6" />
               </div>
               <h3 className="font-heading font-extrabold text-xl text-[#112250]">Disease Library</h3>
@@ -377,7 +373,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 7,000+ conditions simplified with symptoms, genetic causes, and plain-language summaries.
               </p>
             </div>
-            <div className="mt-6 flex items-center justify-between border-t border-[#F5F4F0] pt-3">
+            <div className="mt-6 flex items-center justify-between border-t border-[#EDF6FC] pt-3">
               <span className="font-bold text-xs text-[#112250] uppercase tracking-wider">Explore Library</span>
               <ArrowRight className="h-4 w-4 text-[#112250]" />
             </div>
@@ -387,11 +383,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <motion.div
             whileHover={{ y: -4 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            className="rounded-2xl bg-white p-6 border border-[#BCE0F5] hover:border-[#112250] hover:shadow-[0_8px_24px_rgba(17,34,80,0.06)] transition-all flex flex-col justify-between cursor-pointer"
             onClick={() => onNav("specialists")}
           >
             <div>
-              <div className="rounded-lg bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+              <div className="rounded-xl bg-[#EDF6FC] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
                 <Stethoscope className="h-6 w-6" />
               </div>
               <h3 className="font-heading font-extrabold text-xl text-[#112250]">Find Specialists</h3>
@@ -399,7 +395,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 Direct connections to top pediatric geneticists, metabolic doctors, and specialized hospitals.
               </p>
             </div>
-            <div className="mt-6 flex items-center justify-between border-t border-[#F5F4F0] pt-3">
+            <div className="mt-6 flex items-center justify-between border-t border-[#EDF6FC] pt-3">
               <span className="font-bold text-xs text-[#112250] uppercase tracking-wider">Find Experts</span>
               <ArrowRight className="h-4 w-4 text-[#112250]" />
             </div>
@@ -409,11 +405,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <motion.div
             whileHover={{ y: -4 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            className="rounded-2xl bg-white p-6 border border-[#BCE0F5] hover:border-[#112250] hover:shadow-[0_8px_24px_rgba(17,34,80,0.06)] transition-all flex flex-col justify-between cursor-pointer"
             onClick={() => onNav("research")}
           >
             <div>
-              <div className="rounded-lg bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+              <div className="rounded-xl bg-[#EDF6FC] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
                 <Microscope className="h-6 w-6" />
               </div>
               <h3 className="font-heading font-extrabold text-xl text-[#112250]">Research & Trials</h3>
@@ -421,7 +417,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 Stay updated on groundbreaking enzyme therapies, gene editing, and active clinical trials.
               </p>
             </div>
-            <div className="mt-6 flex items-center justify-between border-t border-[#F5F4F0] pt-3">
+            <div className="mt-6 flex items-center justify-between border-t border-[#EDF6FC] pt-3">
               <span className="font-bold text-xs text-[#112250] uppercase tracking-wider">View Trials</span>
               <ArrowRight className="h-4 w-4 text-[#112250]" />
             </div>
@@ -431,11 +427,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <motion.div
             whileHover={{ y: -4 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-xl bg-white p-6 border-2 border-[#E7E2CE] hover:border-[#112250] transition-all flex flex-col justify-between cursor-pointer"
+            className="rounded-2xl bg-white p-6 border border-[#BCE0F5] hover:border-[#112250] hover:shadow-[0_8px_24px_rgba(17,34,80,0.06)] transition-all flex flex-col justify-between cursor-pointer"
             onClick={() => onNav("community")}
           >
             <div>
-              <div className="rounded-lg bg-[#F5F4F0] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
+              <div className="rounded-xl bg-[#EDF6FC] w-12 h-12 flex items-center justify-center text-[#112250] mb-4">
                 <Users className="h-6 w-6" />
               </div>
               <h3 className="font-heading font-extrabold text-xl text-[#112250]">Caregiver Community</h3>
@@ -443,7 +439,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 Connect with parents and caregivers sharing real experiences, emotional support, and advice.
               </p>
             </div>
-            <div className="mt-6 flex items-center justify-between border-t border-[#F5F4F0] pt-3">
+            <div className="mt-6 flex items-center justify-between border-t border-[#EDF6FC] pt-3">
               <span className="font-bold text-xs text-[#112250] uppercase tracking-wider">Join Circle</span>
               <ArrowRight className="h-4 w-4 text-[#112250]" />
             </div>
@@ -452,11 +448,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
       </section>
 
       {/* ================= FEATURED CONDITIONS SECTION ================= */}
-      <section className="py-14 bg-white border-y border-[#E7E2CE]">
+      <section className="py-14 bg-white/70 backdrop-blur-xs border-y border-[#BCE0F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
-              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#3B507D]">
+              <span className="font-callout text-xs font-bold uppercase tracking-widest text-[#243B6B]">
                 Knowledge Base
               </span>
               <h2 className="font-heading font-black text-3xl text-[#112250] mt-1">
@@ -467,7 +463,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onNav("directory")}
-              className="inline-flex items-center gap-2 rounded-lg bg-[#F5F4F0] px-5 py-2.5 text-sm font-bold text-[#112250] hover:bg-[#E7E2CE] transition-colors self-start"
+              className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-5 py-2.5 text-sm font-bold text-[#112250] hover:bg-[#DDF0FA] transition-colors self-start cursor-pointer"
             >
               <span>View All Conditions</span>
               <ArrowRight className="h-4 w-4" />
@@ -488,24 +484,24 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
       {/* ================= FAMILY & CAREGIVER STORY BANNER ================= */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="relative rounded-xl p-8 sm:p-12 text-white overflow-hidden border-2 border-[#E7E2CE]">
+        <div className="relative rounded-3xl p-8 sm:p-12 text-white overflow-hidden border border-[#BCE0F5] shadow-lg">
           {/* Background Image & Overlay */}
           <div className="absolute inset-0 z-0">
             <img
               src="/rarebridge_family_photo.png"
               alt="RareBridge supportive family background"
-              className="h-full w-full object-cover object-center opacity-35"
+              className="h-full w-full object-cover object-center opacity-30"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#112250] via-[#112250]/90 to-[#112250]/50" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#112250] via-[#112250]/92 to-[#112250]/65" />
           </div>
 
-          <div className="absolute top-4 right-6 opacity-70 pointer-events-none z-10">
+          <div className="absolute top-4 right-6 opacity-60 pointer-events-none z-10">
             <EdelweissFlower size={56} />
           </div>
 
           <div className="relative z-10 max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-md bg-white/10 px-4 py-1.5 text-xs font-bold text-[#E7E2CE] mb-4 backdrop-blur-xs">
-              <HeartHandshake className="h-4 w-4 text-[#E7E2CE]" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-[#BCE0F5] mb-4 backdrop-blur-xs border border-white/15">
+              <HeartHandshake className="h-4 w-4 text-[#BCE0F5]" />
               <span>You Are Not Alone</span>
             </div>
             <h2 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl leading-tight text-white drop-shadow-xs">
@@ -520,7 +516,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onNav("about")}
-                className="rounded-lg bg-[#E7E2CE] px-6 py-3.5 text-sm font-black text-[#112250] hover:bg-white transition-all"
+                className="rounded-full bg-white px-7 py-3.5 text-sm font-black text-[#112250] hover:bg-[#EDF6FC] transition-all cursor-pointer shadow-md"
               >
                 Our Story & Mission
               </motion.button>
@@ -528,7 +524,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => onNav("community")}
-                className="rounded-lg border-2 border-white/20 bg-white/10 px-6 py-3.5 text-sm font-bold text-white hover:bg-white/20 backdrop-blur-sm transition-all"
+                className="rounded-full border-2 border-white/60 bg-white/10 px-7 py-3.5 text-sm font-bold text-white hover:bg-white/20 backdrop-blur-sm transition-all cursor-pointer"
               >
                 Connect with Families
               </motion.button>
@@ -539,7 +535,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
       {/* ================= RAREBRIDGE AI ZEBRA HELPER BANNER ================= */}
       <section className="pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="rounded-xl bg-white p-8 sm:p-10 border-2 border-[#E7E2CE] flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="rounded-3xl bg-white p-8 sm:p-10 border border-[#BCE0F5] shadow-[0_8px_30px_rgba(17,34,80,0.05)] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <img
               src="/rarebridge_zebra_reading.png"
@@ -547,7 +543,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
               className="h-24 w-24 object-contain animate-float shrink-0"
             />
             <div>
-              <span className="font-callout text-xs font-bold uppercase tracking-wider text-[#3B507D]">
+              <span className="font-callout text-xs font-bold uppercase tracking-wider text-[#243B6B]">
                 Child-Friendly AI Assistant
               </span>
               <h3 className="font-heading font-black text-2xl text-[#112250] mt-0.5">
@@ -563,9 +559,9 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => window.dispatchEvent(new CustomEvent("open-ai-assistant"))}
-            className="rounded-lg bg-[#112250] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0 flex items-center gap-2 cursor-pointer"
+            className="rounded-full bg-[#112250] px-7 py-3.5 text-sm font-bold text-white hover:bg-[#1e3a7a] transition-colors shrink-0 flex items-center gap-2 cursor-pointer shadow-md"
           >
-            <BrainCircuit className="h-5 w-5 text-[#E7E2CE]" />
+            <BrainCircuit className="h-5 w-5 text-[#BCE0F5]" />
             <span>Ask Zebra Assistant</span>
           </motion.button>
         </div>

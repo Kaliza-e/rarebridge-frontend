@@ -110,11 +110,10 @@ export default function Navbar({
         type="button"
         onClick={() => handleNavigation(view)}
         aria-current={isActive ? "page" : undefined}
-        className={`group relative inline-flex min-h-12 shrink-0 items-center justify-center gap-2 px-3.5 py-2 text-sm font-semibold transition-all duration-200 outline-none ${
-          isActive
+        className={`group relative inline-flex min-h-12 shrink-0 items-center justify-center gap-2 px-3.5 py-2 text-sm font-semibold transition-all duration-200 outline-none ${isActive
             ? "text-[#112250] font-black bg-transparent"
             : "text-[#3B507D] bg-transparent hover:text-[#112250]"
-        }`}
+          }`}
       >
         {Icon && (
           <Icon
@@ -154,11 +153,10 @@ export default function Navbar({
         type="button"
         onClick={() => handleNavigation(view)}
         aria-current={isActive ? "page" : undefined}
-        className={`flex min-h-12 w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#112250] ${
-          isActive
+        className={`flex min-h-12 w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#112250] ${isActive
             ? "bg-[#112250] font-bold text-white"
             : "font-semibold text-[#3B507D] hover:bg-[#112250]/[0.05] hover:text-[#112250]"
-        }`}
+          }`}
       >
         {Icon && (
           <Icon
@@ -189,11 +187,10 @@ export default function Navbar({
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b border-[#BEB7A7]/30 bg-[#F8F7F2]/85 font-sans backdrop-blur-xl transition-[background-color,box-shadow] duration-200 ${
-        scrolled
-          ? "bg-[#F8F7F2]/95 shadow-[0_4px_20px_rgba(17,34,80,0.04)]"
+      className={`sticky top-0 z-50 border-b border-[#BCE0F5]/60 bg-white/85 font-sans backdrop-blur-xl transition-[background-color,box-shadow] duration-200 ${scrolled
+          ? "bg-white/95 shadow-[0_4px_20px_rgba(17,34,80,0.04)]"
           : ""
-      }`}
+        }`}
     >
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
         {/* Desktop navbar */}
@@ -211,7 +208,7 @@ export default function Navbar({
             <button
               type="button"
               onClick={() => handleNavigation("signin")}
-              className="flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-[#112250] px-4 text-xs font-bold text-white transition-colors hover:bg-[#3B507D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] shadow-sm cursor-pointer"
+              className="flex min-h-10 shrink-0 items-center justify-center rounded-full bg-[#112250] px-5 text-xs font-bold text-white transition-colors hover:bg-[#1e3a7a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] shadow-xs cursor-pointer"
             >
               Sign In
             </button>
@@ -229,11 +226,10 @@ export default function Navbar({
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={menuOpen}
               aria-controls="rarebridge-mobile-menu"
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] ${
-                menuOpen
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] ${menuOpen
                   ? "border-[#112250] bg-[#112250] text-white"
                   : "border-[#112250]/10 bg-white text-[#112250] hover:bg-[#F5F4F0]"
-              }`}
+                }`}
             >
               {menuOpen ? (
                 <X size={20} strokeWidth={2.2} />

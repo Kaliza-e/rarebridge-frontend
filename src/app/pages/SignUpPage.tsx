@@ -8,9 +8,7 @@ import {
   Sparkles,
   CheckCircle2,
   ArrowLeft,
-  ShieldCheck,
 } from "lucide-react";
-import { EdelweissFlower, OrganicWavyLine } from "../components/common/Visuals";
 
 interface SignUpPageProps {
   onNav?: (view: string) => void;
@@ -33,13 +31,7 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
   };
 
   return (
-    <div className="relative min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] flex items-center justify-center overflow-hidden">
-      <OrganicWavyLine side="left" />
-      <OrganicWavyLine side="right" />
-
-      {/* Ambient Pulsing Glowing Lights */}
-      <div className="pointer-events-none absolute -top-24 -right-16 h-80 w-80 rounded-full bg-[#E7E2CE]/70 blur-3xl animate-pulse" />
-      <div className="pointer-events-none absolute top-1/3 -left-20 h-72 w-72 rounded-full bg-[#3B507D]/20 blur-3xl animate-pulse" />
+    <div className="relative min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8 text-[#112250] selection:bg-[#BCE0F5] selection:text-[#112250] flex items-center justify-center">
 
       <div className="relative z-10 w-full max-w-4xl grid gap-8 lg:grid-cols-12 items-center">
         {/* Left Welcome Card */}
@@ -100,22 +92,20 @@ export default function SignUpPage({ onNav }: SignUpPageProps) {
               <button
                 type="button"
                 onClick={() => setRole("parent")}
-                className={`flex-1 rounded-md py-2.5 text-xs font-bold transition-all ${
-                  role === "parent"
+                className={`flex-1 rounded-md py-2.5 text-xs font-bold transition-all ${role === "parent"
                     ? "bg-[#112250] text-white shadow-sm"
                     : "text-[#3B507D] hover:text-[#112250]"
-                }`}
+                  }`}
               >
                 Parent / Caregiver
               </button>
               <button
                 type="button"
                 onClick={() => setRole("specialist")}
-                className={`flex-1 rounded-md py-2.5 text-xs font-bold transition-all ${
-                  role === "specialist"
+                className={`flex-1 rounded-md py-2.5 text-xs font-bold transition-all ${role === "specialist"
                     ? "bg-[#112250] text-white shadow-sm"
                     : "text-[#3B507D] hover:text-[#112250]"
-                }`}
+                  }`}
               >
                 Specialist / Researcher
               </button>

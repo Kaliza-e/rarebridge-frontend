@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchDiseasesFromAPI } from "../data";
-import type { ContentNode, ParsedSection } from "../services/api.service";
-import { ZebraEmptyState, OrganicWavyLine, ZebraGridDoodle } from "../components/common/Visuals";
+import { ZebraEmptyState, ZebraGridDoodle } from "../components/common/Visuals";
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
 import { generateDiseasePDF } from "../utils/pdf-generator";
 import { LinkifiedText, RichTextRunsRenderer } from "../utils/link-helper";
@@ -206,54 +205,54 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   const causesList = disease && Array.isArray(disease.causesStructured) && disease.causesStructured.length > 0
     ? disease.causesStructured
     : (disease && typeof disease.causes === "object" && disease.causes !== null
-        ? Object.entries(disease.causes).map(([key, val]) => ({ title: `${key.toUpperCase()} CAUSE`, explanation: String(val) }))
-        : (disease && typeof disease.causes === "string" && disease.causes.trim()
-            ? [{ title: "Primary Causes & Genetic Inheritance", explanation: disease.causes.replace(/^<!--rbm:[^>]*-->\s*/, "") }]
-            : []));
+      ? Object.entries(disease.causes).map(([key, val]) => ({ title: `${key.toUpperCase()} CAUSE`, explanation: String(val) }))
+      : (disease && typeof disease.causes === "string" && disease.causes.trim()
+        ? [{ title: "Primary Causes & Genetic Inheritance", explanation: disease.causes.replace(/^<!--rbm:[^>]*-->\s*/, "") }]
+        : []));
 
   const typesList = disease && Array.isArray(disease.typesStructured) && disease.typesStructured.length > 0
     ? disease.typesStructured
     : (disease && Array.isArray(disease.types) && disease.types.length > 0
-        ? disease.types.map((t: any) => ({
-            title: t.type || t.name || t.title || "Subtype",
-            description: t.description || (t.symptoms ? `Symptoms: ${t.symptoms.join(", ")}` : "Clinical form"),
-            stage: t.stage,
-            severity: t.severity
-          }))
-        : (disease?.typesAndSymptomsRaw
-            ? disease.typesAndSymptomsRaw.split(/\r?\n|•/)
-                .map((l: string) => l.trim())
-                .filter((l: string) => Boolean(l) && !l.startsWith('<!--rbm:'))
-                .map((line: string) => {
-                  const cleaned = line.replace(/[*_#`]/g, '').trim();
-                  const colon = cleaned.indexOf(':');
-                  return colon > 0
-                    ? { title: cleaned.substring(0, colon).trim(), description: cleaned.substring(colon + 1).trim() }
-                    : { title: "Subtype / Clinical Form", description: cleaned };
-                })
-            : (disease && Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0
-                ? disease.typesAndSymptoms
-                    .map((s: string) => (typeof s === "string" ? s : ""))
-                    .filter((s: string) => Boolean(s) && !s.startsWith('<!--rbm:'))
-                    .map((s: string) => {
-                      const cleaned = s.replace(/[*_#`]/g, '').trim();
-                      const colon = cleaned.indexOf(':');
-                      return colon > 0
-                        ? { title: cleaned.substring(0, colon).trim(), description: cleaned.substring(colon + 1).trim() }
-                        : { title: "Subtype / Clinical Form", description: cleaned };
-                    })
-                : [])));
+      ? disease.types.map((t: any) => ({
+        title: t.type || t.name || t.title || "Subtype",
+        description: t.description || (t.symptoms ? `Symptoms: ${t.symptoms.join(", ")}` : "Clinical form"),
+        stage: t.stage,
+        severity: t.severity
+      }))
+      : (disease?.typesAndSymptomsRaw
+        ? disease.typesAndSymptomsRaw.split(/\r?\n|•/)
+          .map((l: string) => l.trim())
+          .filter((l: string) => Boolean(l) && !l.startsWith('<!--rbm:'))
+          .map((line: string) => {
+            const cleaned = line.replace(/[*_#`]/g, '').trim();
+            const colon = cleaned.indexOf(':');
+            return colon > 0
+              ? { title: cleaned.substring(0, colon).trim(), description: cleaned.substring(colon + 1).trim() }
+              : { title: "Subtype / Clinical Form", description: cleaned };
+          })
+        : (disease && Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0
+          ? disease.typesAndSymptoms
+            .map((s: string) => (typeof s === "string" ? s : ""))
+            .filter((s: string) => Boolean(s) && !s.startsWith('<!--rbm:'))
+            .map((s: string) => {
+              const cleaned = s.replace(/[*_#`]/g, '').trim();
+              const colon = cleaned.indexOf(':');
+              return colon > 0
+                ? { title: cleaned.substring(0, colon).trim(), description: cleaned.substring(colon + 1).trim() }
+                : { title: "Subtype / Clinical Form", description: cleaned };
+            })
+          : [])));
 
   const symptomsList = (
     disease && Array.isArray(disease.symptomsStructured) && disease.symptomsStructured.length > 0
       ? disease.symptomsStructured
       : (disease && Array.isArray(disease.typesAndSymptoms) && disease.typesAndSymptoms.length > 0
-          ? disease.typesAndSymptoms
-          : (disease && Array.isArray(disease.symptoms) && disease.symptoms.length > 0
-              ? disease.symptoms
-              : (disease?.typesAndSymptomsRaw
-                  ? disease.typesAndSymptomsRaw.split(/\r?\n/)
-                  : [])))
+        ? disease.typesAndSymptoms
+        : (disease && Array.isArray(disease.symptoms) && disease.symptoms.length > 0
+          ? disease.symptoms
+          : (disease?.typesAndSymptomsRaw
+            ? disease.typesAndSymptomsRaw.split(/\r?\n/)
+            : [])))
   )
     .map((sym: any) => {
       const rawText = typeof sym === "string" ? sym : sym?.name || "";
@@ -378,10 +377,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   }
 
   return (
-    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#E7E2CE] selection:text-[#112250] overflow-hidden">
-      <OrganicWavyLine side="left" />
-      <OrganicWavyLine side="right" />
-
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#BCE0F5] selection:text-[#112250]">
       {/* ================= BREADCRUMBS & TOP BAR ================= */}
       <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         <nav className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs font-semibold text-[#3B507D] mb-4">
@@ -521,11 +517,10 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                   <button
                     key={tab.id}
                     onClick={() => navigateToTab(tab.id)}
-                    className={`inline-flex shrink-0 items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs transition-all whitespace-nowrap ${
-                      isActive
+                    className={`inline-flex shrink-0 items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs transition-all whitespace-nowrap ${isActive
                         ? "border-b-2 border-[#112250] text-[#112250] bg-white rounded-t-lg font-black shadow-2xs"
                         : "border-b-2 border-transparent text-[#3B507D] font-bold hover:text-[#112250] hover:border-[#E7E2CE]"
-                    }`}
+                      }`}
                   >
                     <IconComp className={`h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 ${isActive ? "text-[#112250]" : "text-[#3B507D]"}`} />
                     <span>{tab.label}</span>
