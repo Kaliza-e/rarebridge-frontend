@@ -173,10 +173,10 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   <span
                     aria-hidden="true"
                     className={`mr-2 inline-block h-2 w-2 rounded-full ${apiStatus === "online"
-                        ? "bg-emerald-500"
-                        : apiStatus === "offline"
-                          ? "bg-emerald-600/80"
-                          : "animate-pulse bg-[#3B507D]/50"
+                      ? "bg-emerald-500"
+                      : apiStatus === "offline"
+                        ? "bg-emerald-600/80"
+                        : "animate-pulse bg-[#3B507D]/50"
                       }`}
                   />
                   {apiStatus === "checking"
@@ -239,8 +239,8 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                       aria-label={`Go to slide ${idx + 1}`}
                       aria-current={currentSlide === idx ? "true" : undefined}
                       className={`h-2 rounded-full transition-all cursor-pointer ${currentSlide === idx
-                          ? "w-6 bg-[#BCE0F5]"
-                          : "w-2 bg-white/40 hover:bg-white/80"
+                        ? "w-6 bg-[#BCE0F5]"
+                        : "w-2 bg-white/40 hover:bg-white/80"
                         }`}
                     />
                   ))}
@@ -538,7 +538,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
         <div className="rounded-3xl bg-white p-8 sm:p-10 border border-[#BCE0F5] shadow-[0_8px_30px_rgba(17,34,80,0.05)] flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <img
-              src="/rarebridge_zebra_reading.png"
+              src="/rarebridge_zebra_with_book.png"
               alt="Friendly Zebra Mascot reading a book"
               className="h-24 w-24 object-contain animate-float shrink-0"
             />
