@@ -395,8 +395,13 @@ export function ZebraStripeBackground() {
   return (
     <div
       aria-hidden="true"
-      className="rb-zebra-background pointer-events-none fixed inset-0 z-0"
-    />
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+    >
+      {/* Perimeter organic reference wave frame */}
+      <div className="rb-reference-wave pointer-events-none absolute inset-0 z-0" />
+      {/* Characteristic repeating zebra stripe pattern across all pages */}
+      <div className="rb-zebra-stripes pointer-events-none absolute inset-0 z-0" />
+    </div>
   );
 }
 

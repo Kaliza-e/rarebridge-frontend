@@ -107,11 +107,35 @@ nav,
   line-height: 1.45;
 }
 
-.rb-zebra-background {
+.rb-reference-wave {
   background-image: url("/reference-wave-bg.svg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
+  opacity: 1;
+}
+
+.rb-zebra-stripes {
+  background-image: url("/zebra-stripe-pattern.svg");
+  background-position: center top;
+  background-repeat: repeat;
+  background-size: 560px 560px;
+  opacity: 0.28;
+}
+
+.rb-zebra-background {
+  background-image:
+    url("/zebra-stripe-pattern.svg"),
+    url("/reference-wave-bg.svg");
+  background-position:
+    center top,
+    center center;
+  background-repeat:
+    repeat,
+    no-repeat;
+  background-size:
+    560px 560px,
+    cover;
   opacity: 1;
 }
 
@@ -120,10 +144,11 @@ nav,
   background-image:
     radial-gradient(ellipse at 12% 0%, rgba(85, 108, 157, 0.26), transparent 42%),
     radial-gradient(ellipse at 88% 100%, rgba(231, 226, 206, 0.08), transparent 36%),
-    linear-gradient(135deg, #112250, #0d1b40);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+    linear-gradient(135deg, rgba(17, 34, 80, 0.94), rgba(13, 27, 64, 0.94)),
+    url("/zebra-stripe-pattern.svg");
+  background-position: center, center, center, center top;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
+  background-size: cover, cover, cover, 560px 560px;
 }
 
 .rb-content-layer .rounded-xl.border-2 {
@@ -142,9 +167,25 @@ nav,
 }
 
 @media (max-width: 640px) {
-  .rb-zebra-background {
+  .rb-reference-wave {
     background-position: center top;
     background-size: cover;
     opacity: 0.85;
+  }
+
+  .rb-zebra-stripes {
+    background-position: 38% top;
+    background-size: 420px 420px;
+    opacity: 0.22;
+  }
+
+  .rb-zebra-background {
+    background-position:
+      38% top,
+      center top;
+    background-size:
+      420px 420px,
+      cover;
+    opacity: 0.95;
   }
 }
