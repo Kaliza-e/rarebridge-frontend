@@ -397,9 +397,9 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="relative overflow-hidden rounded-xl border-2 border-[#E7E2CE] bg-[#F5F8FF] p-4 sm:p-8 lg:p-10 shadow-xs"
+            className="relative overflow-hidden rounded-[2.25rem] border border-[#112250]/15 bg-white/95 p-5 sm:p-8 lg:p-10 shadow-sm backdrop-blur-sm"
           >
-            <ZebraGridDoodle opacity={0.12} />
+            <ZebraGridDoodle opacity={0.035} />
 
             <div className="relative z-10 grid gap-6 lg:grid-cols-12 lg:items-center">
               {/* Left Column: Icon + Header Details */}
@@ -505,11 +505,11 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
         </div>
       </section>
 
-      {/* ================= STICKY TAB NAVIGATION ================= */}
+      {/* ================= STICKY TAB NAVIGATION (CAPSULE PILL BAR) ================= */}
       {tabs.length > 0 && (
-        <section className="sticky top-[60px] sm:top-[76px] z-30 relative overflow-hidden bg-[#F8F7F2]/95 backdrop-blur-md py-2 border-y border-[#E7E2CE]">
+        <section className="sticky top-[76px] sm:top-[88px] z-30 py-2.5">
           <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none scroll-smooth py-1 -mx-3 px-3 sm:mx-0 sm:px-0">
+            <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none scroll-smooth py-1.5 px-2 bg-white/95 rounded-full border border-[#112250]/15 shadow-sm backdrop-blur-md">
               {tabs.map((tab) => {
                 const IconComp = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -517,12 +517,12 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                   <button
                     key={tab.id}
                     onClick={() => navigateToTab(tab.id)}
-                    className={`inline-flex shrink-0 items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs transition-all whitespace-nowrap ${isActive
-                        ? "border-b-2 border-[#112250] text-[#112250] bg-white rounded-t-lg font-black shadow-2xs"
-                        : "border-b-2 border-transparent text-[#3B507D] font-bold hover:text-[#112250] hover:border-[#E7E2CE]"
+                    className={`inline-flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${isActive
+                        ? "bg-[#112250] text-white shadow-xs"
+                        : "text-[#3B507D] hover:text-[#112250] hover:bg-[#112250]/5"
                       }`}
                   >
-                    <IconComp className={`h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 ${isActive ? "text-[#112250]" : "text-[#3B507D]"}`} />
+                    <IconComp className={`h-3.5 w-3.5 shrink-0 ${isActive ? "text-[#BCE0F5]" : "text-[#3B507D]"}`} />
                     <span>{tab.label}</span>
                   </button>
                 );

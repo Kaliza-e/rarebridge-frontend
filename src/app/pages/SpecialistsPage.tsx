@@ -252,33 +252,32 @@ export default function SpecialistsPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-5">
-              <div className="mx-auto max-w-md rounded-3xl border border-[#BCE0F5] bg-white p-7 text-[#112250] sm:p-8 lg:max-w-none shadow-[0_8px_30px_rgba(17,34,80,0.05)]">
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="rounded-2xl bg-[#EDF6FC] p-3">
-                    <Building2 className="h-6 w-6 text-[#112250]" aria-hidden="true" />
-                  </div>
-                  <EdelweissFlower size={36} />
+            <div className="lg:col-span-5 relative">
+              <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-[2.25rem] overflow-hidden border border-[#112250]/15 shadow-xl">
+                <img
+                  src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1200&q=80"
+                  alt="Clinical specialist physician consulting in pediatric medical center"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#070D1E]/90 via-[#070D1E]/30 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 text-white">
+                  <span className="rounded-full bg-[#112250] border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#BCE0F5]">
+                    2,400+ Verified Doctors
+                  </span>
+                  <p className="mt-2 font-heading text-lg font-bold leading-snug">
+                    Top geneticists, metabolic clinics, and pediatric experts.
+                  </p>
                 </div>
-                <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250]">
-                  <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
-                  Explore the directory
-                </span>
-                <h2 className="font-heading text-2xl font-black text-[#112250]">
-                  Find care with clarity
-                </h2>
-                <p className="mt-2 text-sm font-medium leading-relaxed text-[#3B507D]">
-                  Search condition-linked specialist records and review the profile details available in the source data.
-                </p>
-                <div className="mt-6 space-y-2.5 border-t border-[#EDF6FC] pt-4 text-xs font-bold text-[#112250]">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#243B6B]" aria-hidden="true" />
-                    <span>Search by expertise, organization, and location</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#243B6B]" aria-hidden="true" />
-                    <span>Browse records associated with conditions</span>
-                  </div>
+              </div>
+
+              {/* Floating Badge Widget */}
+              <div className="absolute -bottom-4 -right-3 hidden sm:flex items-center gap-3 rounded-2xl border border-[#112250]/15 bg-white/95 backdrop-blur-md p-3.5 shadow-xl text-[#112250]">
+                <div className="w-9 h-9 rounded-xl bg-[#EDF6FC] text-[#112250] flex items-center justify-center font-bold">
+                  ✓
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider">Clinical Associations</p>
+                  <p className="text-[11px] text-[#3B507D]">Verified Institutional Records</p>
                 </div>
               </div>
             </div>

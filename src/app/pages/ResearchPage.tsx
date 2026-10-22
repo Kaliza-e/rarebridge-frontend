@@ -113,44 +113,38 @@ export default function ResearchPage() {
               </div>
             </motion.div>
 
-            {/* Right Card */}
+            {/* Right Card with Genuine Laboratory Research Photograph */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-5"
+              className="lg:col-span-5 relative"
             >
-              <div className="relative mx-auto max-w-md lg:max-w-none">
-                <div className="relative overflow-hidden rounded-3xl border border-[#BCE0F5] bg-white p-8 text-[#112250] shadow-[0_8px_30px_rgba(17,34,80,0.05)]">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="rounded-2xl bg-[#EDF6FC] p-3 text-[#112250]">
-                      <FlaskConical className="h-6 w-6 text-[#112250]" />
-                    </div>
-                    <EdelweissFlower size={36} />
-                  </div>
-
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250] mb-3">
-                    <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
-                    850+ Active Trials Tracked
+              <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-[2.25rem] overflow-hidden border border-[#112250]/15 shadow-xl">
+                <img
+                  src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1200&q=80"
+                  alt="Medical research scientist conducting molecular genetic trial experiments"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#070D1E]/90 via-[#070D1E]/30 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 text-white">
+                  <span className="rounded-full bg-[#112250] border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#BCE0F5]">
+                    Active Clinical Pipelines
                   </span>
-
-                  <h3 className="font-heading font-black text-2xl text-[#112250]">
-                    Hope Through Science
-                  </h3>
-                  <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
-                    Connecting rare disease families with certified research registries and patient trial opportunities worldwide.
+                  <p className="mt-2 font-heading text-lg font-bold leading-snug">
+                    850+ trials tracked across enzyme &amp; gene therapies.
                   </p>
+                </div>
+              </div>
 
-                  <div className="mt-6 space-y-2.5 border-t border-[#EDF6FC] pt-4 text-xs font-bold text-[#112250]">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#243B6B]" />
-                      <span>Phase I, II, & III Gene Therapy updates</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#243B6B]" />
-                      <span>Plain-language scientific abstract summaries</span>
-                    </div>
-                  </div>
+              {/* Floating Badge Widget */}
+              <div className="absolute -bottom-4 -right-3 hidden sm:flex items-center gap-3 rounded-2xl border border-[#112250]/15 bg-white/95 backdrop-blur-md p-3.5 shadow-xl text-[#112250]">
+                <div className="w-9 h-9 rounded-xl bg-[#EDF6FC] text-[#112250] flex items-center justify-center font-bold">
+                  ✓
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider">Clinical Trials Tracked</p>
+                  <p className="text-[11px] text-[#3B507D]">Gene Editing &amp; CRISPR</p>
                 </div>
               </div>
             </motion.div>

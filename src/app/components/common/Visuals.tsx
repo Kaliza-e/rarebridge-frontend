@@ -284,7 +284,7 @@ export function ZebraGridDoodle({
   gridColorLavender = "#A7A9C6",
   gridColorBeige = "#D8D3C8",
   gridColorNavy = "#3B507D",
-  opacity = 0.22,
+  opacity = 0.04,
   patternId = "zebra-grid-doodle-pattern"
 }: {
   className?: string;
@@ -395,11 +395,17 @@ export function ZebraStripeBackground() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
     >
+      {/* Warm child-friendly ambient pastel glows (soft sunshine & baby blue) */}
+      <div className="absolute -top-16 right-1/4 h-88 w-88 rounded-full bg-[#FFF5D6]/35 blur-[120px]" />
+      <div className="absolute top-[30%] -left-16 h-[26rem] w-[26rem] rounded-full bg-[#DDF0FA]/30 blur-[130px]" />
+      <div className="absolute top-[65%] -right-16 h-88 w-88 rounded-full bg-[#EBF5FE]/35 blur-[120px]" />
+      <div className="absolute bottom-10 left-1/3 h-72 w-72 rounded-full bg-[#FFF0E6]/25 blur-[110px]" />
+
       {/* Perimeter organic reference wave frame */}
-      <div className="rb-reference-wave pointer-events-none absolute inset-0 z-0" />
-      {/* Characteristic repeating zebra stripe pattern across all pages */}
+      <div className="rb-reference-wave pointer-events-none absolute inset-0 z-0 opacity-60" />
+      {/* Characteristic repeating zebra stripe pattern - subtle and friendly */}
       <div className="rb-zebra-stripes pointer-events-none absolute inset-0 z-0" />
     </div>
   );

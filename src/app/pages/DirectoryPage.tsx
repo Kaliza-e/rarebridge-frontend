@@ -47,7 +47,16 @@ const SEARCH_SUGGESTIONS = [
 ];
 
 export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = sessionStorage.getItem("rb_search_query");
+      if (saved) {
+        sessionStorage.removeItem("rb_search_query");
+        return saved;
+      }
+    }
+    return "";
+  });
   const [cat, setCat] = useState("All");
   const [status, setStatus] = useState("All Status");
   const [diseases, setDiseases] = useState<Disease[]>(DISEASES);
@@ -192,37 +201,33 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
               </div>
             </div>
 
-            {/* Right Card / Graphic */}
-            <div className="lg:col-span-5">
-              <div className="mx-auto max-w-md rounded-3xl border border-[#BCE0F5] bg-white p-7 text-[#112250] sm:p-8 lg:max-w-none shadow-[0_8px_30px_rgba(17,34,80,0.05)]">
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="rounded-2xl bg-[#EDF6FC] p-3 text-[#112250]">
-                    <BookOpen className="h-6 w-6 text-[#112250]" />
-                  </div>
-                  <EdelweissFlower size={36} />
+            {/* Right Card with Genuine Medical Photograph */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-[2.25rem] overflow-hidden border border-[#112250]/15 shadow-xl">
+                <img
+                  src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=80"
+                  alt="Clinical specialist reviewing medical guides and diagnostic literature"
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#070D1E]/90 via-[#070D1E]/30 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 text-white">
+                  <span className="rounded-full bg-[#112250] border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#BCE0F5]">
+                    Source-Based Library
+                  </span>
+                  <p className="mt-2 font-heading text-lg font-bold leading-snug">
+                    7,000+ conditions curated with certified genetic precision.
+                  </p>
                 </div>
+              </div>
 
-                <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-3.5 py-1 text-xs font-bold text-[#112250]">
-                  <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
-                  Source-Based Disease Information
-                </span>
-
-                <h3 className="font-heading font-black text-2xl text-[#112250]">
-                  Explore Condition Records
-                </h3>
-                <p className="font-sans text-sm text-[#3B507D] mt-2 font-medium leading-relaxed">
-                  Disease information is organized from available source records and displayed with its source structure.
-                </p>
-
-                <div className="mt-6 space-y-2.5 border-t border-[#EDF6FC] pt-4 text-xs font-bold text-[#112250]">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#243B6B]" />
-                    <span>Plain-language medical breakdowns</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#243B6B]" />
-                    <span>Gene Therapy & Clinical Trial updates</span>
-                  </div>
+              {/* Floating Badge Widget */}
+              <div className="absolute -bottom-4 -right-3 hidden sm:flex items-center gap-3 rounded-2xl border border-[#112250]/15 bg-white/95 backdrop-blur-md p-3.5 shadow-xl text-[#112250]">
+                <div className="w-9 h-9 rounded-xl bg-[#EDF6FC] text-[#112250] flex items-center justify-center font-bold">
+                  ✓
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider">ORPHA &amp; OMIM Sourced</p>
+                  <p className="text-[11px] text-[#3B507D]">Plain-Language Medical Summaries</p>
                 </div>
               </div>
             </div>

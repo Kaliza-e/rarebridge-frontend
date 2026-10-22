@@ -4,6 +4,7 @@ import {
   X,
   Menu,
   Search,
+  BookOpen,
   FlaskConical,
   Stethoscope,
   Users,
@@ -89,12 +90,12 @@ export default function Navbar({
       type="button"
       onClick={() => handleNavigation("home")}
       aria-label="Go to home"
-      className="group flex shrink-0 items-center text-left outline-none transition-transform duration-200 hover:scale-105 py-1.5"
+      className="group flex shrink-0 items-center text-left outline-none transition-transform duration-200 hover:scale-105 pr-1 cursor-pointer"
     >
       <img
         src="/logo-transparent.png"
         alt="RareBridge Logo"
-        className={`block object-contain ${mobile ? "h-10 w-auto sm:h-12" : "h-14 w-auto max-h-16 sm:h-16"}`}
+        className={`block object-contain ${mobile ? "h-8 w-auto sm:h-9" : "h-8 sm:h-9 w-auto"}`}
       />
     </button>
   );
@@ -110,32 +111,27 @@ export default function Navbar({
         type="button"
         onClick={() => handleNavigation(view)}
         aria-current={isActive ? "page" : undefined}
-        className={`group relative inline-flex min-h-12 shrink-0 items-center justify-center gap-2 px-3.5 py-2 text-sm font-semibold transition-all duration-200 outline-none ${isActive
-            ? "text-[#112250] font-black bg-transparent"
-            : "text-[#3B507D] bg-transparent hover:text-[#112250]"
-          }`}
+        className={`group relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-heading font-medium transition-all duration-200 whitespace-nowrap cursor-pointer select-none active:scale-95 ${
+          isActive
+            ? "bg-[#E3F2FD] text-[#112250] font-bold shadow-xs border border-[#BCE0F5]"
+            : "text-[#3B507D] hover:text-[#112250] hover:bg-[#112250]/5"
+        }`}
       >
         {Icon && (
           <Icon
-            size={16}
-            strokeWidth={isActive ? 2.3 : 1.8}
-            className={
-              isActive
-                ? "shrink-0 text-[#112250]"
-                : "shrink-0 text-[#3B507D] group-hover:text-[#112250]"
-            }
+            size={14}
+            strokeWidth={isActive ? 2.3 : 1.9}
+            className={`shrink-0 transition-colors ${
+              isActive ? "text-[#112250]" : "text-[#556D9B] group-hover:text-[#112250]"
+            }`}
             aria-hidden="true"
           />
         )}
-
-        <span className="whitespace-nowrap">{link}</span>
-
-        {/* Bottom Line Underline Indicator for Active Tab */}
+        <span>{link}</span>
         {isActive && (
-          <motion.div
-            layoutId="navbar-active-underline"
-            className="absolute bottom-0 left-1 right-1 h-[3px] rounded-full bg-[#112250]"
-            transition={{ type: "spring", stiffness: 400, damping: 32 }}
+          <span
+            className="h-1.5 w-1.5 rounded-full bg-[#112250]"
+            aria-hidden="true"
           />
         )}
       </button>
@@ -153,21 +149,22 @@ export default function Navbar({
         type="button"
         onClick={() => handleNavigation(view)}
         aria-current={isActive ? "page" : undefined}
-        className={`flex min-h-12 w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#112250] ${isActive
-            ? "bg-[#112250] font-bold text-white"
+        className={`flex min-h-11 w-full items-center gap-3 rounded-2xl px-4 py-2.5 text-left transition-all duration-150 outline-none cursor-pointer font-heading ${
+          isActive
+            ? "bg-[#112250] font-bold text-white shadow-xs"
             : "font-semibold text-[#3B507D] hover:bg-[#112250]/[0.05] hover:text-[#112250]"
-          }`}
+        }`}
       >
         {Icon && (
           <Icon
-            size={19}
+            size={18}
             strokeWidth={isActive ? 2.2 : 1.8}
             className={isActive ? "text-white" : "text-[#3B507D]"}
             aria-hidden="true"
           />
         )}
 
-        <span className="flex-1 text-sm">{link}</span>
+        <span className="flex-1 text-xs sm:text-sm">{link}</span>
 
         {isActive ? (
           <span
@@ -176,7 +173,7 @@ export default function Navbar({
           />
         ) : (
           <ChevronRight
-            size={17}
+            size={16}
             className="text-[#667591]"
             aria-hidden="true"
           />
@@ -186,99 +183,109 @@ export default function Navbar({
   };
 
   return (
-    <header
-      className={`sticky top-0 z-50 border-b border-[#BCE0F5]/60 bg-white/85 font-sans backdrop-blur-xl transition-[background-color,box-shadow] duration-200 ${scrolled
-          ? "bg-white/95 shadow-[0_4px_20px_rgba(17,34,80,0.04)]"
-          : ""
-        }`}
-    >
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
-        {/* Desktop navbar */}
-        <div className="hidden min-h-[76px] items-center justify-between gap-6 lg:flex">
-          {renderBrand()}
+    <header className="fixed top-3 sm:top-5 left-0 right-0 z-50 w-full pointer-events-none font-heading flex justify-center px-3 sm:px-6">
+      <div className="flex flex-col items-center w-full max-w-lg lg:w-auto lg:max-w-none">
+        {/* Centered Floating Capsule Bar - snugly sized, perfectly centered */}
+        <div className="pointer-events-auto relative flex items-center justify-between lg:justify-center gap-2 sm:gap-3 lg:gap-3.5 h-13 sm:h-14 px-3.5 sm:px-4.5 rounded-full bg-white/95 border-2 border-[#112250]/15 shadow-[0_8px_32px_rgba(17,34,80,0.12)] backdrop-blur-md transition-all duration-300 w-full lg:w-auto overflow-hidden">
+          {/* Subtle zebra stripe background pattern ("not make it too much") */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.05] rounded-full"
+            style={{
+              backgroundImage: 'url("/zebra-stripe-pattern.svg")',
+              backgroundSize: "240px 240px",
+              backgroundRepeat: "repeat",
+            }}
+            aria-hidden="true"
+          />
 
-          <nav
-            aria-label="Main navigation"
-            className="flex min-w-0 items-center justify-center gap-1"
-          >
-            {NAV_LINKS.map(renderDesktopLink)}
-          </nav>
+          {/* Brand & Desktop Links */}
+          <div className="relative z-10 flex items-center gap-2 sm:gap-2.5 shrink-0">
+            {renderBrand()}
+            <div className="hidden lg:block h-5 w-[1px] bg-[#112250]/15 mx-0.5 shrink-0" aria-hidden="true" />
+            <nav
+              aria-label="Primary navigation"
+              className="hidden lg:flex items-center gap-1 sm:gap-1.5"
+            >
+              {NAV_LINKS.map(renderDesktopLink)}
+            </nav>
+          </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Friendly Divider before Action Button */}
+          <div className="relative z-10 hidden lg:block h-5 w-[1px] bg-[#112250]/15 mx-0.5 shrink-0" aria-hidden="true" />
+
+          {/* Right Actions: Friendly Disease Guide button & Mobile Menu */}
+          <div className="relative z-10 flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Quick Disease Guide button */}
             <button
               type="button"
-              onClick={() => handleNavigation("signin")}
-              className="flex min-h-10 shrink-0 items-center justify-center rounded-full bg-[#112250] px-5 text-xs font-bold text-white transition-colors hover:bg-[#1e3a7a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] shadow-xs cursor-pointer"
+              onClick={() => handleNavigation("directory")}
+              aria-label="Explore Disease Guide"
+              title="Explore Disease Guide"
+              className="flex items-center gap-1.5 rounded-full bg-[#112250] hover:bg-[#1C376F] text-white px-3 sm:px-3.5 py-1.5 text-xs font-heading font-semibold shadow-xs hover:shadow transition-all duration-150 active:scale-95 cursor-pointer shrink-0"
             >
-              Sign In
+              <BookOpen size={14} className="text-[#BCE0F5] shrink-0" />
+              <span className="hidden sm:inline">Disease Guide</span>
+              <span className="sm:hidden">Guide</span>
             </button>
-          </div>
-        </div>
 
-        {/* Mobile navbar */}
-        <div className="flex min-h-[68px] items-center justify-between gap-3 lg:hidden">
-          {renderBrand(true)}
-
-          <div className="flex shrink-0 items-center gap-2">
+            {/* Mobile menu button */}
             <button
               type="button"
               onClick={() => setMenuOpen((open) => !open)}
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={menuOpen}
               aria-controls="rarebridge-mobile-menu"
-              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B507D] ${menuOpen
-                  ? "border-[#112250] bg-[#112250] text-white"
-                  : "border-[#112250]/10 bg-white text-[#112250] hover:bg-[#F5F4F0]"
-                }`}
+              className={`grid h-9 w-9 place-items-center rounded-full transition-colors lg:hidden cursor-pointer ${
+                menuOpen
+                  ? "bg-[#112250] text-white"
+                  : "text-[#112250]/80 hover:text-[#112250] hover:bg-[#112250]/5"
+              }`}
             >
               {menuOpen ? (
-                <X size={20} strokeWidth={2.2} />
+                <X size={18} strokeWidth={2.5} />
               ) : (
-                <Menu size={20} strokeWidth={2.2} />
+                <Menu size={18} strokeWidth={2.5} />
               )}
             </button>
           </div>
         </div>
 
-        {/* Mobile dropdown */}
+        {/* Mobile Dropdown Panel */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
               id="rarebridge-mobile-menu"
-              initial={{ opacity: 0, height: 0, y: -6 }}
-              animate={{ opacity: 1, height: "auto", y: 0 }}
-              exit={{ opacity: 0, height: 0, y: -6 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="overflow-hidden lg:hidden"
+              initial={{ opacity: 0, scale: 0.97, y: -6 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97, y: -6 }}
+              transition={{ duration: 0.2 }}
+              className="pointer-events-auto relative mt-2 w-full rounded-3xl border-2 border-[#112250]/15 bg-white/95 p-3.5 shadow-2xl backdrop-blur-xl lg:hidden overflow-hidden"
             >
-              <nav
-                aria-label="Mobile navigation"
-                className="border-t border-[#112250]/10 py-3"
-              >
-                <div className="space-y-1">
-                  {NAV_LINKS.map(renderMobileLink)}
-                </div>
+              {/* Subtle zebra background */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-[0.04]"
+                style={{
+                  backgroundImage: 'url("/zebra-stripe-pattern.svg")',
+                  backgroundSize: "240px 240px",
+                  backgroundRepeat: "repeat",
+                }}
+                aria-hidden="true"
+              />
 
+              <div className="relative z-10 space-y-1">
+                {NAV_LINKS.map(renderMobileLink)}
+              </div>
 
-
-                <div className="mt-3 border-t border-[#112250]/10 pt-3 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleNavigation("directory")}
-                    className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-[#112250] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#1D376B]"
-                  >
-                    <Search size={17} aria-hidden="true" />
-                    <span>Explore Diseases</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleNavigation("signin")}
-                    className="flex min-h-12 items-center justify-center rounded-lg border border-[#112250]/20 bg-white px-4 py-3 text-sm font-bold text-[#112250] transition-colors hover:bg-[#F5F4F0]"
-                  >
-                    Sign In
-                  </button>
-                </div>
-              </nav>
+              <div className="relative z-10 mt-3 pt-3 border-t border-[#112250]/10">
+                <button
+                  type="button"
+                  onClick={() => handleNavigation("directory")}
+                  className="flex min-h-10 w-full items-center justify-center gap-2 rounded-2xl bg-[#112250] px-4 text-xs font-bold text-white transition-colors hover:bg-[#1D376B] cursor-pointer font-heading"
+                >
+                  <Search size={15} aria-hidden="true" />
+                  <span>Explore Diseases</span>
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

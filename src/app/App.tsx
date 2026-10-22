@@ -338,7 +338,7 @@ export default function App() {
           />
 
           {/* Main content */}
-          <main className="rb-content-layer pb-20 md:pb-0">
+          <main className={`rb-content-layer pb-20 md:pb-0 ${view === "home" ? "pt-0" : "pt-20 sm:pt-24"}`}>
             {view === "home" && (
               <HomePage
                 onNav={handleNav}
