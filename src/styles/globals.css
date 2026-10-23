@@ -164,9 +164,28 @@ nav,
   box-shadow: 0 8px 24px rgba(17, 34, 80, 0.04);
 }
 
-.rb-content-layer :is(button, a, input, select, textarea):focus-visible {
+.rb-content-layer :is(button, a, select, textarea):focus-visible {
   outline: 3px solid rgba(59, 80, 125, 0.48);
   outline-offset: 3px;
+}
+
+/* Ensure search and text inputs never show rectangular focus outlines or rings */
+input,
+input:focus,
+input:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Remove webkit search decorations (cancel button, decoration) that pop up unexpectedly */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
 }
 
 .rb-content-layer button:not(:disabled) {

@@ -7,7 +7,6 @@ import {
 } from "lucide-react";
 import { Disease } from "../../data";
 import { generateDiseasePDF } from "../../utils/pdf-generator";
-export { DrippingScallopDivider } from "./DrippingScallopDivider";
 
 export function FourPointStar({
   size = 11,

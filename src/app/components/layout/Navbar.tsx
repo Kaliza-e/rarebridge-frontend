@@ -111,10 +111,10 @@ export default function Navbar({
         type="button"
         onClick={() => handleNavigation(view)}
         aria-current={isActive ? "page" : undefined}
-        className={`group relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-heading font-medium transition-all duration-200 whitespace-nowrap cursor-pointer select-none active:scale-95 ${
+        className={`group relative flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-heading transition-all duration-200 whitespace-nowrap cursor-pointer select-none active:scale-95 ${
           isActive
-            ? "bg-[#E3F2FD] text-[#112250] font-bold shadow-xs border border-[#BCE0F5]"
-            : "text-[#3B507D] hover:text-[#112250] hover:bg-[#112250]/5"
+            ? "text-[#112250] font-bold"
+            : "text-[#3B507D] font-medium hover:text-[#112250]"
         }`}
       >
         {Icon && (
@@ -151,15 +151,15 @@ export default function Navbar({
         aria-current={isActive ? "page" : undefined}
         className={`flex min-h-11 w-full items-center gap-3 rounded-2xl px-4 py-2.5 text-left transition-all duration-150 outline-none cursor-pointer font-heading ${
           isActive
-            ? "bg-[#112250] font-bold text-white shadow-xs"
-            : "font-semibold text-[#3B507D] hover:bg-[#112250]/[0.05] hover:text-[#112250]"
+            ? "font-bold text-[#112250]"
+            : "font-semibold text-[#3B507D] hover:text-[#112250]"
         }`}
       >
         {Icon && (
           <Icon
             size={18}
             strokeWidth={isActive ? 2.2 : 1.8}
-            className={isActive ? "text-white" : "text-[#3B507D]"}
+            className={isActive ? "text-[#112250]" : "text-[#3B507D]"}
             aria-hidden="true"
           />
         )}
@@ -168,7 +168,7 @@ export default function Navbar({
 
         {isActive ? (
           <span
-            className="h-2 w-2 rounded-full bg-white"
+            className="h-2 w-2 rounded-full bg-[#112250]"
             aria-hidden="true"
           />
         ) : (

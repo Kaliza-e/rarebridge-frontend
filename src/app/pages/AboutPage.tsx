@@ -102,17 +102,30 @@ export default function AboutPage({ onNav }: AboutPageProps) {
 
   return (
     <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250] overflow-hidden">
-      {/* ================= CENTERED HERO BANNER (TOUR ARCHITECTURE) ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      {/* ================= HERO SECTION WITH BACKGROUND IMAGE ================= */}
+      <section className="relative overflow-hidden mx-4 sm:mx-6 lg:mx-8 mt-2 mb-6 rounded-[2rem] sm:rounded-[2.75rem] border border-[#112250]/15 shadow-xl bg-[#070D1E]">
+        {/* Background Photo & Dark Gradient Overlays */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1600&q=80"
+            alt="Caring family and community walking together with support"
+            className="h-full w-full object-cover object-center"
+          />
+          {/* Multi-layer gradient overlays to guarantee WCAG AAA text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#070D1E]/85 via-[#0D1B3E]/80 to-[#070D1E]/92 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070D1E]/40 to-[#070D1E]/80 pointer-events-none" />
+        </div>
+
+        {/* Content Container */}
+        <div className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20 text-center">
           {/* Centered Pill Badge */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 rounded-full border border-[#112250]/15 bg-[#FAF7F0] px-4 py-1.5 text-xs font-semibold text-[#112250] shadow-2xs mb-5"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-semibold text-white shadow-xs mb-5"
           >
-            <FourPointStar size={11} className="text-[#112250] shrink-0" />
+            <FourPointStar size={11} className="text-[#7DD3FC] shrink-0" />
             <span className="uppercase tracking-wider text-[11px] font-bold">About RareBridge</span>
           </motion.div>
 
@@ -121,7 +134,7 @@ export default function AboutPage({ onNav }: AboutPageProps) {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-[#112250] max-w-4xl mx-auto"
+            className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-white max-w-4xl mx-auto drop-shadow-sm"
           >
             A space where families, children &amp; researchers find clarity in rare disease care.
           </motion.h1>
@@ -131,25 +144,10 @@ export default function AboutPage({ onNav }: AboutPageProps) {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#3B507D] font-normal"
+            className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#D6E0F5] font-normal"
           >
             RareBridge is an educational and supportive non-profit platform that empowers families navigating rare conditions with plain-language genetic guidance, certified specialist connections, and active clinical trial discoveries. We believe no family should walk the rare journey alone.
           </motion.p>
-
-          {/* Full-Width Centered Hero Image Banner */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-10 sm:mt-12 max-w-6xl mx-auto rounded-[2rem] sm:rounded-[2.75rem] overflow-hidden border border-[#112250]/15 shadow-xl aspect-[16/9] sm:aspect-[21/9] bg-[#EBF4FA] relative"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1600&q=80"
-              alt="Caring family and community walking together with support"
-              className="h-full w-full object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#112250]/40 via-transparent to-transparent pointer-events-none" />
-          </motion.div>
         </div>
       </section>
 
@@ -382,14 +380,14 @@ export default function AboutPage({ onNav }: AboutPageProps) {
       {/* ================= MEMBER BIO MODAL ================= */}
       <AnimatePresence>
         {selectedMember && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-y-auto">
             <motion.div
               variants={overlayBackdropVariants}
               initial="hidden"
               animate="visible"
               exit="hidden"
               onClick={() => setSelectedMember(null)}
-              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+              className="fixed inset-0 bg-[#112250]/65 backdrop-blur-sm"
             />
 
             <motion.div
@@ -397,7 +395,7 @@ export default function AboutPage({ onNav }: AboutPageProps) {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-lg rounded-3xl border border-[#BCE0F5] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto text-center"
+              className="relative w-full max-w-xl sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-[2rem] sm:rounded-[2.5rem] border-2 border-[#112250]/15 bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto text-center"
             >
               <button
                 onClick={() => setSelectedMember(null)}

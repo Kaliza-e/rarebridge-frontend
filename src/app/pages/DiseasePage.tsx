@@ -161,9 +161,6 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     setOpenLifestyleAccordions((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // State for Hero Banner overview Read More toggle (Defect 2)
-  const [showHeroMore, setShowHeroMore] = useState(false);
-
   // State for Parse Completeness Report collapsible debug panel
   const [showReport, setShowReport] = useState(false);
 
@@ -416,39 +413,18 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                         ? disease.overview.replace(/^<!--rbm:\d+-->\s*/, '').replace(/[*_#`]/g, '').trim()
                         : (disease.overview?.simple || disease.overview?.medical || disease.shortDesc || "");
                       const isOverviewLong = rawOverviewStr.length > 180;
-                      const heroOverviewSnippet = isOverviewLong && !showHeroMore
-                        ? rawOverviewStr.slice(0, 170).trim() + "..."
+                      const heroOverviewSnippet = isOverviewLong
+                        ? rawOverviewStr.slice(0, 180).trim() + "..."
                         : rawOverviewStr;
 
                       return (
                         <>
                           <div className="font-sans mt-2 text-xs sm:text-sm font-medium text-[#3B507D] leading-relaxed max-w-2xl">
                             <span>{heroOverviewSnippet}</span>
-                            {isOverviewLong && (
-                              <button
-                                type="button"
-                                onClick={() => setShowHeroMore(!showHeroMore)}
-                                className="font-sans ml-2 font-bold text-[#112250] hover:text-[#3B507D] underline cursor-pointer"
-                              >
-                                {showHeroMore ? "Show less" : "Read more"}
-                              </button>
-                            )}
                           </div>
                           <div className="font-sans mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#3B507D]">
                             <span className="font-bold text-[#112250]">Specialty Focus:</span>
                             <span>{disease.category || "Rare Disease Specialization"}</span>
-                            {specialistsList.length > 0 && (
-                              <>
-                                <span className="text-[#E7E2CE]">•</span>
-                                <button
-                                  type="button"
-                                  onClick={() => navigateToTab("specialists")}
-                                  className="font-sans font-semibold text-[#112250] hover:underline cursor-pointer"
-                                >
-                                  {specialistsList.length} Specialist{specialistsList.length > 1 ? "s" : ""} Available
-                                </button>
-                              </>
-                            )}
                           </div>
                         </>
                       );

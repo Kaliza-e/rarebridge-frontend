@@ -197,7 +197,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
             <div className="w-full max-w-xl mx-auto pt-2">
               <form
                 onSubmit={handleSearchSubmit}
-                className="group relative flex items-center rounded-full bg-white/95 border-2 border-white/20 shadow-2xl p-1.5 sm:p-2 backdrop-blur-xl transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.35)] hover:border-white/40 focus-within:bg-white focus-within:shadow-[0_20px_60px_rgba(0,0,0,0.45)] focus-within:border-white focus-within:ring-2 focus-within:ring-[#BCE0F5]/50"
+                className="group relative flex items-center rounded-full bg-white border-2 border-white/40 shadow-xl p-1.5 sm:p-2 backdrop-blur-xl transition-all duration-300 hover:border-white/60 focus-within:border-white focus-within:shadow-2xl"
               >
                 <div className="flex items-center pl-3.5 sm:pl-4 pr-2 pointer-events-none text-[#112250]/50 transition-colors group-focus-within:text-[#112250]">
                   <Search className="h-4 w-4" />
@@ -208,7 +208,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search 7,000+ conditions, genes, symptoms, or specialists..."
                   aria-label="Search conditions"
-                  className="w-full bg-transparent py-2 sm:py-2.5 pr-4 text-xs sm:text-sm md:text-base text-[#112250] placeholder:text-[#112250]/45 focus:outline-none font-medium"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck="false"
+                  className="w-full bg-transparent py-2 sm:py-2.5 pr-4 text-xs sm:text-sm md:text-base text-[#112250] placeholder:text-[#112250]/45 font-medium border-0 outline-none focus:outline-none focus:ring-0 focus-visible:outline-none shadow-none focus:shadow-none"
                 />
                 <button
                   type="submit"

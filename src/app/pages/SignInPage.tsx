@@ -219,13 +219,13 @@ export default function SignInPage({ onNav }: SignInPageProps) {
       {/* Forgot Password Modal */}
       <AnimatePresence>
         {showForgotModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-y-auto">
             <div
               onClick={() => {
                 setShowForgotModal(false);
                 setForgotSuccess(false);
               }}
-              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+              className="fixed inset-0 bg-[#112250]/65 backdrop-blur-sm"
             />
 
             <div className="relative w-full max-w-md rounded-xl border-2 border-[#E7E2CE] bg-white p-6 sm:p-8 shadow-2xl z-10 my-auto">

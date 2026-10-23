@@ -156,16 +156,30 @@ export default function CommunityPage() {
   return (
     <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#BCE0F5] selection:text-[#112250]">
       {/* ================= CENTERED HERO BANNER (TOUR ARCHITECTURE) ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+      {/* ================= HERO SECTION WITH BACKGROUND IMAGE ================= */}
+      <section className="relative overflow-hidden mx-4 sm:mx-6 lg:mx-8 mt-2 mb-6 rounded-[2rem] sm:rounded-[2.75rem] border border-[#112250]/15 shadow-xl bg-[#070D1E]">
+        {/* Background Photo & Dark Gradient Overlays */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?auto=format&fit=crop&w=1600&q=80"
+            alt="Caregivers and parents sharing supportive connection and encouragement"
+            className="h-full w-full object-cover object-center"
+          />
+          {/* Multi-layer gradient overlays to guarantee WCAG AAA text legibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#070D1E]/85 via-[#0D1B3E]/80 to-[#070D1E]/92 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070D1E]/40 to-[#070D1E]/80 pointer-events-none" />
+        </div>
+
+        {/* Content Container */}
+        <div className="relative z-10 mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20 text-center">
           {/* Centered Pill Badge */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 rounded-full border border-[#112250]/15 bg-[#FAF7F0] px-4 py-1.5 text-xs font-semibold text-[#112250] shadow-2xs mb-5"
+            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-semibold text-white shadow-xs mb-5"
           >
-            <FourPointStar size={11} className="text-[#112250] shrink-0" />
+            <FourPointStar size={11} className="text-[#7DD3FC] shrink-0" />
             <span className="uppercase tracking-wider text-[11px] font-bold">Caregiver &amp; Peer Community</span>
           </motion.div>
 
@@ -174,7 +188,7 @@ export default function CommunityPage() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-[#112250] max-w-4xl mx-auto"
+            className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-white max-w-4xl mx-auto drop-shadow-sm"
           >
             You Are Never Alone On Your Rare Journey.
           </motion.h1>
@@ -184,7 +198,7 @@ export default function CommunityPage() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#3B507D] font-normal"
+            className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#D6E0F5] font-normal"
           >
             RareBridge connects parents, caregivers, and pediatric advocates to share wisdom, emotional support, and practical caregiving advice in a safe, compassionate environment.
           </motion.p>
@@ -194,30 +208,15 @@ export default function CommunityPage() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.25 }}
-            className="mt-6 flex flex-wrap justify-center gap-3"
+            className="mt-8 flex flex-wrap justify-center gap-3"
           >
             <button
               onClick={() => setSelectedFeature(COMMUNITY_FEATURES[0])}
-              className="inline-flex items-center gap-2 rounded-full bg-[#112250] px-7 py-3 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-[#1e3a7a] transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-xs sm:text-sm font-bold text-[#112250] shadow-xl hover:bg-[#EDF6FC] transition-all cursor-pointer"
             >
-              <Users className="h-4 w-4 text-[#BCE0F5]" />
+              <Users className="h-4 w-4 text-[#112250]" />
               <span>Join Parent Support Circle</span>
             </button>
-          </motion.div>
-
-          {/* Full-Width Centered Hero Image Banner */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-10 sm:mt-12 max-w-6xl mx-auto rounded-[2rem] sm:rounded-[2.75rem] overflow-hidden border border-[#112250]/15 shadow-xl aspect-[16/9] sm:aspect-[21/9] bg-[#EBF4FA] relative"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?auto=format&fit=crop&w=1600&q=80"
-              alt="Caregivers and parents sharing supportive connection and encouragement"
-              className="h-full w-full object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#112250]/40 via-transparent to-transparent pointer-events-none" />
           </motion.div>
         </div>
       </section>
@@ -391,7 +390,7 @@ export default function CommunityPage() {
       {/* ================= MODAL FOR JOINING CIRCLE ================= */}
       <AnimatePresence>
         {selectedFeature && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-y-auto">
             <motion.div
               variants={overlayBackdropVariants}
               initial="hidden"
@@ -401,7 +400,7 @@ export default function CommunityPage() {
                 setSelectedFeature(null);
                 setJoinedSuccess(false);
               }}
-              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+              className="fixed inset-0 bg-[#112250]/65 backdrop-blur-sm"
             />
 
             <motion.div
@@ -471,14 +470,14 @@ export default function CommunityPage() {
       {/* ================= MODAL FOR CREATING TOPIC ================= */}
       <AnimatePresence>
         {isCreatingTopic && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-y-auto">
             <motion.div
               variants={overlayBackdropVariants}
               initial="hidden"
               animate="visible"
               exit="hidden"
               onClick={() => setIsCreatingTopic(false)}
-              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+              className="fixed inset-0 bg-[#112250]/65 backdrop-blur-sm"
             />
 
             <motion.div
@@ -566,14 +565,14 @@ export default function CommunityPage() {
       {/* ================= MODAL FOR VIEWING DISCUSSION THREAD ================= */}
       <AnimatePresence>
         {selectedDiscussion && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-y-auto">
             <motion.div
               variants={overlayBackdropVariants}
               initial="hidden"
               animate="visible"
               exit="hidden"
               onClick={() => setSelectedDiscussion(null)}
-              className="fixed inset-0 bg-[#112250]/60 backdrop-blur-xs"
+              className="fixed inset-0 bg-[#112250]/65 backdrop-blur-sm"
             />
 
             <motion.div
