@@ -37,7 +37,6 @@ import {
   FileCheck,
   Droplets,
   Zap,
-  Sparkles,
   Users,
 } from "lucide-react";
 

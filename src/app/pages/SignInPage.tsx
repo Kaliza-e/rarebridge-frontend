@@ -4,7 +4,6 @@ import {
   Mail,
   Lock,
   ArrowRight,
-  Sparkles,
   HeartPulse,
   User,
   ShieldCheck,

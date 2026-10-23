@@ -120,7 +120,7 @@ nav,
   background-position: center top;
   background-repeat: repeat;
   background-size: 560px 560px;
-  opacity: 0.055;
+  opacity: 0.09;
 }
 
 .rb-navbar-zebra {
@@ -128,7 +128,7 @@ nav,
   background-position: center center;
   background-repeat: repeat;
   background-size: 240px 240px;
-  opacity: 0.05;
+  opacity: 0.06;
 }
 
 .rb-zebra-background {
@@ -144,7 +144,7 @@ nav,
   background-size:
     560px 560px,
     cover;
-  opacity: 0.06;
+  opacity: 0.10;
 }
 
 .rb-footer {

@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560" fill="none">
   <!-- Characteristic organic zebra stripe pattern for RareBridge -->
-  <!-- Horizontal zebra waves in brand Soft Sky (#BCE0F5) -->
-  <g stroke="#BCE0F5" stroke-linecap="round" stroke-width="7" opacity="0.85">
+  <!-- Horizontal zebra waves in brand Soft Sky (#A2D3F5) -->
+  <g stroke="#A2D3F5" stroke-linecap="round" stroke-width="7.5" opacity="0.95">
     <path d="M-34 36C10 6 33 7 58 29s19 44 50 44 38-26 65-27 44 16 66 10 31-30 60-32 45 29 75 28 41-29 66-31 38 12 52 26"/>
     <path d="M-34 66c40-24 66-26 91-4s21 43 50 43 39-25 66-26 44 16 67 9 32-29 59-30 45 29 75 28 40-28 65-30 39 13 54 26"/>
     <path d="M-34 97c39-21 67-25 91-3s21 42 50 42 39-24 66-25 44 16 67 9 32-28 59-29 45 28 75 27 40-27 65-29 39 13 54 26"/>
@@ -17,8 +17,8 @@
     <path d="M-34 460c39-3 67-4 91 10s21 27 50 27 39-14 66-15 44 10 67 4 32-18 59-19 45 18 75 17 40-17 65-19 39 13 54 26"/>
     <path d="M-34 503c39-1 67-2 91 11s21 25 50 25 39-13 66-14 44 10 67 3 32-17 59-18 45 17 75 16 40-16 65-18 39 13 54 26"/>
   </g>
-  <!-- Vertical zebra waves in delicate ice sky-blue (#CDE6F7) -->
-  <g stroke="#CDE6F7" stroke-linecap="round" stroke-width="4.5" opacity="0.75">
+  <!-- Vertical zebra waves in delicate ice sky-blue (#B6E0F8) -->
+  <g stroke="#B6E0F8" stroke-linecap="round" stroke-width="5" opacity="0.88">
     <path d="M35-28c-11 42-7 72 11 94s37 25 39 53-24 39-23 68 18 40 16 66-21 39-20 66 24 42 22 68-20 39-18 66 18 43 14 74"/>
     <path d="M84-28c-10 42-6 72 12 94s37 25 39 53-24 39-23 68 18 40 16 66-21 39-20 66 24 42 22 68-20 39-18 66 18 43 14 74"/>
     <path d="M134-28c-9 42-5 72 13 94s37 25 39 53-24 39-23 68 18 40 16 66-21 39-20 66 24 42 22 68-20 39-18 66 18 43 14 74"/>

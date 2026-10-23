@@ -10,7 +10,6 @@ import {
   BookOpen,
   Dna,
   HeartHandshake,
-  Sparkles,
   Filter,
   BrainCircuit,
   CheckCircle2,
@@ -21,8 +20,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import { EdelweissFlower, ZebraMascot } from "../components/common/Visuals";
-import SectionDivider from "../components/common/SectionDivider";
+import { EdelweissFlower, ZebraMascot, FourPointStar } from "../components/common/Visuals";
 import { fadeUpVariants, staggerContainerVariants, modalPanelVariants, overlayBackdropVariants } from "../utils/animations";
 
 const RESEARCH_TABS = [
@@ -78,83 +76,72 @@ export default function ResearchPage() {
 
   return (
     <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250] overflow-hidden">
-      {/* ================= HERO BANNER ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-10 pb-14 lg:pt-14 lg:pb-16">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="lg:col-span-7"
+      {/* ================= CENTERED HERO BANNER (TOUR ARCHITECTURE) ================= */}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          {/* Centered Pill Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 rounded-full border border-[#112250]/15 bg-[#FAF7F0] px-4 py-1.5 text-xs font-semibold text-[#112250] shadow-2xs mb-5"
+          >
+            <FourPointStar size={11} className="text-[#112250] shrink-0" />
+            <span className="uppercase tracking-wider text-[11px] font-bold">Clinical Research &amp; Trials</span>
+          </motion.div>
+
+          {/* Centered Large Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-[#112250] max-w-4xl mx-auto"
+          >
+            Advancing Discoveries, Gene Therapies &amp; Active Trials.
+          </motion.h1>
+
+          {/* Centered Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#3B507D] font-normal"
+          >
+            Track active gene replacement therapies, enzyme replacement pipelines, and clinical trial milestones in clear, encouraging, family-friendly terms.
+          </motion.p>
+
+          {/* Centered Action Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="mt-6 flex flex-wrap justify-center gap-3"
+          >
+            <a
+              href="#programs"
+              className="inline-flex items-center gap-2 rounded-full bg-[#112250] px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-[#1e3a7a] transition-all cursor-pointer"
             >
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
-                <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
-                <span>Pioneering Medical Science</span>
-              </div>
+              <Microscope className="h-4 w-4 text-[#BCE0F5]" />
+              <span>Browse 850+ Active Trials</span>
+            </a>
+          </motion.div>
 
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight text-[#112250]">
-                Rare Disease Research & Trial Updates
-              </h1>
-
-              <p className="font-sans mt-3 max-w-xl text-base sm:text-lg leading-relaxed text-[#3B507D] font-medium">
-                Track active gene replacement therapies, enzyme replacement pipelines, and clinical trial milestones in clear, encouraging, family-friendly terms.
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-4">
-                <a
-                  href="#programs"
-                  className="inline-flex items-center gap-2.5 rounded-full bg-[#112250] px-7 py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#1e3a7a] transition-all cursor-pointer"
-                >
-                  <Microscope className="h-5 w-5 text-white" />
-                  <span>Browse Active Trials</span>
-                </a>
-              </div>
-            </motion.div>
-
-            {/* Right Card with Genuine Laboratory Research Photograph */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-5 relative"
-            >
-              <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-[2.25rem] overflow-hidden border border-[#112250]/15 shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1200&q=80"
-                  alt="Medical research scientist conducting molecular genetic trial experiments"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#070D1E]/90 via-[#070D1E]/30 to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5 text-white">
-                  <span className="rounded-full bg-[#112250] border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#BCE0F5]">
-                    Active Clinical Pipelines
-                  </span>
-                  <p className="mt-2 font-heading text-lg font-bold leading-snug">
-                    850+ trials tracked across enzyme &amp; gene therapies.
-                  </p>
-                </div>
-              </div>
-
-              {/* Floating Badge Widget */}
-              <div className="absolute -bottom-4 -right-3 hidden sm:flex items-center gap-3 rounded-2xl border border-[#112250]/15 bg-white/95 backdrop-blur-md p-3.5 shadow-xl text-[#112250]">
-                <div className="w-9 h-9 rounded-xl bg-[#EDF6FC] text-[#112250] flex items-center justify-center font-bold">
-                  ✓
-                </div>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider">Clinical Trials Tracked</p>
-                  <p className="text-[11px] text-[#3B507D]">Gene Editing &amp; CRISPR</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          {/* Full-Width Centered Hero Image Banner */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-10 sm:mt-12 max-w-6xl mx-auto rounded-[2rem] sm:rounded-[2.75rem] overflow-hidden border border-[#112250]/15 shadow-xl aspect-[16/9] sm:aspect-[21/9] bg-[#EBF4FA] relative"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1600&q=80"
+              alt="Medical research scientist conducting molecular genetic trial experiments"
+              className="h-full w-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#112250]/40 via-transparent to-transparent pointer-events-none" />
+          </motion.div>
         </div>
       </section>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-2">
-        <SectionDivider variant="scallop" color="blue" className="opacity-80" />
-      </div>
 
       {/* ================= RESEARCH PROGRAMS LISTING ================= */}
       <section id="programs" className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">

@@ -12,12 +12,11 @@ import {
   ZebraEmptyState,
   DiseaseCard,
   EdelweissFlower,
+  FourPointStar,
 } from "../components/common/Visuals";
 
-import { SectionDivider } from "../components/common/SectionDivider";
 import {
   Search,
-  Sparkles,
   BookOpen,
   Filter,
   X,
@@ -151,93 +150,66 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
 
   return (
     <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250] overflow-hidden">
-      {/* ================= HERO BANNER ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-10 pb-14 lg:pt-14 lg:pb-16">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-            {/* Left Content */}
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
-                <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
-                <span>Comprehensive Knowledge Base</span>
-              </div>
+      {/* ================= CENTERED HERO BANNER (TOUR ARCHITECTURE) ================= */}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          {/* Centered Pill Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#112250]/15 bg-[#FAF7F0] px-4 py-1.5 text-xs font-semibold text-[#112250] shadow-2xs mb-5">
+            <FourPointStar size={11} className="text-[#112250] shrink-0" />
+            <span className="uppercase tracking-wider text-[11px] font-bold">Rare Disease Directory</span>
+          </div>
 
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight text-[#112250]">
-                Rare Disease Library & Medical Guides
-              </h1>
+          {/* Centered Large Headline */}
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-[#112250] max-w-4xl mx-auto">
+            Explore 7,000+ Rare Conditions &amp; Plain-Language Guides.
+          </h1>
 
-              <p className="font-sans mt-3 text-base sm:text-lg leading-relaxed text-[#3B507D] font-medium max-w-2xl">
-                Explore 7,000+ conditions simplified into plain language with symptoms, genetic causes, approved treatments, and active trial updates.
-              </p>
+          {/* Centered Subtitle */}
+          <p className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#3B507D] font-normal">
+            Search medically-vetted guides, symptom breakdowns, and specialist resources designed for families, patients, and healthcare providers.
+          </p>
 
-              {/* Search Box */}
-              <div className="mt-8 max-w-2xl">
-                <div className="relative flex items-center rounded-full border border-[#BCE0F5] bg-white p-2 shadow-sm focus-within:border-[#112250] transition-all">
-                  <Search className="ml-3 h-5 w-5 text-[#3B507D] shrink-0" />
-                  <input
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search by condition name, symptom, or ORPHA code..."
-                    aria-label="Search conditions by name, symptom, or ORPHA code"
-                    className="w-full bg-transparent px-3 py-2 text-sm text-[#112250] outline-none placeholder:text-[#3B507D]/60 font-medium sm:text-base"
-                  />
-                  {query && (
-                    <button
-                      onClick={() => setQuery("")}
-                      className="mr-2 rounded-full bg-[#EDF6FC] p-2 text-xs font-bold text-[#112250] hover:bg-[#DDF0FA] transition-colors cursor-pointer"
-                      aria-label="Clear search query"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-                  <button
-                    onClick={() => { }}
-                    className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#112250] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#1e3a7a] transition-colors shrink-0 shadow-xs cursor-pointer"
-                  >
-                    <span>Search</span>
-                  </button>
-                </div>
-              </div>
+          {/* Centered Search Bar */}
+          <div className="mt-8 max-w-2xl mx-auto">
+            <div className="relative flex items-center rounded-full border-2 border-[#112250]/20 bg-white p-2 shadow-sm focus-within:border-[#112250] focus-within:shadow-md transition-all">
+              <Search className="ml-3 h-5 w-5 text-[#3B507D] shrink-0" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search by condition name, symptom, or ORPHA code..."
+                aria-label="Search conditions by name, symptom, or ORPHA code"
+                className="w-full bg-transparent px-3 py-2 text-sm text-[#112250] outline-none placeholder:text-[#3B507D]/60 font-medium sm:text-base"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  className="mr-2 rounded-full bg-[#EDF6FC] p-2 text-xs font-bold text-[#112250] hover:bg-[#DDF0FA] transition-colors cursor-pointer"
+                  aria-label="Clear search query"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+              <button
+                onClick={() => { }}
+                className="hidden sm:inline-flex items-center gap-2 rounded-full bg-[#112250] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#1e3a7a] transition-colors shrink-0 shadow-xs cursor-pointer"
+              >
+                <span>Search</span>
+              </button>
             </div>
+          </div>
 
-            {/* Right Card with Genuine Medical Photograph */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-[2.25rem] overflow-hidden border border-[#112250]/15 shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=80"
-                  alt="Clinical specialist reviewing medical guides and diagnostic literature"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#070D1E]/90 via-[#070D1E]/30 to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5 text-white">
-                  <span className="rounded-full bg-[#112250] border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#BCE0F5]">
-                    Source-Based Library
-                  </span>
-                  <p className="mt-2 font-heading text-lg font-bold leading-snug">
-                    7,000+ conditions curated with certified genetic precision.
-                  </p>
-                </div>
-              </div>
-
-              {/* Floating Badge Widget */}
-              <div className="absolute -bottom-4 -right-3 hidden sm:flex items-center gap-3 rounded-2xl border border-[#112250]/15 bg-white/95 backdrop-blur-md p-3.5 shadow-xl text-[#112250]">
-                <div className="w-9 h-9 rounded-xl bg-[#EDF6FC] text-[#112250] flex items-center justify-center font-bold">
-                  ✓
-                </div>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider">ORPHA &amp; OMIM Sourced</p>
-                  <p className="text-[11px] text-[#3B507D]">Plain-Language Medical Summaries</p>
-                </div>
-              </div>
-            </div>
+          {/* Full-Width Centered Hero Image Banner */}
+          <div className="mt-10 sm:mt-12 max-w-6xl mx-auto rounded-[2rem] sm:rounded-[2.75rem] overflow-hidden border border-[#112250]/15 shadow-xl aspect-[16/9] sm:aspect-[21/9] bg-[#EBF4FA] relative">
+            <img
+              src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1600&q=80"
+              alt="Clinical specialist reviewing medical guides and diagnostic literature"
+              className="h-full w-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#112250]/40 via-transparent to-transparent pointer-events-none" />
           </div>
         </div>
       </section>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-2">
-        <SectionDivider variant="scallop" color="blue" className="opacity-80" />
-      </div>
 
       {/* ================= FILTERS & LISTING SECTION ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">

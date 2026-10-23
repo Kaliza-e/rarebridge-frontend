@@ -10,6 +10,7 @@ import {
 import {
   DiseaseCard,
   EdelweissFlower,
+  FourPointStar,
 } from "../components/common/Visuals";
 
 import {
@@ -17,7 +18,6 @@ import {
   Stethoscope,
   Microscope,
   HeartHandshake,
-  Sparkles,
   ArrowRight,
   ChevronLeft,
   ChevronRight,
@@ -682,7 +682,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
               {/* Bottom Reassurance Banner */}
               <div className="rounded-2xl border border-[#BCE0F5] bg-[#EDF6FC] px-6 py-4 flex items-center gap-3 shadow-xs">
-                <Sparkles className="h-5 w-5 text-[#112250] shrink-0" />
+                <FourPointStar size={18} className="text-[#112250] shrink-0" />
                 <p className="text-sm font-semibold text-[#112250]">
                   Our commitment is clear: plain language, zero barriers, and supportive community for every caregiver.
                 </p>

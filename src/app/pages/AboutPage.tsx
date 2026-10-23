@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { EdelweissFlower, ZebraMascot } from "../components/common/Visuals";
-import SectionDivider from "../components/common/SectionDivider";
+import { EdelweissFlower, ZebraMascot, FourPointStar } from "../components/common/Visuals";
 import {
   Heart,
   ShieldCheck,
   Users,
   Microscope,
-  Sparkles,
   ArrowRight,
   CheckCircle2,
   X,
   Target,
   Globe,
   Award,
+  Eye,
 } from "lucide-react";
 import { fadeUpVariants, staggerContainerVariants, modalPanelVariants, overlayBackdropVariants } from "../utils/animations";
 
@@ -103,95 +102,156 @@ export default function AboutPage({ onNav }: AboutPageProps) {
 
   return (
     <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250] overflow-hidden">
-      {/* ================= HERO BANNER ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-10 pb-14 lg:pt-14 lg:pb-16">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="lg:col-span-7"
-            >
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
-                <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
-                <span>Our Purpose & Mission</span>
+      {/* ================= CENTERED HERO BANNER (TOUR ARCHITECTURE) ================= */}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          {/* Centered Pill Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 rounded-full border border-[#112250]/15 bg-[#FAF7F0] px-4 py-1.5 text-xs font-semibold text-[#112250] shadow-2xs mb-5"
+          >
+            <FourPointStar size={11} className="text-[#112250] shrink-0" />
+            <span className="uppercase tracking-wider text-[11px] font-bold">About RareBridge</span>
+          </motion.div>
+
+          {/* Centered Large Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-[#112250] max-w-4xl mx-auto"
+          >
+            A space where families, children &amp; researchers find clarity in rare disease care.
+          </motion.h1>
+
+          {/* Centered Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#3B507D] font-normal"
+          >
+            RareBridge is an educational and supportive non-profit platform that empowers families navigating rare conditions with plain-language genetic guidance, certified specialist connections, and active clinical trial discoveries. We believe no family should walk the rare journey alone.
+          </motion.p>
+
+          {/* Full-Width Centered Hero Image Banner */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-10 sm:mt-12 max-w-6xl mx-auto rounded-[2rem] sm:rounded-[2.75rem] overflow-hidden border border-[#112250]/15 shadow-xl aspect-[16/9] sm:aspect-[21/9] bg-[#EBF4FA] relative"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1600&q=80"
+              alt="Caring family and community walking together with support"
+              className="h-full w-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#112250]/40 via-transparent to-transparent pointer-events-none" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ================= OUR MISSION & OUR VISION (TWO BALANCED CARDS) ================= */}
+      <section className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-2 sm:mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          {/* Mission Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="rounded-[2rem] border-2 border-[#112250]/15 bg-white p-7 sm:p-10 shadow-xs hover:border-[#112250]/30 hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div className="h-12 w-12 rounded-2xl bg-[#112250] text-white flex items-center justify-center mb-6 shadow-xs">
+                <Eye className="h-6 w-6" />
               </div>
-
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight text-[#112250]">
-                Connecting Knowledge, Families & Care
-              </h1>
-
-              <p className="font-sans mt-3 max-w-xl text-base sm:text-lg leading-relaxed text-[#3B507D] font-medium">
-                RareBridge was created to replace intimidating medical jargon with plain-language guidance, direct specialist connections, and a warm community for parents and children.
+              <h2 className="font-heading text-2xl sm:text-3xl font-black text-[#112250] tracking-tight">
+                Our Mission
+              </h2>
+              <p className="mt-3 text-sm sm:text-base leading-relaxed text-[#3B507D] font-normal">
+                We endeavor to empower families, patients, and children navigating rare conditions by providing an accessible, jargon-free platform where they can understand genetics, explore clinical research, connect with specialists, and find hope freely.
               </p>
+            </div>
+          </motion.div>
 
-              <div className="mt-8 flex flex-wrap gap-4">
+          {/* Vision Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="rounded-[2rem] border-2 border-[#112250]/15 bg-white p-7 sm:p-10 shadow-xs hover:border-[#112250]/30 hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div className="h-12 w-12 rounded-2xl bg-[#112250] text-white flex items-center justify-center mb-6 shadow-xs">
+                <Eye className="h-6 w-6" />
+              </div>
+              <h2 className="font-heading text-2xl sm:text-3xl font-black text-[#112250] tracking-tight">
+                Our Vision
+              </h2>
+              <p className="mt-3 text-sm sm:text-base leading-relaxed text-[#3B507D] font-normal">
+                We strive to create opportunities for families and caregivers to make sense of complex medicine, find peer advocacy circles, and ensure no rare diagnosis goes unrepresented, unanswered, or forgotten.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ================= SIGNATURE DARK NAVY CARD: WHY RAREBRIDGE EXISTS ================= */}
+      <section className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
+        <div className="rounded-[2.25rem] sm:rounded-[2.75rem] bg-[#112250] text-white p-8 sm:p-12 lg:p-14 shadow-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 items-center">
+            <div className="lg:col-span-7 space-y-4 sm:space-y-5">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-white/90 backdrop-blur-md">
+                <Heart className="h-3.5 w-3.5 text-[#BCE0F5]" />
+                <span>Open Access For All Families</span>
+              </div>
+              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+                Why RareBridge Exists
+              </h2>
+              <p className="text-sm sm:text-base leading-relaxed text-[#D6E0F5] font-light">
+                Research and clinical guidance should not be reserved for elite institutions or buried behind impenetrable medical jargon. RareBridge exists to create an accessible space where families and young patients can ask questions, find verified specialists, track breakthrough therapies, and feel supported from day one.
+              </p>
+              <p className="text-sm sm:text-base leading-relaxed text-[#D6E0F5]/85 font-light">
+                With over 7,000 documented rare conditions affecting 300 million people worldwide—75% of whom are children—we bridge the gap between complex genetic science and daily caregiver reality.
+              </p>
+              <div className="pt-2 flex flex-wrap gap-3">
                 <button
                   onClick={() => onNav?.("directory")}
-                  className="inline-flex items-center gap-2.5 rounded-full bg-[#112250] px-7 py-3.5 text-sm font-bold text-white shadow-md hover:bg-[#1e3a7a] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-full bg-white text-[#112250] px-6 py-3 text-xs sm:text-sm font-bold shadow-md hover:bg-[#EDF6FC] transition cursor-pointer"
                 >
-                  <span>Browse Conditions</span>
+                  <span>Browse Directory</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => onNav?.("community")}
-                  className="inline-flex items-center gap-2.5 rounded-full border-2 border-[#112250] bg-white px-7 py-3.5 text-sm font-bold text-[#112250] hover:bg-[#EDF6FC] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 text-white px-6 py-3 text-xs sm:text-sm font-bold hover:bg-white hover:text-[#112250] transition cursor-pointer"
                 >
-                  <span>Join Support Community</span>
+                  <span>Join Caregiver Circle</span>
                 </button>
               </div>
-            </motion.div>
-
-            {/* Right Card with Genuine Medical Photograph */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-5 relative"
-            >
-              <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-[2.25rem] overflow-hidden border border-[#112250]/15 shadow-xl">
+            </div>
+            <div className="lg:col-span-5">
+              <div className="rounded-2xl sm:rounded-3xl overflow-hidden border border-white/15 shadow-xl aspect-[4/3] bg-white/5">
                 <img
                   src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1200&q=80"
-                  alt="Compassionate healthcare specialist with stethoscope"
+                  alt="Compassionate genetic specialists collaborating on patient care"
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#070D1E]/90 via-[#070D1E]/30 to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5 text-white">
-                  <span className="rounded-full bg-[#112250] border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#BCE0F5]">
-                    100% Free &amp; Open Access
-                  </span>
-                  <p className="mt-2 font-heading text-lg font-bold leading-snug">
-                    Built for families first, driven by certified genetic medicine.
-                  </p>
-                </div>
               </div>
-
-              {/* Floating Badge Widget */}
-              <div className="absolute -bottom-4 -right-3 hidden sm:flex items-center gap-3 rounded-2xl border border-[#112250]/15 bg-white/95 backdrop-blur-md p-3.5 shadow-xl text-[#112250]">
-                <div className="w-9 h-9 rounded-xl bg-[#EDF6FC] text-[#112250] flex items-center justify-center font-bold">
-                  ✓
-                </div>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider">Family-First Mission</p>
-                  <p className="text-[11px] text-[#3B507D]">Zero Jargon Barriers</p>
-                </div>
-              </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-2">
-        <SectionDivider variant="scallop" color="blue" className="opacity-80" />
-      </div>
 
       {/* ================= OUR CORE VALUES ================= */}
       <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center max-w-xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1 text-xs font-bold text-[#112250] mb-3">
-            <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+            <FourPointStar size={11} className="text-[#243B6B] shrink-0" />
             <span>Guiding Principles</span>
           </div>
           <h2 className="mt-1 font-heading text-3xl font-black text-[#112250] sm:text-4xl">
@@ -238,7 +298,7 @@ export default function AboutPage({ onNav }: AboutPageProps) {
         <div className="rounded-3xl bg-white p-8 sm:p-12 border border-[#BCE0F5] shadow-xs">
           <div className="mb-10 text-center max-w-xl mx-auto">
             <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1 text-xs font-bold text-[#112250] mb-3">
-              <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+              <FourPointStar size={11} className="text-[#243B6B] shrink-0" />
               <span>Leadership & Care</span>
             </div>
             <h2 className="mt-1 font-heading text-3xl font-black text-[#112250]">
@@ -293,7 +353,7 @@ export default function AboutPage({ onNav }: AboutPageProps) {
       <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
         <div className="mb-10 text-center max-w-xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1 text-xs font-bold text-[#112250] mb-3">
-            <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
+            <FourPointStar size={11} className="text-[#243B6B] shrink-0" />
             <span>Impact & Journey</span>
           </div>
           <h2 className="mt-1 font-heading text-3xl font-black text-[#112250]">

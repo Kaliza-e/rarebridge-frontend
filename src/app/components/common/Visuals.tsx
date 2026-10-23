@@ -2,12 +2,33 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Bot, Star,
   AlertCircle, Stethoscope, ClipboardList, Syringe, Users as UsersIcon, Microscope as MicroscopeIcon,
-  Thermometer, HeartPulse, Pill, Users, FlaskConical, UserCircle, BookOpen, Sparkles, Zap, Trophy, Target,
+  Thermometer, HeartPulse, Pill, Users, FlaskConical, UserCircle, BookOpen, Zap, Trophy, Target,
   Flame, Award, CheckCircle, XCircle, Lock, Download, Heart, Brain, Dna, Activity, ArrowRight
 } from "lucide-react";
 import { Disease } from "../../data";
 import { generateDiseasePDF } from "../../utils/pdf-generator";
 export { DrippingScallopDivider } from "./DrippingScallopDivider";
+
+export function FourPointStar({
+  size = 11,
+  className = "text-[#112250] shrink-0",
+}: {
+  size?: number;
+  className?: string;
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" />
+    </svg>
+  );
+}
 
 
 

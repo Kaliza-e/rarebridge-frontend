@@ -5,7 +5,6 @@ import {
   Building2,
   Search,
   X,
-  Sparkles,
   ExternalLink,
   ChevronRight,
   ChevronLeft,
@@ -18,8 +17,7 @@ import type { ContentNode, Disease as ApiDisease } from "../services/api.service
 import { fetchDiseasesFromAPI, DISEASES } from "../data";
 import { renderTextWithLinks, RichTextRunsRenderer } from "../utils/link-helper";
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
-import { EdelweissFlower } from "../components/common/Visuals";
-import { DrippingScallopDivider } from "../components/common/DrippingScallopDivider";
+import { EdelweissFlower, FourPointStar } from "../components/common/Visuals";
 import {
   fadeUpVariants,
   staggerContainerVariants,
@@ -204,90 +202,68 @@ export default function SpecialistsPage() {
 
   return (
     <div className="relative z-10 min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250]">
-      {/* ================= HERO SECTION ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-10 pb-14 lg:pt-14 lg:pb-16">
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#EDF6FC] border border-[#BCE0F5] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#112250] mb-4 shadow-xs">
-                <Sparkles className="h-3.5 w-3.5 text-[#243B6B]" />
-                <span>Specialist Directory</span>
-              </div>
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black leading-[1.15] tracking-tight text-[#112250]">
-                Specialists by condition
-              </h1>
-              <p className="mt-3 max-w-xl text-base sm:text-lg font-medium leading-relaxed text-[#3B507D]">
-                Browse specialist records and disease associations from the source data. Optional profile details appear only when provided.
-              </p>
+      {/* ================= CENTERED HERO BANNER (TOUR ARCHITECTURE) ================= */}
+      <section className="relative overflow-hidden bg-transparent pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-14">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          {/* Centered Pill Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#112250]/15 bg-[#FAF7F0] px-4 py-1.5 text-xs font-semibold text-[#112250] shadow-2xs mb-5">
+            <FourPointStar size={11} className="text-[#112250] shrink-0" />
+            <span className="uppercase tracking-wider text-[11px] font-bold">Specialist Directory</span>
+          </div>
 
-              <div className="mt-7 max-w-2xl">
-                <label htmlFor="specialist-search" className="sr-only">Search specialists</label>
-                <div className="flex items-center rounded-full border border-[#BCE0F5] bg-white p-2 shadow-sm transition-colors focus-within:border-[#112250]">
-                  <Search className="ml-3 h-5 w-5 shrink-0 text-[#3B507D]" aria-hidden="true" />
-                  <input
-                    id="specialist-search"
-                    type="search"
-                    value={searchQuery}
-                    onChange={(event) => {
-                      setSearchQuery(event.target.value);
-                      setCurrentPage(1);
-                    }}
-                    placeholder="Search by name, expertise, organization, location, or condition"
-                    className="min-w-0 w-full bg-transparent px-3 py-2 text-sm font-medium text-[#112250] outline-none placeholder:text-[#3B507D]/70 sm:text-base"
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery("");
-                        setCurrentPage(1);
-                      }}
-                      aria-label="Clear specialist search"
-                      className="mr-1 rounded-full p-2 text-[#112250] hover:bg-[#EDF6FC] cursor-pointer"
-                    >
-                      <X className="h-4 w-4" aria-hidden="true" />
-                    </button>
-                  )}
-                </div>
-              </div>
+          {/* Centered Large Headline */}
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-[#112250] max-w-4xl mx-auto">
+            Connect with Certified Geneticists &amp; Rare Care Centers.
+          </h1>
+
+          {/* Centered Subtitle */}
+          <p className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#3B507D] font-normal">
+            Find board-certified genetic counselors, pediatric rare disease clinics, and academic medical centers dedicated to rare conditions.
+          </p>
+
+          {/* Centered Search Bar */}
+          <div className="mt-8 max-w-2xl mx-auto">
+            <label htmlFor="specialist-search" className="sr-only">Search specialists</label>
+            <div className="flex items-center rounded-full border-2 border-[#112250]/20 bg-white p-2 shadow-sm transition-all focus-within:border-[#112250] focus-within:shadow-md">
+              <Search className="ml-3 h-5 w-5 shrink-0 text-[#3B507D]" aria-hidden="true" />
+              <input
+                id="specialist-search"
+                type="search"
+                value={searchQuery}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by name, expertise, organization, location, or condition..."
+                className="min-w-0 w-full bg-transparent px-3 py-2 text-sm font-medium text-[#112250] outline-none placeholder:text-[#3B507D]/70 sm:text-base"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                  aria-label="Clear specialist search"
+                  className="mr-1 rounded-full p-2 text-[#112250] hover:bg-[#EDF6FC] cursor-pointer"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              )}
             </div>
+          </div>
 
-            <div className="lg:col-span-5 relative">
-              <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-[2.25rem] overflow-hidden border border-[#112250]/15 shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1200&q=80"
-                  alt="Clinical specialist physician consulting in pediatric medical center"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#070D1E]/90 via-[#070D1E]/30 to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5 text-white">
-                  <span className="rounded-full bg-[#112250] border border-white/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#BCE0F5]">
-                    2,400+ Verified Doctors
-                  </span>
-                  <p className="mt-2 font-heading text-lg font-bold leading-snug">
-                    Top geneticists, metabolic clinics, and pediatric experts.
-                  </p>
-                </div>
-              </div>
-
-              {/* Floating Badge Widget */}
-              <div className="absolute -bottom-4 -right-3 hidden sm:flex items-center gap-3 rounded-2xl border border-[#112250]/15 bg-white/95 backdrop-blur-md p-3.5 shadow-xl text-[#112250]">
-                <div className="w-9 h-9 rounded-xl bg-[#EDF6FC] text-[#112250] flex items-center justify-center font-bold">
-                  ✓
-                </div>
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider">Clinical Associations</p>
-                  <p className="text-[11px] text-[#3B507D]">Verified Institutional Records</p>
-                </div>
-              </div>
-            </div>
+          {/* Full-Width Centered Hero Image Banner */}
+          <div className="mt-10 sm:mt-12 max-w-6xl mx-auto rounded-[2rem] sm:rounded-[2.75rem] overflow-hidden border border-[#112250]/15 shadow-xl aspect-[16/9] sm:aspect-[21/9] bg-[#EBF4FA] relative">
+            <img
+              src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1600&q=80"
+              alt="Clinical specialist physician consulting in pediatric medical center"
+              className="h-full w-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#112250]/40 via-transparent to-transparent pointer-events-none" />
           </div>
         </div>
       </section>
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mt-2 mb-2">
-        <DrippingScallopDivider color="blue" height={36} className="opacity-80" />
-      </div>
 
       {/* ================= SPECIALIST LISTING ================= */}
       <section id="specialist-directory" className="scroll-mt-24 mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
