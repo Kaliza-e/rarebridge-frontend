@@ -853,16 +853,17 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
       <div className="p-5 flex-1 flex flex-col justify-between">
         <p className="font-sans text-xs text-[#3B507D] leading-relaxed line-clamp-2 mb-4 font-medium">
           {(() => {
+            const rawOverview = (disease as any).overview;
             if (typeof disease.shortDesc === "string" && disease.shortDesc.trim()) {
               return disease.shortDesc.replace(/<!--rbm:[^>]*-->/gi, "").trim();
             }
-            if (typeof disease.overview === "object" && disease.overview !== null) {
-              if (typeof disease.overview.simple === "string" && disease.overview.simple.trim()) {
-                return disease.overview.simple.replace(/<!--rbm:[^>]*-->/gi, "").trim();
+            if (typeof rawOverview === "object" && rawOverview !== null) {
+              if (typeof rawOverview.simple === "string" && rawOverview.simple.trim()) {
+                return rawOverview.simple.replace(/<!--rbm:[^>]*-->/gi, "").trim();
               }
             }
-            if (typeof disease.overview === "string" && disease.overview.trim()) {
-              const text = disease.overview.replace(/<!--rbm:[^>]*-->/gi, "").trim();
+            if (typeof rawOverview === "string" && rawOverview.trim()) {
+              const text = rawOverview.replace(/<!--rbm:[^>]*-->/gi, "").trim();
               if (text.startsWith("{") && text.endsWith("}")) {
                 try {
                   const parsed = JSON.parse(text);

@@ -4,6 +4,8 @@ import { cleanPdfText } from '../app/utils/pdf-generator';
 import { apiService, ApiError } from '../app/services/api.service';
 import { DISEASES, type Disease } from '../app/data';
 
+declare const process: any;
+
 function assert(condition: boolean, message: string) {
   if (!condition) {
     console.error(`❌ FAILED: ${message}`);
@@ -129,16 +131,16 @@ DISEASES.forEach((d: Disease) => {
 
   // FAQs format tolerance
   if (d.faqs && d.faqs.length > 0) {
-    d.faqs.forEach((faq, idx) => {
-      const q = faq.question || (faq as any).q;
-      const a = faq.answer || (faq as any).a;
+    (d.faqs as any[]).forEach((faq: any, idx: number) => {
+      const q = faq.question || faq.q;
+      const a = faq.answer || faq.a;
       assert(Boolean(q), `Disease ${d.id} FAQ #${idx + 1} has a valid question`);
       assert(Boolean(a), `Disease ${d.id} FAQ #${idx + 1} has a valid answer`);
     });
   }
 
   // Facts & Myths format tolerance
-  const factsMyths = d.factsMyths || (d as any).myths;
+  const factsMyths = (d as any).factsMyths || (d as any).myths;
   if (factsMyths && factsMyths.length > 0) {
     factsMyths.forEach((item: any, idx: number) => {
       const statement = item.statement || item.myth || item.fact;

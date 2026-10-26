@@ -16,4 +16,5 @@ declare module '*.jpg';
 declare module '*.jpeg';
 declare module '*.gif';
 
-export {};
+declare module 'react-dom/client';
+declare const process: any;

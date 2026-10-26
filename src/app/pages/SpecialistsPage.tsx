@@ -118,7 +118,7 @@ export default function SpecialistsPage() {
         diseases.forEach((disease) => {
           if (!disease || typeof disease !== "object") return;
           if (Array.isArray(disease.specialists)) {
-            disease.specialists.forEach((spec) => {
+            disease.specialists.forEach((spec: any) => {
               if (!spec || typeof spec !== "object" || typeof spec.name !== "string" || !spec.name.trim()) {
                 return;
               }
@@ -138,7 +138,7 @@ export default function SpecialistsPage() {
                 if (!existing.publications && spec.publications) existing.publications = spec.publications;
                 if (Array.isArray(spec.sources) && spec.sources.length > 0) {
                   const currSources = new Set(existing.sources || []);
-                  spec.sources.forEach((s) => currSources.add(s));
+                  spec.sources.forEach((s: any) => currSources.add(s));
                   existing.sources = Array.from(currSources);
                 }
               } else {

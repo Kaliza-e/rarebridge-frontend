@@ -222,11 +222,18 @@ export default function ResearchPage() {
 
                 const phaseBadge = (i % 3 === 0) ? "Phase II Trial" : (i % 3 === 1) ? "Phase III Trial" : "Gene Therapy Pipeline";
 
+                const rawOverview = (d as any).overview;
+                const overviewStr = typeof rawOverview === "string"
+                  ? rawOverview
+                  : typeof rawOverview?.simple === "string"
+                  ? rawOverview.simple
+                  : "";
+
                 const cleanDesc =
                   typeof d.shortDesc === "string" && d.shortDesc.trim()
                     ? d.shortDesc.replace(/<!--rbm:[^>]*-->/gi, "").trim()
-                    : typeof d.overview === "string"
-                    ? d.overview.replace(/<!--rbm:[^>]*-->/gi, "").trim().slice(0, 160)
+                    : overviewStr
+                    ? overviewStr.replace(/<!--rbm:[^>]*-->/gi, "").trim().slice(0, 160)
                     : "Comprehensive research profiles and observational clinical registries.";
 
                 return (

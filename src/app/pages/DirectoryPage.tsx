@@ -123,7 +123,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
       String(d.name || "").toLowerCase().includes(q) ||
       String(d.category || "").toLowerCase().includes(q) ||
       (Boolean(d.shortDesc) && String(d.shortDesc).toLowerCase().includes(q)) ||
-      (Boolean(d.orphaCode) && String(d.orphaCode).toLowerCase().includes(q)) ||
+      (Boolean((d as any).orphaCode) && String((d as any).orphaCode).toLowerCase().includes(q)) ||
       (Boolean((d as any).diseaseNumber) && String((d as any).diseaseNumber).toLowerCase().includes(q)) ||
       (Boolean((d as any).omimNumber) && String((d as any).omimNumber).toLowerCase().includes(q)) ||
       (Array.isArray((d as any).synonyms) && (d as any).synonyms.some((s: string) => String(s).toLowerCase().includes(q)));

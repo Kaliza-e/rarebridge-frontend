@@ -1,6 +1,6 @@
 const API_BASE_URL = (
-  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) ||
-  (typeof process !== 'undefined' && (process.env?.VITE_API_URL || process.env?.REACT_APP_API_URL)) ||
+  (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_API_URL) ||
+  (typeof globalThis !== 'undefined' && ((globalThis as any).process?.env?.VITE_API_URL || (globalThis as any).process?.env?.REACT_APP_API_URL)) ||
   ''
 ).replace(/\/+$/, '');
 
