@@ -54,11 +54,28 @@ function renderAdditionalContent(nodes?: ContentNode[]): React.ReactNode {
   if (!nodes?.length) return null;
 
   return nodes.map((node, index) => {
-    const title = node.title?.map((run) => run.text).join("").trim();
+    let titleStr = "";
+    if (typeof node.title === "string") {
+      titleStr = (node.title as string).trim();
+    } else if (Array.isArray(node.title)) {
+      titleStr = node.title
+        .map((run) => (typeof run === "string" ? run : run?.text || ""))
+        .join("")
+        .trim();
+    }
+
     return (
-      <div key={`${title || node.type}-${index}`} className="space-y-2">
-        {title && <h4 className="text-sm font-bold text-[#112250]"><RichTextRunsRenderer runs={node.title} /></h4>}
-        {node.content && <div className="break-words text-sm leading-relaxed text-[#3B507D]"><RichTextRunsRenderer runs={node.content} /></div>}
+      <div key={`${titleStr || node.type}-${index}`} className="space-y-2">
+        {titleStr && (
+          <h4 className="text-sm font-bold text-[#112250]">
+            <RichTextRunsRenderer runs={node.title as any} />
+          </h4>
+        )}
+        {node.content && (
+          <div className="break-words text-sm leading-relaxed text-[#3B507D]">
+            <RichTextRunsRenderer runs={node.content as any} />
+          </div>
+        )}
         {renderAdditionalContent(node.children)}
       </div>
     );
@@ -164,19 +181,19 @@ export default function SpecialistsPage() {
   };
 
   const filteredSpecialists = specialists.filter((s) => {
-    const q = searchQuery.toLowerCase();
-    const matchSearch =
-      !q ||
-      s.name?.toLowerCase().includes(q) ||
-      s.profession?.toLowerCase().includes(q) ||
-      s.organization?.toLowerCase().includes(q) ||
-      s.specialization?.toLowerCase().includes(q) ||
-      s.location?.toLowerCase().includes(q) ||
-      s.disease?.toLowerCase().includes(q) ||
-      s.diseases?.some((d) => d.name.toLowerCase().includes(q)) ||
-      s.publications?.toLowerCase().includes(q);
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
 
-    return matchSearch;
+    return (
+      (typeof s.name === "string" && s.name.toLowerCase().includes(q)) ||
+      (typeof s.profession === "string" && s.profession.toLowerCase().includes(q)) ||
+      (typeof s.organization === "string" && s.organization.toLowerCase().includes(q)) ||
+      (typeof s.specialization === "string" && s.specialization.toLowerCase().includes(q)) ||
+      (typeof s.location === "string" && s.location.toLowerCase().includes(q)) ||
+      (typeof s.disease === "string" && s.disease.toLowerCase().includes(q)) ||
+      (Array.isArray(s.diseases) && s.diseases.some((d) => typeof d?.name === "string" && d.name.toLowerCase().includes(q))) ||
+      (typeof s.publications === "string" && s.publications.toLowerCase().includes(q))
+    );
   });
   const totalPages = Math.ceil(filteredSpecialists.length / SPECIALISTS_PER_PAGE);
   const displayedPage = totalPages > 0 ? Math.min(currentPage, totalPages) : 1;

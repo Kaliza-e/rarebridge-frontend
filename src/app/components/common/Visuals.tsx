@@ -852,7 +852,29 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
 
       <div className="p-5 flex-1 flex flex-col justify-between">
         <p className="font-sans text-xs text-[#3B507D] leading-relaxed line-clamp-2 mb-4 font-medium">
-          {disease.shortDesc || disease.overview?.simple || (typeof disease.overview === "string" ? disease.overview : "Plain-language medical summary.")}
+          {(() => {
+            if (typeof disease.shortDesc === "string" && disease.shortDesc.trim()) {
+              return disease.shortDesc.replace(/<!--rbm:[^>]*-->/gi, "").trim();
+            }
+            if (typeof disease.overview === "object" && disease.overview !== null) {
+              if (typeof disease.overview.simple === "string" && disease.overview.simple.trim()) {
+                return disease.overview.simple.replace(/<!--rbm:[^>]*-->/gi, "").trim();
+              }
+            }
+            if (typeof disease.overview === "string" && disease.overview.trim()) {
+              const text = disease.overview.replace(/<!--rbm:[^>]*-->/gi, "").trim();
+              if (text.startsWith("{") && text.endsWith("}")) {
+                try {
+                  const parsed = JSON.parse(text);
+                  if (parsed.simple) return String(parsed.simple);
+                } catch {
+                  // ignore
+                }
+              }
+              return text;
+            }
+            return "Plain-language medical summary and research profile.";
+          })()}
         </p>
 
         <div className="font-sans flex items-center justify-between border-t border-[#EDF6FC] pt-3 text-xs font-black text-[#112250] group-hover:text-[#3B507D]">

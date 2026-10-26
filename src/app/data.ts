@@ -670,45 +670,71 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
 
     // Transform API data to frontend format without discarding structured data or truncating text
     const transformedDiseases = apiDiseases.map((apiDisease: ApiDisease) => {
-      // Parse facts/myths safely
-      const myths = Array.isArray(apiDisease.factsMyths)
-        ? apiDisease.factsMyths.map((fm: any, idx: number) => {
-            const mythStr = extractPlainText(fm.myth) || extractPlainText(fm.statement) || `Myth #${idx + 1}`;
-            let factStr = extractPlainText(fm.fact) || extractPlainText(fm.explanation) || "";
-            // Strip any [Myth] or [Fact] prefix from explanation
-            factStr = factStr.replace(/^\[(Myth|Fact)\]\s*/i, "");
-            return {
-              myth: mythStr,
-              fact: factStr || "Verified medical guidance.",
-              statement: mythStr,
-              explanation: factStr || "Verified medical guidance.",
-              isFact: fm.isFact ?? false,
-              order: fm.order || idx + 1,
-            };
-          })
-        : [];
+      // Parse facts/myths safely from factsMyths or legacy myths
+      const rawMythsSource = Array.isArray(apiDisease.factsMyths) && apiDisease.factsMyths.length > 0
+        ? apiDisease.factsMyths
+        : (Array.isArray((apiDisease as any).myths) ? (apiDisease as any).myths : []);
+
+      const myths = rawMythsSource.map((fm: any, idx: number) => {
+        const mythStr = extractPlainText(fm.myth) || extractPlainText(fm.statement) || `Myth #${idx + 1}`;
+        let factStr = extractPlainText(fm.fact) || extractPlainText(fm.explanation) || "";
+        factStr = factStr.replace(/^\[(Myth|Fact)\]\s*/i, "");
+        return {
+          myth: mythStr,
+          fact: factStr || "Verified medical guidance.",
+          statement: mythStr,
+          explanation: factStr || "Verified medical guidance.",
+          isFact: fm.isFact ?? false,
+          order: fm.order || idx + 1,
+        };
+      });
+
+      const typesList = Array.isArray(apiDisease.typesStructured) && apiDisease.typesStructured.length > 0
+        ? apiDisease.typesStructured
+        : (Array.isArray((apiDisease as any).types) ? (apiDisease as any).types : []);
+
+      const symptomsList = Array.isArray(apiDisease.typesAndSymptoms) && apiDisease.typesAndSymptoms.length > 0
+        ? apiDisease.typesAndSymptoms
+        : (Array.isArray(apiDisease.symptomsStructured) && apiDisease.symptomsStructured.length > 0
+          ? apiDisease.symptomsStructured.map((s: any) => typeof s === "string" ? s : s.name)
+          : (Array.isArray((apiDisease as any).symptoms) ? (apiDisease as any).symptoms : []));
+
+      const clinicalTrials = Array.isArray((apiDisease as any).clinicalTrials)
+        ? (apiDisease as any).clinicalTrials
+        : (Array.isArray(apiDisease.treatmentsAndPharma)
+          ? apiDisease.treatmentsAndPharma.filter((t: any) => t.drugName || t.stage || t.status)
+          : []);
+
+      const researchOrganizations = Array.isArray((apiDisease as any).researchOrganizations)
+        ? (apiDisease as any).researchOrganizations
+        : (Array.isArray(apiDisease.treatmentsAndPharma)
+          ? apiDisease.treatmentsAndPharma.filter((t: any) => !t.drugName && !t.stage)
+          : []);
 
       return {
         ...apiDisease, // Keep all raw backend properties (causesStructured, typesStructured, symptomsStructured, etc.)
         id: apiDisease.id || apiDisease.diseaseNumber || apiDisease.name.toLowerCase().replace(/\s+/g, "-"),
         name: apiDisease.name,
+        diseaseNumber: apiDisease.diseaseNumber || (apiDisease as any).id || "1",
         category: apiDisease.category || "Rare Disease",
-        categoryBadges: apiDisease.category
-          ? apiDisease.category.split(/[·,]/).map((c: string) => c.trim()).filter(Boolean)
-          : ["Rare Disease"],
+        categoryBadges: (Array.isArray((apiDisease as any).categoryBadges) && (apiDisease as any).categoryBadges.length > 0)
+          ? (apiDisease as any).categoryBadges
+          : (apiDisease.category
+            ? apiDisease.category.split(/[·,]/).map((c: string) => c.trim()).filter(Boolean)
+            : ["Rare Disease"]),
+        orphaCode: (apiDisease as any).orphaCode || (apiDisease as any).orpha || undefined,
+        inheritancePattern: (apiDisease as any).inheritancePattern || (apiDisease as any).inheritance || undefined,
         icon: Brain,
         color: "navy",
-        shortDesc: extractPlainText(apiDisease.overview) || 'Comprehensive rare disease details and support resources.',
-        researchStatus: "Active Research",
-        symptoms: Array.isArray(apiDisease.typesAndSymptoms) ? apiDisease.typesAndSymptoms : [],
+        shortDesc: extractPlainText(apiDisease.overview) || (apiDisease as any).shortDesc || 'Comprehensive rare disease details and support resources.',
+        researchStatus: (apiDisease as any).researchStatus || "Active Research",
+        symptoms: symptomsList,
         overview: apiDisease.overview,
         causes: apiDisease.causes,
         causesStructured: apiDisease.causesStructured || [],
         typesStructured: apiDisease.typesStructured || [],
         symptomsStructured: apiDisease.symptomsStructured || [],
-        types: Array.isArray(apiDisease.typesStructured) && apiDisease.typesStructured.length > 0
-          ? apiDisease.typesStructured
-          : [],
+        types: typesList,
         diagnosis: apiDisease.diagnosis ?
           (Array.isArray(apiDisease.diagnosis)
             ? apiDisease.diagnosis
@@ -718,7 +744,7 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
               how: "Comprehensive assessment by specialized medical teams",
               result: extractPlainText(apiDisease.diagnosis)
             }]
-          ) : [],
+          ) : ((apiDisease as any).diagnosticSteps || []),
         lifestyleAndDailySupport: apiDisease.lifestyleAndDailySupport || {
           therapies: [],
           nutrition: typeof apiDisease.lifestyleAndDailySupport === "string" ? apiDisease.lifestyleAndDailySupport : "",
@@ -749,6 +775,10 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
             communities: []
           },
         treatmentsAndPharma: apiDisease.treatmentsAndPharma || [],
+        treatmentSections: (apiDisease as any).treatmentSections || [],
+        clinicalTrials,
+        researchOrganizations,
+        researchSections: (apiDisease as any).researchSections || [],
         research: Array.isArray(apiDisease.treatmentsAndPharma) && apiDisease.treatmentsAndPharma.length > 0
           ? apiDisease.treatmentsAndPharma.map(org => ({
               name: org.name || "Research Institution",
@@ -766,30 +796,39 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
               focus: extractPlainText(apiDisease.treatmentsAndPharma),
               why: "Current clinical research, pharmaceutical pipeline, and therapeutic programs",
               logo: "RX"
-            }] : []),
+            }] : ((apiDisease as any).research || [])),
         faqs: Array.isArray(apiDisease.faqs)
-          ? apiDisease.faqs.map(faq => ({
-              q: extractPlainText(faq.question) || "Frequently Asked Question",
-              a: extractPlainText(faq.answer) || "Consult specialist for detailed information."
-            }))
-          : [],
+          ? apiDisease.faqs.map((faq, idx) => {
+              const qText = extractPlainText(faq.question) || extractPlainText((faq as any).q) || `Question ${idx + 1}`;
+              const aText = extractPlainText(faq.answer) || extractPlainText((faq as any).a) || "Consult specialist for detailed information.";
+              return {
+                question: qText,
+                answer: aText,
+                q: qText,
+                a: aText,
+                order: faq.order || idx + 1,
+              };
+            })
+          : ((apiDisease as any).faq || []),
         myths,
         factsMyths: myths,
-        specialists: apiDisease.specialists?.map(spec => ({
+        specialists: (apiDisease.specialists || (apiDisease as any).specialistList || []).map((spec: any) => ({
           name: spec.name,
-          profession: spec.profession || spec.focus || "",
-          specialization: spec.specialization || spec.focus || "",
+          profession: spec.profession || spec.focus || spec.role || "",
+          specialization: spec.specialization || spec.focus || spec.role || "",
           photoUrl: spec.photoUrl || null,
-          organization: spec.organization || "",
+          organization: spec.organization || spec.org || "",
           location: spec.location || "",
           contact: spec.contact || null,
           publications: spec.publications || "",
           sources: spec.sources || [],
           links: spec.links || [],
           additionalContent: spec.additionalContent || [],
-          focus: spec.focus || "",
+          focus: spec.focus || spec.specialization || spec.profession || "",
           why: spec.why || spec.name
-        })) || []
+        })),
+        sources: (apiDisease as any).sources || (apiDisease as any).links || [],
+        uncategorizedContent: (apiDisease as any).uncategorizedContent || (apiDisease as any).uncategorized || []
       };
     });
 

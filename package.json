@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "node node_modules/vite/bin/vite.js build",
-    "dev": "vite"
+    "dev": "vite",
+    "test": "npx tsx src/tests/parsing-and-integration.test.ts"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

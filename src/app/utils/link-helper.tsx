@@ -224,15 +224,23 @@ export function RichTextRunsRenderer({
   runs,
   className = "",
 }: {
-  runs?: Array<{ text: string; bold?: boolean; italic?: boolean; underline?: boolean; color?: string; link?: string }>;
+  runs?: Array<{ text: string; bold?: boolean; italic?: boolean; underline?: boolean; color?: string; link?: string }> | string | null;
   className?: string;
 }) {
-  if (!runs || !Array.isArray(runs) || runs.length === 0) return null;
+  if (!runs) return null;
+  if (typeof runs === "string") {
+    return <span className={className}>{renderTextWithLinks(runs)}</span>;
+  }
+  if (!Array.isArray(runs) || runs.length === 0) return null;
 
   return (
     <span className={className}>
-      {runs.map((run, idx) => {
-        let content: React.ReactNode = run.text;
+      {runs.map((run: any, idx) => {
+        if (!run) return null;
+        if (typeof run === "string") {
+          return <React.Fragment key={idx}>{renderTextWithLinks(run)}</React.Fragment>;
+        }
+        let content: React.ReactNode = run.text || "";
 
         if (run.bold) content = <strong>{content}</strong>;
         if (run.italic) content = <em>{content}</em>;

@@ -7,6 +7,7 @@ import { generateDiseasePDF } from "../utils/pdf-generator";
 import { LinkifiedText, RichTextRunsRenderer } from "../utils/link-helper";
 import { getBlocks } from "../utils/rbm";
 import { BlocksRenderer } from "../components/rbm";
+import type { ParsedSection, ContentNode } from "../services/api.service";
 import {
   ArrowLeft,
   Download,
@@ -45,6 +46,17 @@ type DiseasePageProps = {
   onBack: () => void;
 };
 
+function renderNodeRunsOrString(runsOrText: any) {
+  if (!runsOrText) return null;
+  if (Array.isArray(runsOrText)) {
+    return <RichTextRunsRenderer runs={runsOrText} />;
+  }
+  if (typeof runsOrText === "string") {
+    return <LinkifiedText text={runsOrText} />;
+  }
+  return String(runsOrText);
+}
+
 function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
   if (!nodes || !Array.isArray(nodes) || nodes.length === 0) return null;
 
@@ -59,12 +71,12 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
               {node.title && (
                 <h3 className="font-heading font-black text-base text-[#112250] flex items-center gap-2">
                   <span className="flex h-2.5 w-2.5 rounded-full bg-[#112250]" />
-                  <RichTextRunsRenderer runs={node.title} />
+                  {renderNodeRunsOrString(node.title)}
                 </h3>
               )}
               {node.content && (
                 <p className="text-xs text-[#112250] font-medium leading-relaxed">
-                  <RichTextRunsRenderer runs={node.content} />
+                  {renderNodeRunsOrString(node.content)}
                 </p>
               )}
               {Array.isArray(node.children) && node.children.length > 0 && (
@@ -80,7 +92,7 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
           return (
             <div key={idx} className="flex items-start gap-2 text-xs text-[#112250] font-medium">
               <span className="h-1.5 w-1.5 rounded-full bg-[#112250] mt-1.5 shrink-0" />
-              <span><RichTextRunsRenderer runs={node.content} /></span>
+              <span>{renderNodeRunsOrString(node.content)}</span>
             </div>
           );
         }
@@ -89,14 +101,14 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
           return (
             <div key={idx} className="flex items-start gap-2 text-xs text-[#112250] font-medium">
               <span className="font-bold text-[#112250] shrink-0">{idx + 1}.</span>
-              <span><RichTextRunsRenderer runs={node.content} /></span>
+              <span>{renderNodeRunsOrString(node.content)}</span>
             </div>
           );
         }
 
         return (
           <div key={idx} className="text-xs font-medium text-[#112250] leading-relaxed">
-            <RichTextRunsRenderer runs={node.content} />
+            {renderNodeRunsOrString(node.content)}
           </div>
         );
       })}
@@ -174,12 +186,24 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
         const allDiseases = await fetchDiseasesFromAPI();
         if (cancelled) return;
 
-        const found = allDiseases.find(
-          (d: any) =>
-            d.id === diseaseId ||
-            d.diseaseNumber === diseaseId ||
-            d.name?.toLowerCase() === diseaseId?.toLowerCase()
-        );
+        const targetId = String(diseaseId || "").trim().toLowerCase();
+        const found = allDiseases.find((d: any) => {
+          if (!d) return false;
+          const dId = String(d.id || "").trim().toLowerCase();
+          const dNum = String(d.diseaseNumber || "").trim().toLowerCase();
+          const dName = String(d.name || "").trim().toLowerCase();
+          const dSlug = dName.replace(/\s+/g, "-");
+          const dClean = dName.replace(/[^a-z0-9]/g, "");
+          const targetClean = targetId.replace(/[^a-z0-9]/g, "");
+
+          return (
+            dId === targetId ||
+            dNum === targetId ||
+            dName === targetId ||
+            dSlug === targetId ||
+            (targetClean.length > 2 && dClean === targetClean)
+          );
+        });
 
         setDisease(found || null);
       } catch (err) {
@@ -211,9 +235,10 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     : (disease && Array.isArray(disease.types) && disease.types.length > 0
       ? disease.types.map((t: any) => ({
         title: t.type || t.name || t.title || "Subtype",
-        description: t.description || (t.symptoms ? `Symptoms: ${t.symptoms.join(", ")}` : "Clinical form"),
+        description: t.description || (t.symptoms ? `Symptoms: ${Array.isArray(t.symptoms) ? t.symptoms.join(", ") : t.symptoms}` : "Clinical form"),
         stage: t.stage,
-        severity: t.severity
+        severity: t.severity,
+        characteristics: Array.isArray(t.characteristics) ? t.characteristics : []
       }))
       : (disease?.typesAndSymptomsRaw
         ? disease.typesAndSymptomsRaw.split(/\r?\n|•/)
@@ -258,7 +283,12 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
         .replace(/[*_#`]/g, "")
         .replace(/^[•·▪▸►\-–—]\s*/, "")
         .trim();
-      return cleaned ? { name: cleaned } : null;
+      return cleaned
+        ? {
+            ...(typeof sym === "object" && sym !== null ? sym : {}),
+            name: cleaned,
+          }
+        : null;
     })
     .filter(Boolean);
 
@@ -588,7 +618,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                         {causesList.slice(0, 3).map((c: any, idx: number) => (
                           <li key={idx} className="flex items-start gap-2">
                             <span className="h-2 w-2 rounded-full bg-[#112250] mt-1.5 shrink-0" />
-                            <span><strong className="font-bold">{c.title}:</strong> <LinkifiedText text={c.explanation} /></span>
+                            <span><strong className="font-bold">{c.title || `Cause #${idx + 1}`}:</strong> <LinkifiedText text={c.explanation || (typeof c === "string" ? c : "")} /></span>
                           </li>
                         ))}
                       </ul>
@@ -819,14 +849,23 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                     ) : (
                       <div className="space-y-8">
                         {/* Section 1: Treatments */}
-                        {treatmentSections.length > 0 && (
+                        {treatmentSections.length > 0 ? (
                           <div>
                             <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
                               <HeartPulse className="h-4 w-4 text-[#112250]" /> Treatments & Management
                             </h3>
                             <StructuredSections sections={treatmentSections} emptyHeading="Treatment" />
                           </div>
-                        )}
+                        ) : (typeof disease.treatmentsAndPharma === "string" && disease.treatmentsAndPharma.trim()) ? (
+                          <div>
+                            <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
+                              <HeartPulse className="h-4 w-4 text-[#112250]" /> Treatments & Management
+                            </h3>
+                            <div className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 text-xs text-[#112250] font-medium leading-relaxed">
+                              <LinkifiedText text={disease.treatmentsAndPharma.replace(/^<!--rbm:[^>]*-->\s*/, "")} />
+                            </div>
+                          </div>
+                        ) : null}
 
                         {/* Section 2: Clinical Trials */}
                         {(clinicalTrials.length > 0 || clinicalTrialSections.length > 0) && (
@@ -1339,12 +1378,19 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                               )}
                               {Array.isArray(spec.additionalContent) && spec.additionalContent.length > 0 && (
                                 <div className="space-y-3 border-t border-[#F5F4F0] pt-3">
-                                  {spec.additionalContent.map((item: ContentNode, extraIndex: number) => (
-                                    <div key={`${extraIndex}-${item.title?.[0]?.text || "additional"}`} className="break-words">
-                                      {item.title?.length > 0 && <h4 className="text-xs font-bold text-[#112250]">{item.title.map((run) => run.text).join("")}</h4>}
-                                      <ContentNodeRenderer nodes={item.children} />
-                                    </div>
-                                  ))}
+                                  {spec.additionalContent.map((item: ContentNode, extraIndex: number) => {
+                                    const titleText = Array.isArray(item.title)
+                                      ? item.title.map((run: any) => run.text || "").join("")
+                                      : typeof item.title === "string"
+                                      ? item.title
+                                      : "";
+                                    return (
+                                      <div key={`${extraIndex}-${titleText || "additional"}`} className="break-words">
+                                        {titleText && <h4 className="text-xs font-bold text-[#112250]">{titleText}</h4>}
+                                        <ContentNodeRenderer nodes={item.children} />
+                                      </div>
+                                    );
+                                  })}
                                 </div>
                               )}
                               {Array.isArray(spec.links) && spec.links.length > 0 && (

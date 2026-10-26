@@ -66,10 +66,14 @@ export default function ResearchPage() {
   }, []);
 
   const filteredDiseases = diseases.filter((d) => {
+    const desc = (typeof d?.shortDesc === "string" ? d.shortDesc : (typeof d?.overview === "string" ? d.overview : "")).toLowerCase();
+    const cat = (typeof d?.category === "string" ? d.category : "");
+    const name = (typeof d?.name === "string" ? d.name : "");
+
     if (activeTab === "All Programs") return true;
-    if (activeTab === "Gene Therapies") return d.shortDesc.toLowerCase().includes("gene") || d.category.includes("Metabolic");
-    if (activeTab === "Enzyme Replacement") return d.name.includes("MPS") || d.name.includes("Fabry") || d.name.includes("Gaucher");
-    if (activeTab === "CRISPR & RNA") return d.shortDesc.toLowerCase().includes("genetic") || d.shortDesc.toLowerCase().includes("mutation");
+    if (activeTab === "Gene Therapies") return desc.includes("gene") || cat.includes("Metabolic");
+    if (activeTab === "Enzyme Replacement") return name.includes("MPS") || name.includes("Fabry") || name.includes("Gaucher");
+    if (activeTab === "CRISPR & RNA") return desc.includes("genetic") || desc.includes("mutation");
     if (activeTab === "Clinical Registries") return true;
     return true;
   });
@@ -194,11 +198,36 @@ export default function ResearchPage() {
               className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             >
               {filteredDiseases.slice(0, 9).map((d, i) => {
-                const leadResearch = d.research?.[0] || {
-                  name: "National Institutes of Health & Genetic Registry",
-                  why: "Ongoing clinical observation and biomarker analysis.",
-                };
+                const leadOrg = (d as any).researchOrganizations?.[0];
+                const leadTrial = (d as any).clinicalTrials?.[0];
+                const leadFallback = d.research?.[0];
+
+                const leadName =
+                  (leadOrg && (leadOrg.title || leadOrg.name)) ||
+                  (leadTrial && (leadTrial.trialName || leadTrial.organization)) ||
+                  (leadFallback && leadFallback.name) ||
+                  "National Institutes of Health & Genetic Registry";
+
+                const leadWhy =
+                  (leadTrial && (leadTrial.phase ? `${leadTrial.phase}: ${leadTrial.drug || "Investigational Agent"}` : leadTrial.drug)) ||
+                  (leadOrg && (leadOrg.description || leadOrg.focus)) ||
+                  (leadFallback && leadFallback.why) ||
+                  "Ongoing clinical observation and biomarker analysis.";
+
+                const leadUrl =
+                  (leadOrg && (leadOrg.url || leadOrg.link)) ||
+                  (leadTrial && leadTrial.url) ||
+                  (leadFallback as any)?.url ||
+                  undefined;
+
                 const phaseBadge = (i % 3 === 0) ? "Phase II Trial" : (i % 3 === 1) ? "Phase III Trial" : "Gene Therapy Pipeline";
+
+                const cleanDesc =
+                  typeof d.shortDesc === "string" && d.shortDesc.trim()
+                    ? d.shortDesc.replace(/<!--rbm:[^>]*-->/gi, "").trim()
+                    : typeof d.overview === "string"
+                    ? d.overview.replace(/<!--rbm:[^>]*-->/gi, "").trim().slice(0, 160)
+                    : "Comprehensive research profiles and observational clinical registries.";
 
                 return (
                   <motion.div
@@ -213,9 +242,9 @@ export default function ResearchPage() {
                       setSelectedResearch({
                         diseaseName: d.name,
                         category: d.category,
-                        researchName: leadResearch.name,
-                        why: leadResearch.why,
-                        url: (leadResearch as any).url,
+                        researchName: leadName,
+                        why: leadWhy,
+                        url: leadUrl,
                         stage: phaseBadge,
                       })
                     }
@@ -225,9 +254,9 @@ export default function ResearchPage() {
                         setSelectedResearch({
                           diseaseName: d.name,
                           category: d.category,
-                          researchName: leadResearch.name,
-                          why: leadResearch.why,
-                          url: (leadResearch as any).url,
+                          researchName: leadName,
+                          why: leadWhy,
+                          url: leadUrl,
                           stage: phaseBadge,
                         });
                       }
@@ -246,12 +275,12 @@ export default function ResearchPage() {
                         {d.name}
                       </h3>
                       <p className="mt-2 text-xs leading-relaxed text-[#3B507D] font-medium line-clamp-2">
-                        {d.shortDesc}
+                        {cleanDesc}
                       </p>
 
                       <div className="mt-4 border-t border-[#EDF6FC] pt-3">
                         <p className="text-xs font-black text-[#112250]">Lead Center:</p>
-                        <p className="text-xs font-bold text-[#3B507D] mt-0.5">{leadResearch.name}</p>
+                        <p className="text-xs font-bold text-[#3B507D] mt-0.5 line-clamp-1">{leadName}</p>
                       </div>
                     </div>
 
@@ -347,6 +376,20 @@ export default function ResearchPage() {
                     <p className="text-sm font-medium text-[#112250] mt-0.5 leading-relaxed">
                       "{selectedResearch.why}"
                     </p>
+                  </div>
+                )}
+
+                {selectedResearch.url && (
+                  <div className="pt-2 border-t border-[#BCE0F5]/50">
+                    <a
+                      href={selectedResearch.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#112250] hover:text-[#243B6B] underline"
+                    >
+                      <span>Visit Trial or Registry Resource</span>
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
                   </div>
                 )}
               </div>
