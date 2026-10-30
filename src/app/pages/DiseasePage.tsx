@@ -187,20 +187,23 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
         if (cancelled) return;
 
         const targetId = String(diseaseId || "").trim().toLowerCase();
+        const targetClean = targetId.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+        const targetSlug = targetId.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
         const found = allDiseases.find((d: any) => {
           if (!d) return false;
           const dId = String(d.id || "").trim().toLowerCase();
           const dNum = String(d.diseaseNumber || "").trim().toLowerCase();
           const dName = String(d.name || "").trim().toLowerCase();
-          const dSlug = dName.replace(/\s+/g, "-");
-          const dClean = dName.replace(/[^a-z0-9]/g, "");
-          const targetClean = targetId.replace(/[^a-z0-9]/g, "");
+          const dNorm = dName.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          const dSlug = dNorm.replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+          const dClean = dNorm.replace(/[^a-z0-9]/g, "");
 
           return (
             dId === targetId ||
             dNum === targetId ||
             dName === targetId ||
-            dSlug === targetId ||
+            dSlug === targetSlug ||
             (targetClean.length > 2 && dClean === targetClean)
           );
         });

@@ -25,6 +25,7 @@ export const SUGGESTED_SEARCHES = ["Adrenoleukodystrophy", "Mesothelioma", "Amyl
 const FALLBACK_DISEASES = [
   {
     id: "amyloidosis",
+    diseaseNumber: "1",
     name: "Amyloidosis",
     category: "Genetic",
     categoryBadges: ["Genetic"],
@@ -133,6 +134,7 @@ const FALLBACK_DISEASES = [
   },
   {
     id: "adrenocortical-carcinoma",
+    diseaseNumber: "2",
     name: "Adrenocortical Carcinoma",
     category: "Rare Adrenal Cancer",
     categoryBadges: ["Rare Adrenal Cancer"],
@@ -205,6 +207,7 @@ const FALLBACK_DISEASES = [
   },
   {
     id: "alexander-disease",
+    diseaseNumber: "3",
     name: "Alexander Disease",
     category: "Genetic",
     categoryBadges: ["Genetic"],
@@ -278,226 +281,8 @@ const FALLBACK_DISEASES = [
     ]
   },
   {
-    id: "batten-disease",
-    name: "Batten Disease",
-    category: "Genetic · Neurological",
-    categoryBadges: ["Genetic", "Neurological"],
-    icon: Zap,
-    color: "sapphire",
-    shortDesc: "A fatal nervous system disorder that begins in childhood, causing vision loss, seizures, and progressive loss of motor and cognitive skills.",
-    researchStatus: "Active Research",
-    inheritance: "Autosomal Recessive",
-    ageAppearance: "5–10 years",
-    severity: "Severe",
-    symptoms: ["Vision loss", "Seizures", "Cognitive decline", "Motor deterioration", "Behavioral changes"],
-    overview: {
-      simple: "Batten Disease is a group of fatal nervous system disorders that begin in childhood and progressively worsen, affecting vision, thinking, and movement.",
-      medical: "Batten Disease (neuronal ceroid lipofuscinoses) are lysosomal storage disorders caused by mutations in various genes (CLN genes), leading to neuronal death."
-    },
-    causes: {
-      genetic: "Caused by mutations in CLN genes. Both parents must carry the mutation (autosomal recessive). Different CLN genes cause different disease types.",
-      environmental: "No environmental factors are known to cause Batten Disease.",
-      unknown: "The exact mechanisms by which CLN mutations lead to neuronal death are still being researched."
-    },
-    types: [
-      { stage: "Infancy", type: "CLN1 (Infantile)", symptoms: ["Language delay", "Ataxia", "Vision loss"], severity: "Very Severe" },
-      { stage: "Late childhood", type: "CLN2 (Late-infantile)", symptoms: ["Seizures", "Developmental regression", "Vision loss"], severity: "Very Severe" },
-      { stage: "Childhood", type: "CLN3 (Juvenile)", symptoms: ["Vision loss", "Cognitive decline", "Behavioral changes"], severity: "Severe" }
-    ],
-    diagnosis: [
-      { name: "Genetic Testing", what: "Testing for mutations in CLN genes.", how: "Blood sample analyzed for CLN gene mutations.", result: "CLN mutation confirms specific disease type." },
-      { name: "EEG", what: "Brain wave monitoring to detect seizure activity.", how: "Electrodes placed on scalp record brain activity.", result: "Abnormal patterns support diagnosis." }
-    ],
-    lifestyle: {
-      therapies: [
-        { name: "Physical Therapy", desc: "Helps maintain mobility as long as possible.", icon: Activity },
-        { name: "Occupational Therapy", desc: "Supports daily functioning and adaptation.", icon: Heart }
-      ],
-      nutrition: "Feeding support often needed as swallowing difficulties develop.",
-      devices: ["Wheelchairs", "Feeding tubes", "Communication devices", "Seizure monitoring equipment"],
-      caregiverTips: ["Seizure safety precautions", "Vision support adaptations", "Behavioral management strategies"]
-    },
-    research: [
-      { name: "Batten Disease Support", focus: "Research funding and family support", why: "Dedicated to finding treatments and supporting families", logo: "RX" }
-    ],
-    faqs: [
-      { q: "How is Batten Disease inherited?", a: "Batten Disease is inherited in an autosomal recessive pattern, meaning both parents must carry the gene mutation." }
-    ],
-    myths: [
-      { myth: "Batten Disease is contagious.", fact: "Batten Disease is a genetic disorder and cannot be caught from others." }
-    ],
-    specialists: [
-      {
-        name: "Dr. Jonathan W. Mink",
-        profession: "Pediatric Neurologist",
-        specialization: "Neuronal Ceroid Lipofuscinoses (Batten Disease), Pediatric Movement Disorders",
-        organization: "University of Rochester Medical Center – Batten Center",
-        location: "Rochester, New York, USA",
-        contact: "https://www.urmc.rochester.edu",
-        publications: "Director of the University of Rochester Batten Center; pioneered standardized rating scales for CLN3 disease.",
-        focus: "Pediatric Neurologist",
-        why: "Dr. Jonathan W. Mink"
-      },
-      {
-        name: "Dr. Erika Augustine",
-        profession: "Pediatric Neurologist & Clinical Trialist",
-        specialization: "Batten Disease (CLN3, CLN2), Rare Pediatric Neurodegenerative Disorders",
-        organization: "Kennedy Krieger Institute / Johns Hopkins Medicine",
-        location: "Baltimore, Maryland, USA",
-        contact: "https://www.kennedykrieger.org",
-        publications: "Extensive leadership in Batten disease natural history studies and novel clinical trials.",
-        focus: "Pediatric Neurologist",
-        why: "Dr. Erika Augustine"
-      }
-    ]
-  },
-  {
-    id: "angiosarcoma",
-    name: "Angiosarcoma",
-    category: "Rare Cancer",
-    categoryBadges: ["Rare Cancer"],
-    icon: Heart,
-    color: "taupe",
-    shortDesc: "A rare cancer that develops in the inner lining of blood vessels or lymph vessels, often appearing as a bruise-like lesion on the skin.",
-    researchStatus: "Active Research",
-    inheritance: "Not inherited",
-    ageAppearance: "Older adults",
-    severity: "Aggressive",
-    symptoms: ["Skin lesions", "Bruise-like appearance", "Swelling", "Pain", "Bleeding"],
-    overview: {
-      simple: "Angiosarcoma is a rare cancer that starts in blood vessels. It often appears as a bruise on the skin and can grow quickly.",
-      medical: "Angiosarcoma is a malignant tumor arising from endothelial cells of blood or lymph vessels, with a high tendency for local recurrence and metastasis."
-    },
-    causes: {
-      genetic: "Not typically inherited. Some cases associated with radiation therapy or chronic lymphedema.",
-      environmental: "Chronic lymphedema, radiation exposure, and certain chemicals are risk factors.",
-      unknown: "The exact cause in many cases remains unknown."
-    },
-    types: [
-      { stage: "Skin", type: "Cutaneous", symptoms: ["Bruise-like lesions", "Skin discoloration", "Bleeding"], severity: "Aggressive" },
-      { stage: "Internal organs", type: "Visceral", symptoms: ["Organ-specific symptoms", "Pain", "Weight loss"], severity: "Very Aggressive" }
-    ],
-    diagnosis: [
-      { name: "Biopsy", what: "Removing tissue sample for examination.", how: "Doctor removes sample from suspicious area.", result: "Microscopic examination confirms cancer type." },
-      { name: "Imaging", what: "CT/MRI/PET scans to assess extent.", how: "Patient undergoes imaging studies.", result: "Shows tumor size, location, and spread." }
-    ],
-    lifestyle: {
-      therapies: [
-        { name: "Radiation Therapy", desc: "Often used after surgery to kill remaining cancer cells.", icon: Activity }
-      ],
-      nutrition: "Nutritional support may be needed during treatment.",
-      devices: ["Compression garments", "Lymphedema management tools"],
-      caregiverTips: ["Monitor for skin changes", "Watch for bleeding", "Support during treatment recovery"]
-    },
-    research: [
-      { name: "Cancer Research Centers", focus: "Angiosarcoma clinical trials", why: "Developing new targeted therapies", logo: "RX" }
-    ],
-    faqs: [
-      { q: "What does angiosarcoma look like?", a: "It often appears as a bruise-like purple or red lesion on the skin that may grow over time." }
-    ],
-    myths: [
-      { myth: "Angiosarcoma is just a bad bruise.", fact: "While it may look like a bruise, angiosarcoma is a serious cancer that requires medical treatment." }
-    ],
-    specialists: [
-      {
-        name: "Dr. Vinod Ravi",
-        profession: "Sarcoma Medical Oncologist",
-        specialization: "Angiosarcoma, Vascular Malignancies, Targeted Therapies",
-        organization: "MD Anderson Cancer Center",
-        location: "Houston, Texas, USA",
-        contact: "https://www.mdanderson.org",
-        publications: "Extensive clinical trial leadership for angiosarcoma and immunotherapy.",
-        focus: "Sarcoma Medical Oncologist",
-        why: "Dr. Vinod Ravi"
-      },
-      {
-        name: "Dr. William D. Tap",
-        profession: "Chief of Medical Oncology",
-        specialization: "Soft Tissue Sarcomas, Vascular Tumors",
-        organization: "Memorial Sloan Kettering Cancer Center",
-        location: "New York, New York, USA",
-        contact: "https://www.mskcc.org",
-        publications: "Pioneering research in novel small-molecule inhibitors and immunotherapy in sarcoma.",
-        focus: "Medical Oncologist",
-        why: "Dr. William D. Tap"
-      }
-    ]
-  },
-  {
-    id: "als",
-    name: "Amyotrophic Lateral Sclerosis",
-    category: "Neurological",
-    categoryBadges: ["Neurological"],
-    icon: Activity,
-    color: "navy",
-    shortDesc: "A progressive neurodegenerative disease that affects nerve cells in the brain and spinal cord, causing loss of muscle control.",
-    researchStatus: "Active Research",
-    inheritance: "Mostly sporadic",
-    ageAppearance: "40-70 years",
-    severity: "Progressive",
-    symptoms: ["Muscle weakness", "Difficulty speaking", "Trouble swallowing", "Breathing problems", "Paralysis"],
-    overview: {
-      simple: "ALS is a disease that gradually affects nerve cells controlling muscles, leading to progressive weakness and paralysis.",
-      medical: "ALS is characterized by degeneration of motor neurons in the cerebral cortex, brainstem, and spinal cord, resulting in progressive muscle atrophy and weakness."
-    },
-    causes: {
-      genetic: "About 5-10% of cases are familial (inherited), caused by mutations in genes like SOD1, C9orf72, TARDBP, and FUS.",
-      environmental: "Possible environmental factors being studied, but no definitive causes identified.",
-      unknown: "In 90-95% of cases, the cause is unknown (sporadic ALS)."
-    },
-    types: [
-      { stage: "All", type: "Sporadic", symptoms: ["Most common form", "Unknown cause", "Progressive weakness"], severity: "Severe" },
-      { stage: "Familial", type: "Familial", symptoms: ["Inherited", "Similar symptoms", "Earlier onset possible"], severity: "Severe" }
-    ],
-    diagnosis: [
-      { name: "EMG/NCS", what: "Electromyography and nerve conduction studies to assess muscle and nerve function.", how: "Electrodes measure electrical activity in muscles and nerves.", result: "Abnormal patterns support ALS diagnosis." },
-      { name: "MRI", what: "Brain and spinal cord imaging to rule out other conditions.", how: "Patient undergoes MRI scan.", result: "Helps exclude other neurological conditions." }
-    ],
-    lifestyle: {
-      therapies: [
-        { name: "Physical Therapy", desc: "Helps maintain mobility and function as long as possible.", icon: Activity },
-        { name: "Speech Therapy", desc: "Addresses communication and swallowing difficulties.", icon: MessageCircle }
-      ],
-      nutrition: "Feeding tube often needed when swallowing becomes difficult.",
-      devices: ["Wheelchairs", "Communication devices", "Ventilators", "Feeding tubes"],
-      caregiverTips: ["Breathing support planning", "Communication adaptations", "Respiratory monitoring"]
-    },
-    research: [
-      { name: "ALS Research Centers", focus: "Finding treatments and cure", why: "Extensive research into gene therapy and neuroprotection", logo: "RX" }
-    ],
-    faqs: [
-      { q: "Is ALS always fatal?", a: "ALS is currently fatal, but treatments can extend life and improve quality of life. Research continues to find a cure." }
-    ],
-    myths: [
-      { myth: "ALS is contagious.", fact: "ALS is not contagious and cannot be spread from person to person." }
-    ],
-    specialists: [
-      {
-        name: "Dr. Merit Cudkowicz",
-        profession: "Neurologist & Director of the Healey Center",
-        specialization: "Amyotrophic Lateral Sclerosis, Motor Neuron Therapeutics",
-        organization: "Massachusetts General Hospital / Harvard Medical School",
-        location: "Boston, Massachusetts, USA",
-        contact: "https://www.massgeneral.org",
-        publications: "Principal investigator on HEALEY ALS Platform Trial, over 250 publications on motor neuron disease.",
-        focus: "Neurologist",
-        why: "Dr. Merit Cudkowicz"
-      },
-      {
-        name: "Dr. Jeffrey D. Rothstein",
-        profession: "Director, Robert Packard Center for ALS Research",
-        specialization: "ALS Neurobiology, C9orf72 & SOD1 Genetics",
-        organization: "Johns Hopkins Medicine",
-        location: "Baltimore, Maryland, USA",
-        contact: "https://www.hopkinsmedicine.org",
-        publications: "Pioneered nuclear transport defect discoveries and antisense trials in ALS.",
-        focus: "Neurologist & Neuroscientist",
-        why: "Dr. Jeffrey D. Rothstein"
-      }
-    ]
-  },
-  {
     id: "adrenoleukodystrophy",
+    diseaseNumber: "4",
     name: "Adrenoleukodystrophy",
     category: "Genetic · Neurological · Metabolic",
     categoryBadges: ["Genetic", "Neurological", "Metabolic"],
@@ -640,6 +425,228 @@ const FALLBACK_DISEASES = [
         why: "Dr. Hugo Moser"
       }
     ]
+  },
+  {
+    id: "batten-disease",
+    diseaseNumber: "5",
+    name: "Batten Disease",
+    category: "Genetic · Neurological",
+    categoryBadges: ["Genetic", "Neurological"],
+    icon: Zap,
+    color: "sapphire",
+    shortDesc: "A fatal nervous system disorder that begins in childhood, causing vision loss, seizures, and progressive loss of motor and cognitive skills.",
+    researchStatus: "Active Research",
+    inheritance: "Autosomal Recessive",
+    ageAppearance: "5–10 years",
+    severity: "Severe",
+    symptoms: ["Vision loss", "Seizures", "Cognitive decline", "Motor deterioration", "Behavioral changes"],
+    overview: {
+      simple: "Batten Disease is a group of fatal nervous system disorders that begin in childhood and progressively worsen, affecting vision, thinking, and movement.",
+      medical: "Batten Disease (neuronal ceroid lipofuscinoses) are lysosomal storage disorders caused by mutations in various genes (CLN genes), leading to neuronal death."
+    },
+    causes: {
+      genetic: "Caused by mutations in CLN genes. Both parents must carry the mutation (autosomal recessive). Different CLN genes cause different disease types.",
+      environmental: "No environmental factors are known to cause Batten Disease.",
+      unknown: "The exact mechanisms by which CLN mutations lead to neuronal death are still being researched."
+    },
+    types: [
+      { stage: "Infancy", type: "CLN1 (Infantile)", symptoms: ["Language delay", "Ataxia", "Vision loss"], severity: "Very Severe" },
+      { stage: "Late childhood", type: "CLN2 (Late-infantile)", symptoms: ["Seizures", "Developmental regression", "Vision loss"], severity: "Very Severe" },
+      { stage: "Childhood", type: "CLN3 (Juvenile)", symptoms: ["Vision loss", "Cognitive decline", "Behavioral changes"], severity: "Severe" }
+    ],
+    diagnosis: [
+      { name: "Genetic Testing", what: "Testing for mutations in CLN genes.", how: "Blood sample analyzed for CLN gene mutations.", result: "CLN mutation confirms specific disease type." },
+      { name: "EEG", what: "Brain wave monitoring to detect seizure activity.", how: "Electrodes placed on scalp record brain activity.", result: "Abnormal patterns support diagnosis." }
+    ],
+    lifestyle: {
+      therapies: [
+        { name: "Physical Therapy", desc: "Helps maintain mobility as long as possible.", icon: Activity },
+        { name: "Occupational Therapy", desc: "Supports daily functioning and adaptation.", icon: Heart }
+      ],
+      nutrition: "Feeding support often needed as swallowing difficulties develop.",
+      devices: ["Wheelchairs", "Feeding tubes", "Communication devices", "Seizure monitoring equipment"],
+      caregiverTips: ["Seizure safety precautions", "Vision support adaptations", "Behavioral management strategies"]
+    },
+    research: [
+      { name: "Batten Disease Support", focus: "Research funding and family support", why: "Dedicated to finding treatments and supporting families", logo: "RX" }
+    ],
+    faqs: [
+      { q: "How is Batten Disease inherited?", a: "Batten Disease is inherited in an autosomal recessive pattern, meaning both parents must carry the gene mutation." }
+    ],
+    myths: [
+      { myth: "Batten Disease is contagious.", fact: "Batten Disease is a genetic disorder and cannot be caught from others." }
+    ],
+    specialists: [
+      {
+        name: "Dr. Jonathan W. Mink",
+        profession: "Pediatric Neurologist",
+        specialization: "Neuronal Ceroid Lipofuscinoses (Batten Disease), Pediatric Movement Disorders",
+        organization: "University of Rochester Medical Center – Batten Center",
+        location: "Rochester, New York, USA",
+        contact: "https://www.urmc.rochester.edu",
+        publications: "Director of the University of Rochester Batten Center; pioneered standardized rating scales for CLN3 disease.",
+        focus: "Pediatric Neurologist",
+        why: "Dr. Jonathan W. Mink"
+      },
+      {
+        name: "Dr. Erika Augustine",
+        profession: "Pediatric Neurologist & Clinical Trialist",
+        specialization: "Batten Disease (CLN3, CLN2), Rare Pediatric Neurodegenerative Disorders",
+        organization: "Kennedy Krieger Institute / Johns Hopkins Medicine",
+        location: "Baltimore, Maryland, USA",
+        contact: "https://www.kennedykrieger.org",
+        publications: "Extensive leadership in Batten disease natural history studies and novel clinical trials.",
+        focus: "Pediatric Neurologist",
+        why: "Dr. Erika Augustine"
+      }
+    ]
+  },
+  {
+    id: "angiosarcoma",
+    diseaseNumber: "6",
+    name: "Angiosarcoma",
+    category: "Rare Cancer",
+    categoryBadges: ["Rare Cancer"],
+    icon: Heart,
+    color: "taupe",
+    shortDesc: "A rare cancer that develops in the inner lining of blood vessels or lymph vessels, often appearing as a bruise-like lesion on the skin.",
+    researchStatus: "Active Research",
+    inheritance: "Not inherited",
+    ageAppearance: "Older adults",
+    severity: "Aggressive",
+    symptoms: ["Skin lesions", "Bruise-like appearance", "Swelling", "Pain", "Bleeding"],
+    overview: {
+      simple: "Angiosarcoma is a rare cancer that starts in blood vessels. It often appears as a bruise on the skin and can grow quickly.",
+      medical: "Angiosarcoma is a malignant tumor arising from endothelial cells of blood or lymph vessels, with a high tendency for local recurrence and metastasis."
+    },
+    causes: {
+      genetic: "Not typically inherited. Some cases associated with radiation therapy or chronic lymphedema.",
+      environmental: "Chronic lymphedema, radiation exposure, and certain chemicals are risk factors.",
+      unknown: "The exact cause in many cases remains unknown."
+    },
+    types: [
+      { stage: "Skin", type: "Cutaneous", symptoms: ["Bruise-like lesions", "Skin discoloration", "Bleeding"], severity: "Aggressive" },
+      { stage: "Internal organs", type: "Visceral", symptoms: ["Organ-specific symptoms", "Pain", "Weight loss"], severity: "Very Aggressive" }
+    ],
+    diagnosis: [
+      { name: "Biopsy", what: "Removing tissue sample for examination.", how: "Doctor removes sample from suspicious area.", result: "Microscopic examination confirms cancer type." },
+      { name: "Imaging", what: "CT/MRI/PET scans to assess extent.", how: "Patient undergoes imaging studies.", result: "Shows tumor size, location, and spread." }
+    ],
+    lifestyle: {
+      therapies: [
+        { name: "Radiation Therapy", desc: "Often used after surgery to kill remaining cancer cells.", icon: Activity }
+      ],
+      nutrition: "Nutritional support may be needed during treatment.",
+      devices: ["Compression garments", "Lymphedema management tools"],
+      caregiverTips: ["Monitor for skin changes", "Watch for bleeding", "Support during treatment recovery"]
+    },
+    research: [
+      { name: "Cancer Research Centers", focus: "Angiosarcoma clinical trials", why: "Developing new targeted therapies", logo: "RX" }
+    ],
+    faqs: [
+      { q: "What does angiosarcoma look like?", a: "It often appears as a bruise-like purple or red lesion on the skin that may grow over time." }
+    ],
+    myths: [
+      { myth: "Angiosarcoma is just a bad bruise.", fact: "While it may look like a bruise, angiosarcoma is a serious cancer that requires medical treatment." }
+    ],
+    specialists: [
+      {
+        name: "Dr. Vinod Ravi",
+        profession: "Sarcoma Medical Oncologist",
+        specialization: "Angiosarcoma, Vascular Malignancies, Targeted Therapies",
+        organization: "MD Anderson Cancer Center",
+        location: "Houston, Texas, USA",
+        contact: "https://www.mdanderson.org",
+        publications: "Extensive clinical trial leadership for angiosarcoma and immunotherapy.",
+        focus: "Sarcoma Medical Oncologist",
+        why: "Dr. Vinod Ravi"
+      },
+      {
+        name: "Dr. William D. Tap",
+        profession: "Chief of Medical Oncology",
+        specialization: "Soft Tissue Sarcomas, Vascular Tumors",
+        organization: "Memorial Sloan Kettering Cancer Center",
+        location: "New York, New York, USA",
+        contact: "https://www.mskcc.org",
+        publications: "Pioneering research in novel small-molecule inhibitors and immunotherapy in sarcoma.",
+        focus: "Medical Oncologist",
+        why: "Dr. William D. Tap"
+      }
+    ]
+  },
+  {
+    id: "als",
+    diseaseNumber: "7",
+    name: "Amyotrophic Lateral Sclerosis",
+    category: "Neurological",
+    categoryBadges: ["Neurological"],
+    icon: Activity,
+    color: "navy",
+    shortDesc: "A progressive neurodegenerative disease that affects nerve cells in the brain and spinal cord, causing loss of muscle control.",
+    researchStatus: "Active Research",
+    inheritance: "Mostly sporadic",
+    ageAppearance: "40-70 years",
+    severity: "Progressive",
+    symptoms: ["Muscle weakness", "Difficulty speaking", "Trouble swallowing", "Breathing problems", "Paralysis"],
+    overview: {
+      simple: "ALS is a disease that gradually affects nerve cells controlling muscles, leading to progressive weakness and paralysis.",
+      medical: "ALS is characterized by degeneration of motor neurons in the cerebral cortex, brainstem, and spinal cord, resulting in progressive muscle atrophy and weakness."
+    },
+    causes: {
+      genetic: "About 5-10% of cases are familial (inherited), caused by mutations in genes like SOD1, C9orf72, TARDBP, and FUS.",
+      environmental: "Possible environmental factors being studied, but no definitive causes identified.",
+      unknown: "In 90-95% of cases, the cause is unknown (sporadic ALS)."
+    },
+    types: [
+      { stage: "All", type: "Sporadic", symptoms: ["Most common form", "Unknown cause", "Progressive weakness"], severity: "Severe" },
+      { stage: "Familial", type: "Familial", symptoms: ["Inherited", "Similar symptoms", "Earlier onset possible"], severity: "Severe" }
+    ],
+    diagnosis: [
+      { name: "EMG/NCS", what: "Electromyography and nerve conduction studies to assess muscle and nerve function.", how: "Electrodes measure electrical activity in muscles and nerves.", result: "Abnormal patterns support ALS diagnosis." },
+      { name: "MRI", what: "Brain and spinal cord imaging to rule out other conditions.", how: "Patient undergoes MRI scan.", result: "Helps exclude other neurological conditions." }
+    ],
+    lifestyle: {
+      therapies: [
+        { name: "Physical Therapy", desc: "Helps maintain mobility and function as long as possible.", icon: Activity },
+        { name: "Speech Therapy", desc: "Addresses communication and swallowing difficulties.", icon: MessageCircle }
+      ],
+      nutrition: "Feeding tube often needed when swallowing becomes difficult.",
+      devices: ["Wheelchairs", "Communication devices", "Ventilators", "Feeding tubes"],
+      caregiverTips: ["Breathing support planning", "Communication adaptations", "Respiratory monitoring"]
+    },
+    research: [
+      { name: "ALS Research Centers", focus: "Finding treatments and cure", why: "Extensive research into gene therapy and neuroprotection", logo: "RX" }
+    ],
+    faqs: [
+      { q: "Is ALS always fatal?", a: "ALS is currently fatal, but treatments can extend life and improve quality of life. Research continues to find a cure." }
+    ],
+    myths: [
+      { myth: "ALS is contagious.", fact: "ALS is not contagious and cannot be spread from person to person." }
+    ],
+    specialists: [
+      {
+        name: "Dr. Merit Cudkowicz",
+        profession: "Neurologist & Director of the Healey Center",
+        specialization: "Amyotrophic Lateral Sclerosis, Motor Neuron Therapeutics",
+        organization: "Massachusetts General Hospital / Harvard Medical School",
+        location: "Boston, Massachusetts, USA",
+        contact: "https://www.massgeneral.org",
+        publications: "Principal investigator on HEALEY ALS Platform Trial, over 250 publications on motor neuron disease.",
+        focus: "Neurologist",
+        why: "Dr. Merit Cudkowicz"
+      },
+      {
+        name: "Dr. Jeffrey D. Rothstein",
+        profession: "Director, Robert Packard Center for ALS Research",
+        specialization: "ALS Neurobiology, C9orf72 & SOD1 Genetics",
+        organization: "Johns Hopkins Medicine",
+        location: "Baltimore, Maryland, USA",
+        contact: "https://www.hopkinsmedicine.org",
+        publications: "Pioneered nuclear transport defect discoveries and antisense trials in ALS.",
+        focus: "Neurologist & Neuroscientist",
+        why: "Dr. Jeffrey D. Rothstein"
+      }
+    ]
   }
 ];
 
@@ -713,7 +720,7 @@ export async function fetchDiseasesFromAPI(search?: string, category?: string) {
 
       return {
         ...apiDisease, // Keep all raw backend properties (causesStructured, typesStructured, symptomsStructured, etc.)
-        id: apiDisease.id || apiDisease.diseaseNumber || apiDisease.name.toLowerCase().replace(/\s+/g, "-"),
+        id: apiDisease.diseaseNumber || apiDisease.id || apiDisease.name.toLowerCase().replace(/\s+/g, "-"),
         name: apiDisease.name,
         diseaseNumber: apiDisease.diseaseNumber || (apiDisease as any).id || "1",
         category: apiDisease.category || "Rare Disease",
