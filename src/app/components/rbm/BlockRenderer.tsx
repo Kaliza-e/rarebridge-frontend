@@ -153,9 +153,21 @@ function GroupCard({ group, className = '' }: { group: GroupBlock; className?: s
         {group.title}
       </h3>
       <div className="space-y-3">
-        {group.blocks.map((child, idx) => (
-          <BlockRenderer key={idx} block={child} />
-        ))}
+        {group.blocks.map((child, idx) => {
+          const isNutrition =
+            child.type === 'labeled' &&
+            /^(?:diets?(?:\s*[\/&]\s*nutrition)?|nutrition(?:al)?(?:\s+guidance)?)$/i.test(child.label.trim());
+          return (
+            <React.Fragment key={idx}>
+              {isNutrition && idx > 0 && (
+                <div className="py-2" role="separator" aria-orientation="horizontal">
+                  <hr className="border-t border-[#E7E2CE]" />
+                </div>
+              )}
+              <BlockRenderer block={child} />
+            </React.Fragment>
+          );
+        })}
       </div>
     </div>
   );
@@ -312,9 +324,24 @@ export function BlocksRenderer({ blocks, className = '' }: { blocks?: Block[]; c
 
   return (
     <div className={`space-y-3.5 ${className}`}>
-      {blocks.map((block, idx) => (
-        <BlockRenderer key={idx} block={block} />
-      ))}
+      {blocks.map((block, idx) => {
+        const isNutritionBlock =
+          (block.type === 'labeled' &&
+            /^(?:diets?(?:\s*[\/&]\s*nutrition)?|nutrition(?:al)?(?:\s+guidance)?)$/i.test(block.label.trim())) ||
+          (block.type === 'group' &&
+            /^(?:diets?(?:\s*[\/&]\s*nutrition)?|nutrition(?:al)?(?:\s+guidance)?)$/i.test(block.title.trim()));
+
+        return (
+          <React.Fragment key={idx}>
+            {isNutritionBlock && idx > 0 && (
+              <div className="py-2" role="separator" aria-orientation="horizontal">
+                <hr className="border-t border-[#E7E2CE]" />
+              </div>
+            )}
+            <BlockRenderer block={block} />
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchDiseasesFromAPI } from "../data";
 import { ZebraEmptyState, ZebraGridDoodle } from "../components/common/Visuals";
@@ -322,10 +322,6 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     ? disease.lifestyleAndDailySupport.communities
     : [];
 
-  const faqsList = disease && Array.isArray(disease.faqs) && disease.faqs.length > 0
-    ? disease.faqs
-    : (disease && Array.isArray(disease.faq) ? disease.faq : []);
-
   const mythsList = disease && Array.isArray(disease.factsMyths) && disease.factsMyths.length > 0
     ? disease.factsMyths
     : (disease && Array.isArray(disease.myths) ? disease.myths : []);
@@ -351,6 +347,78 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   const mythsBlocks = disease?.rbmBlocks?.myths || getBlocks(disease?.factsMyths);
   const specialistsBlocks = disease?.rbmBlocks?.specialists || getBlocks(disease?.specialists);
   const sourcesBlocks = disease?.rbmBlocks?.sources || getBlocks(disease?.sources);
+
+  const faqsList = useMemo(() => {
+    if (disease && Array.isArray(disease.faqs) && disease.faqs.length > 0) {
+      return disease.faqs;
+    }
+    if (disease && Array.isArray(disease.faq) && disease.faq.length > 0) {
+      return disease.faq;
+    }
+    if (faqsBlocks && faqsBlocks.length > 0) {
+      return faqsBlocks
+        .filter((b: any) => b.type === "labeled" || (b.type === "record" && b.fields))
+        .map((b: any, idx: number) => {
+          if (b.type === "labeled") {
+            const ans = Array.isArray(b.body)
+              ? b.body.map((s: any) => s.t || "").join("")
+              : typeof b.body === "string"
+              ? b.body
+              : "";
+            return {
+              question: b.label,
+              answer: ans.trim(),
+              q: b.label,
+              a: ans.trim(),
+              order: idx + 1,
+            };
+          }
+          if (b.type === "record") {
+            const qF = b.fields.find((f: any) => /question/i.test(f.label));
+            const aF = b.fields.find((f: any) => /answer/i.test(f.label));
+            const qStr = qF
+              ? Array.isArray(qF.body)
+                ? qF.body.map((s: any) => s.t || "").join("")
+                : String(qF.body || "")
+              : `Question ${idx + 1}`;
+            const aStr = aF
+              ? Array.isArray(aF.body)
+                ? aF.body.map((s: any) => s.t || "").join("")
+                : String(aF.body || "")
+              : "";
+            return {
+              question: qStr.trim(),
+              answer: aStr.trim(),
+              q: qStr.trim(),
+              a: aStr.trim(),
+              order: idx + 1,
+            };
+          }
+          return null;
+        })
+        .filter(Boolean);
+    }
+    if (typeof disease?.faqs === "string" && disease.faqs.trim()) {
+      const cleaned = disease.faqs.replace(/^<!--rbm:[^>]*-->\s*/, "").trim();
+      const lines = cleaned.split(/\r?\n/).map((l: string) => l.trim()).filter(Boolean);
+      const parsed: any[] = [];
+      let currentQ = "";
+      let currentA = "";
+      for (const line of lines) {
+        const match = line.match(/^(?:Q\d*[:.]\s*|\*\*(.+?)\*\*:?\s*|(.+?\?):?\s*)(.*)$/i);
+        if (match) {
+          if (currentQ) parsed.push({ question: currentQ, answer: currentA.trim(), q: currentQ, a: currentA.trim() });
+          currentQ = (match[1] || match[2] || line).trim();
+          currentA = match[3] || "";
+        } else if (currentQ) {
+          currentA += " " + line;
+        }
+      }
+      if (currentQ) parsed.push({ question: currentQ, answer: currentA.trim(), q: currentQ, a: currentA.trim() });
+      if (parsed.length > 0) return parsed;
+    }
+    return [];
+  }, [disease, faqsBlocks]);
 
   const allTabs = [
     { id: "overview", label: "Overview", icon: BookOpen },
@@ -1209,9 +1277,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                       </div>
                     </div>
 
-                    {faqsBlocks && faqsBlocks.length > 0 ? (
-                      <BlocksRenderer blocks={faqsBlocks} />
-                    ) : faqsList.length > 0 ? (
+                    {faqsList.length > 0 ? (
                       <div className="space-y-3">
                         {faqsList.map((faq: any, idx: number) => {
                           const isOpen = openFaqIndices[idx] ?? (idx === 0);

@@ -537,10 +537,10 @@ export function AIAssistant() {
       <button
         onClick={() => setOpen(o => !o)}
         className="ai-assistant-control fixed right-5 bottom-24 md:bottom-8 z-50 flex items-center gap-2 rounded-full bg-[#112250] px-5 py-3 text-sm font-bold text-white shadow-xl hover:bg-[#1e3a7a] transition-all duration-200 hover:-translate-y-0.5 group cursor-pointer border border-[#BCE0F5]/40"
-        aria-label="Open AI Assistant"
+        aria-label="Open Rare-Ze Assistant"
       >
         <Bot className="w-5 h-5 text-[#BCE0F5]" />
-        <span className="hidden sm:inline">Ask RareBridge AI</span>
+        <span className="hidden sm:inline">Rare-Ze</span>
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BCE0F5] opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-[#BCE0F5]" />
@@ -556,10 +556,10 @@ export function AIAssistant() {
               <Bot className="w-5 h-5 text-[#BCE0F5]" />
             </div>
             <div className="flex-1">
-              <p className="font-bold text-white text-sm leading-none font-heading">RareBridge AI</p>
+              <p className="font-bold text-white text-sm leading-none font-heading">Rare-Ze</p>
               <p className="text-[#D6E0F5] text-xs mt-0.5 font-medium">Ask anything about rare diseases</p>
             </div>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Close AI Assistant" className="text-[#D6E0F5] hover:text-white transition-colors p-1 cursor-pointer">
+            <button type="button" onClick={() => setOpen(false)} aria-label="Close Rare-Ze Assistant" className="text-[#D6E0F5] hover:text-white transition-colors p-1 cursor-pointer">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
@@ -597,10 +597,10 @@ export function AIAssistant() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && send(input)}
                 placeholder="Ask a question…"
-                aria-label="Ask RareBridge AI a question"
+                aria-label="Ask Rare-Ze a question"
                 className="flex-1 bg-transparent text-xs sm:text-sm text-[#112250] placeholder-[#3B507D]/60 outline-none font-medium"
               />
-              <button type="button" onClick={() => send(input)} aria-label="Send message to AI assistant" className="w-7 h-7 rounded-full bg-[#112250] flex items-center justify-center hover:bg-[#1e3a7a] transition-colors shrink-0 cursor-pointer">
+              <button type="button" onClick={() => send(input)} aria-label="Send message to Rare-Ze" className="w-7 h-7 rounded-full bg-[#112250] flex items-center justify-center hover:bg-[#1e3a7a] transition-colors shrink-0 cursor-pointer">
                 <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
               </button>
             </div>
