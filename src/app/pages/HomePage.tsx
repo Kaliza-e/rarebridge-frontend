@@ -44,41 +44,25 @@ const HERO_SLIDES = [
     tag: "A Warm Safe Place for Rare Families",
     title: "Understanding rare conditions with clarity, care & hope.",
     subtitle: "Plain-language medical guides, world-class specialist directories, and compassionate family support for children, parents, and caregivers.",
-    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=2000&q=85",
-    alt: "Caring physician consulting warmly with reassurance in modern clinic",
+    image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1920&q=80",
+    alt: "Healthcare specialist offering compassionate medical support to family",
     badge: "100% Free & Family-Centered",
-  },
-  {
-    tag: "Caregiver & Family Circles",
-    title: "Connecting parents & caregivers through real experience.",
-    subtitle: "You are never alone. Join parent support circles, practical caregiver wellness guides, and peer advocacy networks.",
-    image: "https://images.unsplash.com/photo-1536640712-4d4c36ff0e4e?auto=format&fit=crop&w=2000&q=85",
-    alt: "Joyful parent hugging their child with genuine love and optimism",
-    badge: "Compassionate Peer Support",
   },
   {
     tag: "Plain-Language Medical Education",
     title: "Simplifying complex genetic reports into everyday guidance.",
     subtitle: "Our certified clinical networks break down ORPHA codes, symptoms, and inheritance patterns into clear, encouraging steps.",
-    image: "https://images.unsplash.com/photo-1579165466791-78822d31e672?auto=format&fit=crop&w=2000&q=85",
-    alt: "Genetics researcher analyzing diagnostic sequencing in high-tech laboratory",
+    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=1920&q=80",
+    alt: "Medical researcher and geneticist studying molecular pathology under microscope",
     badge: "Sourced from Certified Geneticists",
   },
   {
-    tag: "Specialist & Center Directory",
-    title: "Find trusted specialists who truly understand rare diseases.",
-    subtitle: "Explore over 2,400 verified medical centers, metabolic clinicians, and neurological genetics teams worldwide.",
-    image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=2000&q=85",
-    alt: "Pediatric physician caring gently for a child in a sunny clinic",
-    badge: "Verified Clinical Network",
-  },
-  {
-    tag: "Community Advocacy & Research",
-    title: "Empowering every family on their rare disease journey.",
-    subtitle: "Access practical therapies, assistive equipment guides, and research pipelines tailored for daily living.",
-    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=2000&q=85",
-    alt: "Warm collaborative circle of family caregivers sharing hope",
-    badge: "Every Journey Matters",
+    tag: "Caregiver & Family Network",
+    title: "Connecting parents & caregivers through real experience.",
+    subtitle: "You are never alone. Join parent support circles, practical caregiver wellness guides, and peer advocacy networks.",
+    image: "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1920&q=80",
+    alt: "Supportive family walking together with care and hope",
+    badge: "Compassionate Support Circles",
   },
 ];
 
@@ -171,8 +155,8 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 className="h-full w-full object-cover object-center transition-transform duration-[7000ms] ease-out scale-105"
               />
               {/* Deep navy atmospheric gradient overlays matching Tour */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#070D1E]/75 via-[#070D1E]/55 to-[#070D1E]/85" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070D1E]/30 to-[#070D1E]/75 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#070D1E]/92 via-[#070D1E]/80 to-[#070D1E]/95" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070D1E]/40 to-[#070D1E]/90 pointer-events-none" />
             </div>
           ))}
         </div>
