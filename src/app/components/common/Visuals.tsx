@@ -8,6 +8,125 @@ import {
 import { Disease } from "../../data";
 import { generateDiseasePDF } from "../../utils/pdf-generator";
 
+/**
+ * Buttery yellow (#FBE08A) cartoon star with friendly rounded points.
+ * Inspired by the warm baby zebra illustration.
+ */
+
+/**
+ * Adorable Baby Zebra mascot badge using official Rare-Ze artwork.
+ * Replaces star emojis with warm zebra branding.
+ */
+export function BabyZebraBadge({
+  size = 24,
+  className = "",
+  style = {},
+}: {
+  size?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <div
+      className={`inline-flex items-center justify-center rounded-full overflow-hidden shrink-0 border border-[#112250]/20 bg-white shadow-2xs ${className}`}
+      style={{ width: size, height: size, ...style }}
+      aria-label="Rare-Ze Baby Zebra Mascot"
+    >
+      <img
+        src="/baby-zebra.jpg"
+        alt="Rare-Ze Baby Zebra"
+        className="w-full h-full object-cover scale-110"
+      />
+    </div>
+  );
+}
+
+export function ZebraStar({
+  size = 20,
+  tilt = 0,
+  className = "",
+  style = {},
+}: {
+  size?: number;
+  tilt?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      className={`shrink-0 select-none ${className}`}
+      style={{
+        transform: tilt ? `rotate(${tilt}deg)` : undefined,
+        ...style,
+      }}
+      aria-hidden="true"
+    >
+      <path
+        d="M12 2.2L14.7 7.7C14.9 8.1 15.3 8.4 15.8 8.5L21.8 9.3C23 9.5 23.5 11 22.6 11.8L18.3 16C18 16.3 17.8 16.8 17.9 17.3L18.9 23.3C19.1 24.5 17.8 25.4 16.7 24.8L12.4 22.5C12 22.3 11.5 22.3 11.1 22.5L6.8 24.8C5.7 25.4 4.4 24.5 4.6 23.3L5.6 17.3C5.7 16.8 5.5 16.3 5.2 16L0.9 11.8C0 11 0.5 9.5 1.7 9.3L7.7 8.5C8.2 8.4 8.6 8.1 8.8 7.7L11.5 2.2C12 1.2 12.5 1.2 13 2.2Z"
+        fill="#FBE08A"
+        stroke="#E8C665"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Soft sky blue (#D6EAF5) cloud-shaped blob.
+ */
+export function ZebraCloudBlob({
+  className = "",
+  style = {},
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <svg
+      viewBox="0 0 200 120"
+      fill="none"
+      className={`pointer-events-none select-none ${className}`}
+      style={style}
+      aria-hidden="true"
+    >
+      <path
+        d="M35 85C20 85 10 73 10 58C10 44 21 33 35 32C41 18 55 8 72 8C92 8 108 21 113 38C120 33 129 30 139 30C158 30 174 46 174 65C183 67 190 75 190 85C190 97 180 107 168 107L38 107C24 107 15 97 15 85Z"
+        fill="#D6EAF5"
+        fillOpacity="0.65"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Thin black-and-white zebra stripe divider line between major sections.
+ */
+export function ZebraStripeDivider({ className = "" }: { className?: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`w-full flex items-center justify-center my-8 sm:my-12 px-4 select-none ${className}`}
+    >
+      <div className="relative w-full max-w-4xl h-2.5 rounded-full overflow-hidden shadow-2xs border border-[#112250]/15 bg-white">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(45deg, #112250 0, #112250 10px, #FFFFFF 10px, #FFFFFF 20px)",
+            opacity: 0.95,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function FourPointStar({
   size = 11,
   className = "text-[#112250] shrink-0",
@@ -536,14 +655,14 @@ export function AIAssistant() {
       {/* Floating button */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="ai-assistant-control fixed right-5 bottom-24 md:bottom-8 z-50 flex items-center gap-2 rounded-full bg-[#112250] px-5 py-3 text-sm font-bold text-white shadow-xl hover:bg-[#1e3a7a] transition-all duration-200 hover:-translate-y-0.5 group cursor-pointer border border-[#BCE0F5]/40"
+        className="ai-assistant-control fixed right-5 bottom-24 md:bottom-8 z-50 flex items-center gap-2 rounded-full bg-[#112250] text-white px-5 py-3 text-sm font-bold shadow-xl hover:bg-[#1C376F] transition-all duration-200 hover:-translate-y-1 group cursor-pointer border border-white/20 min-h-[44px]"
         aria-label="Open Rare-Ze Assistant"
       >
         <Bot className="w-5 h-5 text-[#BCE0F5]" />
-        <span className="hidden sm:inline">Rare-Ze</span>
+        <span className="hidden sm:inline font-heading font-black">Rare-Ze</span>
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BCE0F5] opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#BCE0F5]" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#48CAE4] opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#48CAE4]" />
         </span>
       </button>
 

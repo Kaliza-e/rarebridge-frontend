@@ -499,7 +499,6 @@ export function generateDiseasePDF(disease: PDFDiseaseData) {
   // Meta Badges line
   const metaParts: string[] = [];
   if (disease.category) metaParts.push(`Category: ${disease.category}`);
-  if (disease.diseaseNumber) metaParts.push(`Disease No. ${disease.diseaseNumber}`);
   if (disease.orphaCode) metaParts.push(`ORPHA: ${disease.orphaCode}`);
   if (disease.inheritancePattern) metaParts.push(`Inheritance: ${disease.inheritancePattern}`);
   if (disease.researchStatus) metaParts.push(`Status: ${disease.researchStatus}`);

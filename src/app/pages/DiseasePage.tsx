@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchDiseasesFromAPI } from "../data";
-import { ZebraEmptyState, ZebraGridDoodle } from "../components/common/Visuals";
+import {
+  ZebraEmptyState,
+  ZebraGridDoodle,
+  BabyZebraBadge,
+  ZebraCloudBlob,
+} from "../components/common/Visuals";
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
 import { generateDiseasePDF } from "../utils/pdf-generator";
 import { LinkifiedText, RichTextRunsRenderer } from "../utils/link-helper";
@@ -39,6 +44,9 @@ import {
   Droplets,
   Zap,
   Users,
+  Bot,
+  Sparkles,
+  MessageCircle,
 } from "lucide-react";
 
 type DiseasePageProps = {
@@ -67,7 +75,7 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
 
         if (node.type === "section" || node.type === "subsection") {
           return (
-            <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-5 space-y-3">
+            <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-white p-5 space-y-3 shadow-xs card-hover-lift">
               {node.title && (
                 <h3 className="font-heading font-black text-base text-[#112250] flex items-center gap-2">
                   <span className="flex h-2.5 w-2.5 rounded-full bg-[#112250]" />
@@ -75,12 +83,12 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
                 </h3>
               )}
               {node.content && (
-                <p className="text-xs text-[#112250] font-medium leading-relaxed">
+                <p className="text-base text-[#112250] font-medium leading-relaxed">
                   {renderNodeRunsOrString(node.content)}
                 </p>
               )}
               {Array.isArray(node.children) && node.children.length > 0 && (
-                <div className="pl-3 border-l-2 border-[#E7E2CE]">
+                <div className="pl-3 border-l-2 border-[#D6EAF5]">
                   <ContentNodeRenderer nodes={node.children} />
                 </div>
               )}
@@ -90,8 +98,8 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
 
         if (node.type === "bullet") {
           return (
-            <div key={idx} className="flex items-start gap-2 text-xs text-[#112250] font-medium">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#112250] mt-1.5 shrink-0" />
+            <div key={idx} className="flex items-start gap-2.5 text-base text-[#112250] font-medium leading-relaxed">
+              <span className="h-2 w-2 rounded-full bg-[#112250] mt-2 shrink-0" />
               <span>{renderNodeRunsOrString(node.content)}</span>
             </div>
           );
@@ -99,7 +107,7 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
 
         if (node.type === "numbered") {
           return (
-            <div key={idx} className="flex items-start gap-2 text-xs text-[#112250] font-medium">
+            <div key={idx} className="flex items-start gap-2.5 text-base text-[#112250] font-medium leading-relaxed">
               <span className="font-bold text-[#112250] shrink-0">{idx + 1}.</span>
               <span>{renderNodeRunsOrString(node.content)}</span>
             </div>
@@ -107,7 +115,7 @@ function ContentNodeRenderer({ nodes }: { nodes?: any[] }) {
         }
 
         return (
-          <div key={idx} className="text-xs font-medium text-[#112250] leading-relaxed">
+          <div key={idx} className="text-base font-medium text-[#112250] leading-relaxed">
             {renderNodeRunsOrString(node.content)}
           </div>
         );
@@ -121,16 +129,16 @@ function StructuredSections({ sections, emptyHeading }: { sections: ParsedSectio
   return (
     <div className="space-y-3">
       {sections.map((section, index) => (
-        <details key={`${section.title}-${index}`} className="group rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0]">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-xl p-4 text-sm font-bold text-[#112250] marker:content-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#112250]">
-            <span>{section.title || emptyHeading}</span>
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" aria-hidden="true" />
+        <details key={`${section.title}-${index}`} className="group rounded-2xl border border-[#112250]/15 bg-white overflow-hidden shadow-xs">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 sm:p-5 text-base font-bold text-[#112250] marker:content-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#112250] bg-[#F7FBFE] hover:bg-[#D6EAF5]/40 transition-colors">
+            <span className="font-heading font-black">{section.title || emptyHeading}</span>
+            <ChevronDown className="h-5 w-5 shrink-0 text-[#112250] transition-transform group-open:rotate-180" aria-hidden="true" />
           </summary>
-          <div className="border-t border-[#E7E2CE] bg-white p-4">
+          <div className="border-t border-[#112250]/10 bg-white p-5">
             {section.content?.length ? (
               <ContentNodeRenderer nodes={section.content as ContentNode[]} />
             ) : (
-              <p className="whitespace-pre-line text-sm leading-relaxed text-[#112250]">
+              <p className="whitespace-pre-line text-base leading-relaxed text-[#112250]">
                 <LinkifiedText text={section.raw} />
               </p>
             )}
@@ -158,23 +166,26 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   >("overview");
 
   // State for FAQ accordion toggle
-  const [openFaqIndices, setOpenFaqIndices] = useState<Record<number, boolean>>({});
+  const [openFaqIndices, setOpenFaqIndices] = useState<Record<number, boolean>>({ 0: true });
 
-  // State for Lifestyle 5-section collapsible accordions (Defect 8)
+  // State for Myths accordion toggle
+  const [openMythIndices, setOpenMythIndices] = useState<Record<number, boolean>>({ 0: true });
+
+  // State for symptoms list view expansion (first 4 visible by default)
+  const [showAllSymptoms, setShowAllSymptoms] = useState(false);
+
+  // State for Lifestyle accordions
   const [openLifestyleAccordions, setOpenLifestyleAccordions] = useState<Record<string, boolean>>({
     therapies: true,
-    nutrition: true,
-    devices: true,
-    caregiverTips: true,
-    community: true,
+    nutrition: false,
+    devices: false,
+    caregiverTips: false,
+    community: false,
   });
 
   const toggleLifestyleAccordion = (key: string) => {
     setOpenLifestyleAccordions((prev) => ({ ...prev, [key]: !prev[key] }));
   };
-
-  // State for Parse Completeness Report collapsible debug panel
-  const [showReport, setShowReport] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -224,7 +235,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     };
   }, [diseaseId]);
 
-  // Safe extractors & content availability checks (safe for null disease)
+  // Safe extractors & content availability checks
   const causesList = disease && Array.isArray(disease.causesStructured) && disease.causesStructured.length > 0
     ? disease.causesStructured
     : (disease && typeof disease.causes === "object" && disease.causes !== null
@@ -337,9 +348,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     ? disease.sources
     : (disease && Array.isArray(disease.links) ? disease.links : []);
 
-  const uncategorizedList = disease && Array.isArray(disease.uncategorizedContent) ? disease.uncategorizedContent : [];
-
-  // Extract structured RBM blocks if present (or parse on the fly)
+  // RBM blocks
   const overviewBlocks = disease?.rbmBlocks?.overview || getBlocks(disease?.overview);
   const causesBlocks = disease?.rbmBlocks?.causes || getBlocks(disease?.causes);
   const typesSymptomsBlocks = disease?.rbmBlocks?.typesSymptoms || getBlocks(disease?.typesAndSymptoms) || getBlocks(disease?.typesAndSymptomsRaw);
@@ -349,7 +358,6 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   const faqsBlocks = disease?.rbmBlocks?.faqs || getBlocks(disease?.faqs);
   const mythsBlocks = disease?.rbmBlocks?.myths || getBlocks(disease?.factsMyths);
   const specialistsBlocks = disease?.rbmBlocks?.specialists || getBlocks(disease?.specialists);
-  const sourcesBlocks = disease?.rbmBlocks?.sources || getBlocks(disease?.sources);
 
   const faqsList = useMemo(() => {
     if (disease && Array.isArray(disease.faqs) && disease.faqs.length > 0) {
@@ -432,10 +440,11 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     { id: "researchPharma", label: "Research & Pharma", icon: FlaskConical },
     { id: "faqs", label: "FAQs", icon: HelpCircle },
     { id: "myths", label: "Facts vs. Myths", icon: Lightbulb },
-    { id: "specialists", label: "Specialist Directory", icon: Stethoscope },
+    { id: "specialists", label: "Specialists", icon: Stethoscope },
   ] as const;
 
   const tabs = allTabs;
+
   const navigateToTab = (id: typeof activeTab) => {
     setActiveTab(id);
     requestAnimationFrame(() => {
@@ -447,25 +456,174 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     setOpenFaqIndices((prev) => ({ ...prev, [idx]: !prev[idx] }));
   };
 
+  const toggleMyth = (idx: number) => {
+    setOpenMythIndices((prev) => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  const openRareZeChat = () => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("open-ai-assistant"));
+    }
+  };
+
+  // Plain-language 1-2 sentence summaries for each tab
+  const tabSummaries = useMemo(() => {
+    if (!disease) return {};
+    const rawOverviewStr = typeof disease.overview === "string"
+      ? disease.overview.replace(/^<!--rbm:[^>]*-->\s*/, '').replace(/[*_#`]/g, '').trim()
+      : (disease.overview?.simple || disease.overview?.medical || disease.shortDesc || "");
+
+    const firstTwoSentences = rawOverviewStr
+      .split(/(?<=[.!?])\s+/)
+      .slice(0, 2)
+      .join(" ") || `${disease.name} is a recognized rare health condition requiring specialized care and guidance.`;
+
+    return {
+      overview: firstTwoSentences,
+      causes: `${disease.name} is primarily driven by genetic or biological alterations, though environmental and individual modifiers may also contribute.`,
+      typesAndSymptoms: `Symptoms can appear gradually or across distinct subtypes, often affecting multiple bodily systems with varying degrees of severity.`,
+      diagnosis: `Clinicians confirm ${disease.name} through comprehensive physical evaluations, targeted genetic testing, blood biomarkers, and specialized imaging.`,
+      lifestyleCommunity: `Consistent daily therapies, tailored nutritional support, adaptive equipment, and connected family communities make a lasting difference.`,
+      researchPharma: `Clinical teams and research institutions worldwide are actively investigating novel therapies, targeted drug candidates, and observational trials.`,
+      faqs: `Here are clear, medical-backed answers to the questions patients, caregivers, and families ask most frequently.`,
+      myths: `Medical science is continually evolving. Here we pair common misconceptions with verified clinical facts to keep your family informed.`,
+      specialists: `Consulting experienced multidisciplinary clinicians and specialist centers provides the highest quality care and surveillance.`,
+    };
+  }, [disease]);
+
+  // Contextual Jump-To Anchors per tab
+  const jumpLinks = useMemo(() => {
+    switch (activeTab) {
+      case "overview":
+        return [
+          { label: "At a Glance", href: "#sec-summary" },
+          { label: "Quick Facts", href: "#sec-fact-cards" },
+          { label: "Detailed Medical Overview", href: "#sec-detail" },
+          { label: "Common Symptoms", href: "#sec-symptoms-preview" },
+        ];
+      case "causes":
+        return [
+          { label: "Summary & Facts", href: "#sec-fact-cards" },
+          { label: "Genetic Risk Factors", href: "#sec-causes-list" },
+          { label: "Inheritance Pattern", href: "#sec-inheritance" },
+        ];
+      case "typesAndSymptoms":
+        return [
+          { label: "Summary & Facts", href: "#sec-fact-cards" },
+          { label: "Clinical Subtypes", href: "#sec-subtypes" },
+          { label: "Symptoms Checklist", href: "#sec-symptoms-list" },
+        ];
+      case "diagnosis":
+        return [
+          { label: "Summary & Facts", href: "#sec-fact-cards" },
+          { label: "Diagnostic Steps", href: "#sec-diagnostic-steps" },
+          { label: "Testing Methods", href: "#sec-testing" },
+        ];
+      case "lifestyleCommunity":
+        return [
+          { label: "Daily Support Overview", href: "#sec-fact-cards" },
+          { label: "Therapies & Diets", href: "#sec-therapies" },
+          { label: "Caregiver Tips & Groups", href: "#sec-caregiver" },
+        ];
+      case "researchPharma":
+        return [
+          { label: "Pipeline Overview", href: "#sec-fact-cards" },
+          { label: "Active Treatments", href: "#sec-treatments" },
+          { label: "Clinical Trials & Centers", href: "#sec-trials" },
+        ];
+      case "faqs":
+        return [
+          { label: "Overview", href: "#sec-fact-cards" },
+          { label: "Browse All Questions", href: "#sec-faqs-accordion" },
+        ];
+      case "myths":
+        return [
+          { label: "Overview", href: "#sec-fact-cards" },
+          { label: "Myth vs. Fact Pairs", href: "#sec-myths-accordion" },
+        ];
+      case "specialists":
+        return [
+          { label: "Specialty Focus", href: "#sec-fact-cards" },
+          { label: "Clinical Directory", href: "#sec-specialists-list" },
+        ];
+      default:
+        return [];
+    }
+  }, [activeTab]);
+
+  // Key Takeaways per tab
+  const keyTakeaways = useMemo(() => {
+    if (!disease) return [];
+    switch (activeTab) {
+      case "overview":
+        return [
+          `${disease.name} has recognized medical pathways and dedicated clinical resources.`,
+          "Early diagnosis and specialized multidisciplinary care significantly improve quality of life.",
+        ];
+      case "causes":
+        return [
+          "Understanding the underlying genetic or cellular cause helps guide targeted therapeutic plans.",
+          "Genetic counseling is recommended for families seeking clarity on inheritance risks.",
+        ];
+      case "typesAndSymptoms":
+        return [
+          "Symptoms vary by subtype and patient age—monitoring progression helps doctors adjust interventions early.",
+          "Tracking new symptoms in a simple journal helps clinical appointments remain focused.",
+        ];
+      case "diagnosis":
+        return [
+          "A definitive diagnosis typically combines molecular genetic tests with specialized clinical imaging.",
+          "Second opinions at certified rare disease referral centers can confirm complex findings.",
+        ];
+      case "lifestyleCommunity":
+        return [
+          "Physical and occupational therapies preserve daily mobility and independence.",
+          "Connecting with peer support groups helps families share practical day-to-day tips.",
+        ];
+      case "researchPharma":
+        return [
+          "New observational studies and targeted therapeutic pipelines are active worldwide.",
+          "Talk to your specialist before applying to clinical trials to verify eligibility criteria.",
+        ];
+      case "faqs":
+        return [
+          "Clear information dispels uncertainty and helps caregivers advocate with confidence.",
+          "Ask your medical team whenever a symptom or treatment plan feels unclear.",
+        ];
+      case "myths":
+        return [
+          "Verified medical facts protect families from unproven or potentially harmful claims.",
+          "Always verify treatment guidance with licensed clinicians specializing in this disease.",
+        ];
+      case "specialists":
+        return [
+          "Experienced specialists coordinate comprehensive care across organs and body systems.",
+          "Telemedicine and regional center partnerships make expert consultations more accessible.",
+        ];
+      default:
+        return ["Personalized care and regular consultations help manage this condition effectively."];
+    }
+  }, [disease, activeTab]);
+
   if (loading) {
     return (
-      <div className="flex min-h-[70vh] flex-col items-center justify-center bg-[#F5F4F0] p-8 text-center">
+      <div className="flex min-h-[70vh] flex-col items-center justify-center bg-[#F7FBFE] p-8 text-center">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#112250] border-t-transparent mb-4" />
-        <p className="text-base font-bold text-[#3B507D]">Loading disease information...</p>
+        <p className="text-base font-bold text-[#112250]">Loading disease information...</p>
       </div>
     );
   }
 
   if (!disease) {
     return (
-      <div className="min-h-screen bg-[#F5F4F0] px-6 py-16 text-center">
+      <div className="min-h-screen bg-[#F7FBFE] px-6 py-16 text-center">
         <ZebraEmptyState
           message={loadError ? "Disease information unavailable" : "Condition not found"}
           sub={loadError || "The condition you are looking for could not be loaded from the source data."}
         />
         <button
           onClick={onBack}
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#112250] px-6 py-3.5 font-bold text-white hover:bg-[#3B507D] transition-all"
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#112250] px-6 py-3.5 font-bold text-white hover:bg-[#1a3365] transition-all min-h-[44px] cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" /> Back to Disease Directory
         </button>
@@ -474,118 +632,69 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   }
 
   return (
-    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#BCE0F5] selection:text-[#112250]">
-      {/* ================= BREADCRUMBS & TOP BAR ================= */}
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6">
-        <nav className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs font-semibold text-[#3B507D] mb-4">
-          <button onClick={onBack} className="hover:text-[#112250] hover:underline flex items-center gap-1">
+    <div className="relative min-h-screen bg-[#F7FBFE] pb-24 text-[#112250] selection:bg-[#D6EAF5] selection:text-[#112250]">
+      {/* ================= COMPACT HEADER (BREADCRUMB, TITLE, TAGS & PDF BUTTON IN ONE ROW) ================= */}
+      <header className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-2">
+        {/* Subtle pale blue cloud blob and gentle stars behind header */}
+        <div className="pointer-events-none absolute -top-8 right-10 w-72 h-44 opacity-35 blur-xl">
+          <ZebraCloudBlob className="w-full h-full" />
+        </div>
+        <div className="pointer-events-none absolute top-3 right-1/4 hidden sm:block opacity-90">
+          <BabyZebraBadge size={32} className="border-2 border-white shadow-sm" />
+        </div>
+
+        {/* Compact Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-semibold text-[#3B507D] mb-3">
+          <button onClick={onBack} className="hover:text-[#112250] hover:underline flex items-center gap-1 cursor-pointer">
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Diseases</span>
           </button>
           <ChevronRight className="h-3.5 w-3.5 text-[#3B507D]/70 shrink-0" />
-          <span className="text-[#112250] font-bold truncate max-w-[180px] sm:max-w-none">{disease.name}</span>
+          <span className="text-[#112250] font-bold truncate max-w-[220px] sm:max-w-none">{disease.name}</span>
         </nav>
-      </div>
 
-      {/* ================= HEADER HERO BANNER ================= */}
-      <section className="relative overflow-hidden bg-transparent pt-2 pb-6 sm:pb-8">
-        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="relative overflow-hidden rounded-[2.25rem] border border-[#112250]/15 bg-white/95 p-5 sm:p-8 lg:p-10 shadow-sm backdrop-blur-sm"
-          >
-            <ZebraGridDoodle opacity={0.035} />
-
-            <div className="relative z-10 grid gap-6 lg:grid-cols-12 lg:items-center">
-              {/* Left Column: Icon + Header Details */}
-              <div className="lg:col-span-8">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4">
-                  <div className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl bg-[#E0EBFB] text-[#112250] border border-[#BFD5F8] shadow-xs">
-                    <Dna className="h-7 w-7 sm:h-9 sm:w-9 text-[#112250]" />
-                  </div>
-                  <div>
-                    <h1 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-black text-[#112250] break-words">
-                      {disease.name}
-                    </h1>
-                    {(() => {
-                      const rawOverviewStr = typeof disease.overview === "string"
-                        ? disease.overview.replace(/^<!--rbm:\d+-->\s*/, '').replace(/[*_#`]/g, '').trim()
-                        : (disease.overview?.simple || disease.overview?.medical || disease.shortDesc || "");
-                      const isOverviewLong = rawOverviewStr.length > 180;
-                      const heroOverviewSnippet = isOverviewLong
-                        ? rawOverviewStr.slice(0, 180).trim() + "..."
-                        : rawOverviewStr;
-
-                      return (
-                        <>
-                          <div className="font-sans mt-2 text-xs sm:text-sm font-medium text-[#3B507D] leading-relaxed max-w-2xl">
-                            <span>{heroOverviewSnippet}</span>
-                          </div>
-                          <div className="font-sans mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#3B507D]">
-                            <span className="font-bold text-[#112250]">Specialty Focus:</span>
-                            <span>{disease.category || "Rare Disease Specialization"}</span>
-                          </div>
-                        </>
-                      );
-                    })()}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2 mt-4">
-                  {disease.category && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-bold text-[#112250] border border-[#E7E2CE] shadow-2xs">
-                      <Dna className="h-3.5 w-3.5 text-[#3B507D]" />
-                      <span>{disease.category}</span>
-                    </span>
-                  )}
-                  {disease.diseaseNumber && (
-                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-bold text-[#112250] border border-[#E7E2CE] shadow-2xs">
-                      Disease No. {disease.diseaseNumber}
-                    </span>
-                  )}
-                  {Array.isArray(disease.categoryBadges) &&
-                    disease.categoryBadges.map((badge: string, idx: number) => {
-                      if (badge.toLowerCase() === disease.category?.toLowerCase()) return null;
-                      return (
-                        <span
-                          key={idx}
-                          className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-bold text-[#112250] border border-[#E7E2CE] shadow-2xs"
-                        >
-                          <Star className="h-3.5 w-3.5 text-[#3B507D]" />
-                          <span>{badge}</span>
-                        </span>
-                      );
-                    })}
-                  {disease.inheritancePattern && (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E7E2CE]/70 px-3 py-1 text-xs font-bold text-[#112250]">
-                      Inheritance: {disease.inheritancePattern}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Right Column: PDF Action */}
-              <div className="lg:col-span-4 flex flex-col items-stretch sm:items-center lg:items-end justify-center gap-4">
-                <button
-                  onClick={() => generateDiseasePDF(disease)}
-                  className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-[#112250] px-5 sm:px-6 py-3 text-xs sm:text-sm font-bold text-white hover:bg-[#3B507D] transition-all shadow-sm"
-                >
-                  <Download className="h-4 w-4 text-white shrink-0" />
-                  <span>Download Family Guide (PDF)</span>
-                </button>
+        {/* Compact Row Container (Title + Tags + PDF Button) */}
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-2xl sm:rounded-3xl border border-[#112250]/15 bg-white p-4 sm:p-5 shadow-xs">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#D6EAF5] text-[#112250] border border-[#BCE0F5] shadow-2xs">
+              <Dna className="h-6 w-6 text-[#112250]" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="font-heading text-2xl sm:text-3xl font-black text-[#112250] tracking-tight">
+                  {disease.name}
+                </h1>
+                {disease.category && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#D6EAF5] border border-[#BCE0F5] px-2.5 py-0.5 text-xs font-bold text-[#112250]">
+                    {disease.category}
+                  </span>
+                )}
+                {disease.inheritancePattern && (
+                  <span className="hidden sm:inline-flex items-center rounded-full bg-[#D6EAF5] px-2.5 py-0.5 text-xs font-bold text-[#112250]">
+                    {disease.inheritancePattern}
+                  </span>
+                )}
               </div>
             </div>
-          </motion.div>
+          </div>
+
+          {/* Download PDF button (min 44px tall, pill-shaped, star sparkle on hover) */}
+          <button
+            onClick={() => generateDiseasePDF(disease)}
+            className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#112250] hover:bg-[#1a3365] px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 min-h-[44px] cursor-pointer shrink-0"
+          >
+            <Download className="h-4 w-4 text-[#D6EAF5] shrink-0 transition-transform group-hover:translate-y-0.5" />
+            <span>Download Family Guide (PDF)</span>
+            <BabyZebraBadge size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
         </div>
-      </section>
+      </header>
 
       {/* ================= STICKY TAB NAVIGATION (CAPSULE PILL BAR) ================= */}
       {tabs.length > 0 && (
-        <section className="sticky top-[76px] sm:top-[88px] z-30 py-2.5">
-          <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none scroll-smooth py-1.5 px-2 bg-white/95 rounded-full border border-[#112250]/15 shadow-sm backdrop-blur-md">
+        <section className="sticky top-[72px] sm:top-[76px] z-30 py-2">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-1.5 px-2 bg-white/95 rounded-full border border-[#112250]/15 shadow-sm backdrop-blur-md">
               {tabs.map((tab) => {
                 const IconComp = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -593,12 +702,13 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                   <button
                     key={tab.id}
                     onClick={() => navigateToTab(tab.id)}
-                    className={`inline-flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${isActive
+                    className={`inline-flex shrink-0 items-center gap-1.5 sm:gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full text-xs sm:text-sm font-heading font-bold transition-all whitespace-nowrap cursor-pointer min-h-[44px] ${
+                      isActive
                         ? "bg-[#112250] text-white shadow-xs"
-                        : "text-[#3B507D] hover:text-[#112250] hover:bg-[#112250]/5"
-                      }`}
+                        : "text-[#3B507D] hover:text-[#112250] hover:bg-[#D6EAF5]/50"
+                    }`}
                   >
-                    <IconComp className={`h-3.5 w-3.5 shrink-0 ${isActive ? "text-[#BCE0F5]" : "text-[#3B507D]"}`} />
+                    <IconComp className={`h-4 w-4 shrink-0 ${isActive ? "text-[#BCE0F5]" : "text-[#3B507D]"}`} />
                     <span>{tab.label}</span>
                   </button>
                 );
@@ -608,41 +718,117 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
         </section>
       )}
 
-      {/* ================= MAIN CONTENT GRID (8-COL MAIN / 4-COL SIDEBAR) ================= */}
-      <section id="disease-tab-content" className="scroll-mt-32 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+      {/* ================= MAIN TWO-COLUMN CONTENT GRID ================= */}
+      <section id="disease-tab-content" className="scroll-mt-32 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         <div className="grid gap-6 lg:gap-8 lg:grid-cols-12">
-          {/* ================= LEFT MAIN CONTENT COLUMN (8 COLS) ================= */}
-          <div className="lg:col-span-8 space-y-6 sm:space-y-8">
-            <AnimatePresence mode="sync">
-              {/* ── 1. OVERVIEW TAB ── */}
+          {/* ================= LEFT COLUMN: MAIN CONTENT (8 COLS) ================= */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* 1. PLAIN-LANGUAGE SUMMARY (Starts every tab) */}
+            <div id="sec-summary" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+              <div className="flex items-center gap-2.5 mb-2.5">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#D6EAF5] text-[#112250]">
+                  <Sparkles className="h-4 w-4" />
+                </span>
+                <h3 className="font-heading font-black text-sm uppercase tracking-wider text-[#112250]">
+                  Plain-Language Summary
+                </h3>
+              </div>
+              <p className="text-base sm:text-lg leading-relaxed text-[#112250] font-medium">
+                {tabSummaries[activeTab]}
+              </p>
+            </div>
+
+            {/* 2. THREE SMALL FACT CARDS (Follows summary on every tab) */}
+            <div id="sec-fact-cards" className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              {/* Fact Card 1: Prevalence / How Rare */}
+              <div className="rounded-2xl border border-[#112250]/15 bg-[#D6EAF5]/65 p-4 sm:p-4.5 shadow-xs card-hover-lift">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Star className="h-4 w-4 text-[#112250]" />
+                  <span className="font-heading text-xs font-black uppercase text-[#112250]">How Rare</span>
+                </div>
+                <h4 className="font-heading font-black text-sm text-[#112250] truncate">
+                  {disease.category || "Rare Disorder"}
+                </h4>
+                <p className="text-xs text-[#3B507D] font-medium mt-0.5 leading-snug">
+                  Affects &lt; 1 in 100,000 individuals globally.
+                </p>
+              </div>
+
+              {/* Fact Card 2: Where in the body */}
+              <div className="rounded-2xl border border-[#112250]/15 bg-white p-4 sm:p-4.5 shadow-xs card-hover-lift">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <HeartPulse className="h-4 w-4 text-[#112250]" />
+                  <span className="font-heading text-xs font-black uppercase text-[#112250]">Body Systems</span>
+                </div>
+                <h4 className="font-heading font-black text-sm text-[#112250] truncate">
+                  {disease.categoryBadges?.[0] || "Multisystem / Genetic"}
+                </h4>
+                <p className="text-xs text-[#3B507D] font-medium mt-0.5 leading-snug">
+                  Requires periodic systemic health monitoring.
+                </p>
+              </div>
+
+              {/* Fact Card 3: Which Specialist */}
+              <div className="rounded-2xl border border-[#112250]/15 bg-[#D6EAF5]/65 p-4 sm:p-4.5 shadow-xs card-hover-lift">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Stethoscope className="h-4 w-4 text-[#112250]" />
+                  <span className="font-heading text-xs font-black uppercase text-[#112250]">Care Lead</span>
+                </div>
+                <h4 className="font-heading font-black text-sm text-[#112250] truncate">
+                  {specialistsList[0]?.profession || "Medical Specialist"}
+                </h4>
+                <p className="text-xs text-[#3B507D] font-medium mt-0.5 leading-snug">
+                  Coordinates clinical therapy & testing.
+                </p>
+              </div>
+            </div>
+
+            {/* 3. DYNAMIC TAB CONTENT (Short cards, scannable format, accordions) */}
+            <AnimatePresence mode="wait">
+              {/* ── OVERVIEW TAB ── */}
               {activeTab === "overview" && (
-                <motion.div key="overview" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  {/* Card 1: What is Disease? */}
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-[#112250]" />
-                      </div>
-                      <h2 className="font-heading text-lg sm:text-2xl font-black text-[#112250] break-words">
-                        What is {disease.name}?
-                      </h2>
-                    </div>
+                <motion.div
+                  key="overview"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div id="sec-detail" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                    <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-3 flex items-center gap-2">
+                      <BookOpen className="h-5 w-5 text-[#112250]" />
+                      <span>About {disease.name}</span>
+                    </h3>
 
                     {overviewBlocks && overviewBlocks.length > 0 ? (
                       <BlocksRenderer blocks={overviewBlocks} />
                     ) : (
-                      <div className="prose max-w-none text-sm text-[#112250] leading-relaxed font-medium space-y-3">
+                      <div className="text-base text-[#112250] leading-relaxed font-medium space-y-3">
                         {typeof disease.overview === "object" && disease.overview !== null ? (
                           <>
                             {disease.overview.simple && <p><LinkifiedText text={disease.overview.simple} /></p>}
-                            {disease.overview.medical && <p><LinkifiedText text={disease.overview.medical} /></p>}
+                            {disease.overview.medical && (
+                              <div className="rounded-xl bg-[#F7FBFE] p-4 border border-[#112250]/10 text-sm">
+                                <span className="font-bold text-[#112250] block mb-1">Clinical Definition:</span>
+                                <LinkifiedText text={disease.overview.medical} />
+                              </div>
+                            )}
                           </>
                         ) : (
                           <p className="whitespace-pre-line">
                             {Array.isArray(disease.parsedDiseaseModel?.overview) ? (
                               <RichTextRunsRenderer runs={disease.parsedDiseaseModel.overview} />
                             ) : (
-                              <LinkifiedText text={(typeof disease.overview === "string" ? disease.overview.replace(/^<!--rbm:[^>]*-->\s*/, "") : disease.overview) || disease.shortDesc || "Comprehensive overview currently being updated."} />
+                              <LinkifiedText
+                                text={
+                                  (typeof disease.overview === "string"
+                                    ? disease.overview.replace(/^<!--rbm:[^>]*-->\s*/, "")
+                                    : disease.overview) ||
+                                  disease.shortDesc ||
+                                  "Comprehensive overview currently being updated."
+                                }
+                              />
                             )}
                           </p>
                         )}
@@ -650,186 +836,70 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                     )}
                   </div>
 
-                  {/* Card 2: Common Symptoms Summary */}
+                  {/* Common Symptoms Preview (First 4 with view all) */}
                   {symptomsList.length > 0 && (
-                    <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                        <h3 className="font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
-                          <Activity className="h-5 w-5 text-[#112250] shrink-0" /> Common Symptoms
-                        </h3>
-                        <button onClick={() => navigateToTab("typesAndSymptoms")} className="text-xs font-bold text-[#112250] hover:underline">
-                          View All Symptoms →
+                    <div id="sec-symptoms-preview" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <h4 className="font-heading font-black text-base sm:text-lg text-[#112250] flex items-center gap-2">
+                          <Activity className="h-5 w-5 text-[#112250]" />
+                          <span>Symptoms Preview</span>
+                        </h4>
+                        <button
+                          onClick={() => navigateToTab("typesAndSymptoms")}
+                          className="text-xs sm:text-sm font-bold text-[#112250] hover:underline cursor-pointer"
+                        >
+                          View Full Details →
                         </button>
                       </div>
-                      <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
-                        {symptomsList.slice(0, 6).map((sym: any, idx: number) => (
-                          <div key={idx} className="flex items-center gap-3 rounded-xl bg-[#F5F4F0] p-3 sm:p-3.5 border border-[#E7E2CE]">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-[#112250] shadow-2xs">
-                              <Droplets className="h-4 w-4 text-[#112250]" />
-                            </div>
-                            <span className="text-xs font-bold text-[#112250] break-words">{sym.name || sym}</span>
+                      <div className="grid gap-2.5 sm:grid-cols-2">
+                        {symptomsList.slice(0, 4).map((sym: any, idx: number) => (
+                          <div key={idx} className="flex items-center gap-3 rounded-xl bg-[#F7FBFE] p-3 border border-[#112250]/10 card-hover-lift">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white border border-[#112250]/15 text-[#112250] text-xs font-bold shadow-2xs">
+                              {idx + 1}
+                            </span>
+                            <span className="text-sm font-bold text-[#112250] truncate">{sym.name || sym}</span>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
-
-                  {/* Card 3: Causes & Risk Factors Summary */}
-                  {causesList.length > 0 && (
-                    <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                        <h3 className="font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
-                          <Dna className="h-5 w-5 text-[#112250] shrink-0" /> Causes & Risk Factors
-                        </h3>
-                        <button onClick={() => navigateToTab("causes")} className="text-xs font-bold text-[#112250] hover:underline">
-                          View All Causes →
-                        </button>
-                      </div>
-                      <ul className="space-y-2 text-xs text-[#112250] font-medium">
-                        {causesList.slice(0, 3).map((c: any, idx: number) => (
-                          <li key={idx} className="flex items-start gap-2">
-                            <span className="h-2 w-2 rounded-full bg-[#112250] mt-1.5 shrink-0" />
-                            <span><strong className="font-bold">{c.title || `Cause #${idx + 1}`}:</strong> <LinkifiedText text={c.explanation || (typeof c === "string" ? c : "")} /></span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                 </motion.div>
               )}
 
-              {/* ── 2. TYPES & SYMPTOMS TAB (Defect 3) ── */}
-              {activeTab === "typesAndSymptoms" && (
-                <motion.div key="typesAndSymptoms" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <Activity className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Types & Symptoms
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Documented subtypes, clinical forms, and symptoms preserved in document order.
-                        </p>
-                      </div>
-                    </div>
-
-                    {typesSymptomsBlocks && typesSymptomsBlocks.length > 0 ? (
-                      <BlocksRenderer blocks={typesSymptomsBlocks} />
-                    ) : typesAndSymptomsSections.length > 0 ? (
-                      <StructuredSections sections={typesAndSymptomsSections} emptyHeading="Types & Symptoms" />
-                    ) : (
-                      <div className="space-y-6">
-                        {typesList.length > 0 && (
-                          <div>
-                            <h3 className="font-heading text-base sm:text-lg font-bold text-[#112250] mb-3 pb-2 border-b border-[#E7E2CE] flex items-center gap-2">
-                              <Layers className="h-4 w-4 text-[#112250]" /> Subtypes & Forms
-                            </h3>
-                            <div className="space-y-4">
-                              {typesList.map((type: any, idx: number) => (
-                                <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F9F8F5] p-4 sm:p-5">
-                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 mb-2">
-                                    <h4 className="font-heading font-black text-sm sm:text-base text-[#112250] break-words">
-                                      {type.title || `Subtype ${idx + 1}`}
-                                    </h4>
-                                    {type.stage && (
-                                      <span className="self-start sm:self-auto rounded-md bg-[#112250] px-2.5 py-0.5 text-[10px] font-bold text-white uppercase">
-                                        {type.stage}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <p className="text-xs text-[#112250] font-medium leading-relaxed mb-2 break-words">
-                                    <LinkifiedText text={type.description} />
-                                  </p>
-                                  {Array.isArray(type.characteristics) && type.characteristics.length > 0 && (
-                                    <div className="mt-2 rounded-lg bg-white p-3 border border-[#E7E2CE]">
-                                      <h5 className="text-[11px] font-bold text-[#112250] uppercase mb-1">Key Characteristics</h5>
-                                      <ul className="list-disc list-inside text-xs text-[#3B507D] font-medium space-y-1">
-                                        {type.characteristics.map((c: string, cIdx: number) => (
-                                          <li key={cIdx} className="break-words">{c}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {symptomsList.length > 0 && (
-                          <div>
-                            <h3 className="font-heading text-base sm:text-lg font-bold text-[#112250] mb-3 pb-2 border-b border-[#E7E2CE] flex items-center gap-2">
-                              <Activity className="h-4 w-4 text-[#112250]" /> Symptoms & Characteristics
-                            </h3>
-                            <div className="space-y-3">
-                              {symptomsList.map((sym: any, idx: number) => (
-                                <div key={idx} className="rounded-xl border border-[#E7E2CE] bg-[#F5F4F0] p-4">
-                                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                                    <h4 className="font-heading text-sm font-bold text-[#112250] flex items-center gap-2">
-                                      <span className="flex h-2 w-2 rounded-full bg-[#112250] shrink-0" />
-                                      <span>{sym.name || sym}</span>
-                                    </h4>
-                                    {sym.severity && (
-                                      <span className="self-start sm:self-auto rounded-full bg-[#112250] px-2.5 py-0.5 text-[10px] font-bold text-white uppercase">
-                                        {sym.severity}
-                                      </span>
-                                    )}
-                                  </div>
-                                  {sym.description && (
-                                    <p className="mt-2 text-xs text-[#3B507D] font-medium leading-relaxed pl-4 border-l-2 border-[#112250]">
-                                      <LinkifiedText text={sym.description} />
-                                    </p>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ── 3. CAUSES TAB ── */}
+              {/* ── CAUSES TAB ── */}
               {activeTab === "causes" && (
-                <motion.div key="causes" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <Microscope className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Causes & Genetic Risk Factors
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Detailed breakdown of genetic mutations, environmental factors, and inheritance patterns.
-                        </p>
-                      </div>
-                    </div>
+                <motion.div
+                  key="causes"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div id="sec-causes-list" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                    <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-4 flex items-center gap-2">
+                      <Microscope className="h-5 w-5 text-[#112250]" />
+                      <span>Causes & Genetic Risk Factors</span>
+                    </h3>
 
                     {causesBlocks && causesBlocks.length > 0 ? (
                       <BlocksRenderer blocks={causesBlocks} />
                     ) : causesList.length > 0 ? (
-                      <div className="space-y-4 sm:space-y-5">
+                      <div className="space-y-3.5">
                         {causesList.map((cause: any, idx: number) => (
-                          <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
-                            <div className="flex items-center gap-2">
-                              <span className="rounded-full bg-[#112250] px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider">
+                          <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] p-4 sm:p-5 card-hover-lift">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="rounded-full bg-[#112250] px-3 py-0.5 text-xs font-bold text-white uppercase tracking-wider">
                                 {cause.title || `Cause #${idx + 1}`}
                               </span>
                             </div>
-                            <p className="text-xs sm:text-sm text-[#112250] font-medium leading-relaxed break-words">
+                            <p className="text-base text-[#112250] font-medium leading-relaxed">
                               <LinkifiedText text={cause.explanation || cause} />
                             </p>
                             {Array.isArray(cause.details) && cause.details.length > 0 && (
-                              <ul className="mt-2 space-y-1.5 pl-4 border-l-2 border-[#E7E2CE] text-xs text-[#3B507D] font-medium">
+                              <ul className="mt-3 space-y-1.5 pl-4 border-l-2 border-[#112250]/20 text-sm text-[#3B507D] font-medium">
                                 {cause.details.map((detail: string, dIdx: number) => (
-                                  <li key={dIdx} className="break-words">• {detail}</li>
+                                  <li key={dIdx}>• {detail}</li>
                                 ))}
                               </ul>
                             )}
@@ -837,421 +907,284 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-[#3B507D] italic">Causes information currently being updated.</p>
+                      <p className="text-base text-[#3B507D] italic">Causes information currently being updated.</p>
                     )}
                   </div>
                 </motion.div>
               )}
 
-              {/* ── 4. DIAGNOSIS TAB (Defect 4) ── */}
-              {activeTab === "diagnosis" && (
-                <motion.div key="diagnosis" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <FileText className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Diagnostic Procedures & Testing
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Complete diagnostic criteria, laboratory tests, procedures, and clinical result meanings.
-                        </p>
+              {/* ── TYPES & SYMPTOMS TAB (First 4 symptoms with 'View all' toggle) ── */}
+              {activeTab === "typesAndSymptoms" && (
+                <motion.div
+                  key="typesAndSymptoms"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  {/* Subtypes Section */}
+                  {typesList.length > 0 && (
+                    <div id="sec-subtypes" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                      <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-4 flex items-center gap-2">
+                        <Layers className="h-5 w-5 text-[#112250]" />
+                        <span>Clinical Subtypes & Forms</span>
+                      </h3>
+                      <div className="space-y-3.5">
+                        {typesList.map((type: any, idx: number) => (
+                          <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] p-4 sm:p-5 card-hover-lift">
+                            <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                              <h4 className="font-heading font-black text-base text-[#112250]">
+                                {type.title || `Subtype ${idx + 1}`}
+                              </h4>
+                              {type.stage && (
+                                <span className="rounded-full bg-[#112250] px-2.5 py-0.5 text-xs font-bold text-white uppercase">
+                                  {type.stage}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-base text-[#112250] font-medium leading-relaxed">
+                              <LinkifiedText text={type.description} />
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     </div>
+                  )}
+
+                  {/* Symptoms Section with first 4 shown + View all toggle */}
+                  {symptomsList.length > 0 && (
+                    <div id="sec-symptoms-list" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                      <div className="flex items-center justify-between gap-2 mb-4">
+                        <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] flex items-center gap-2">
+                          <Activity className="h-5 w-5 text-[#112250]" />
+                          <span>Symptoms Checklist ({symptomsList.length})</span>
+                        </h3>
+                        <span className="text-xs text-[#3B507D] font-bold">
+                          {showAllSymptoms ? `Showing all ${symptomsList.length}` : "Showing first 4"}
+                        </span>
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {(showAllSymptoms ? symptomsList : symptomsList.slice(0, 4)).map((sym: any, idx: number) => (
+                          <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] p-4 card-hover-lift">
+                            <div className="flex items-center justify-between gap-2">
+                              <h4 className="font-heading text-sm font-black text-[#112250] flex items-center gap-2">
+                                <span className="h-2 w-2 rounded-full bg-[#112250]" />
+                                <span>{sym.name || sym}</span>
+                              </h4>
+                              {sym.severity && (
+                                <span className="rounded-full bg-[#112250] px-2 py-0.5 text-[10px] font-bold text-white uppercase">
+                                  {sym.severity}
+                                </span>
+                              )}
+                            </div>
+                            {sym.description && (
+                              <p className="mt-1.5 text-xs text-[#3B507D] font-medium leading-relaxed">
+                                <LinkifiedText text={sym.description} />
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {symptomsList.length > 4 && (
+                        <div className="mt-4 pt-3 border-t border-[#112250]/10 text-center">
+                          <button
+                            type="button"
+                            onClick={() => setShowAllSymptoms((prev) => !prev)}
+                            className="inline-flex items-center gap-2 rounded-full bg-[#D6EAF5] hover:bg-[#c2e2f3] text-[#112250] font-bold px-6 py-2.5 text-sm transition-all duration-200 cursor-pointer min-h-[44px]"
+                          >
+                            <span>{showAllSymptoms ? "Show Fewer Symptoms" : `View All ${symptomsList.length} Symptoms`}</span>
+                            {showAllSymptoms ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* ── DIAGNOSIS TAB ── */}
+              {activeTab === "diagnosis" && (
+                <motion.div
+                  key="diagnosis"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div id="sec-diagnostic-steps" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                    <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-4 flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-[#112250]" />
+                      <span>Diagnostic Procedures & Testing</span>
+                    </h3>
 
                     {diagnosisBlocks && diagnosisBlocks.length > 0 ? (
                       <BlocksRenderer blocks={diagnosisBlocks} />
                     ) : diagnosisSections.length > 0 ? (
                       <StructuredSections sections={diagnosisSections} emptyHeading="Diagnosis" />
                     ) : diagnosticSteps.length > 0 ? (
-                      <div className="space-y-4">
+                      <div className="space-y-3.5">
                         {diagnosticSteps.map((step: any, idx: number) => (
-                          <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
-                            <span className="rounded-full bg-[#112250] px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider inline-block">
+                          <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] p-4 sm:p-5 card-hover-lift space-y-2">
+                            <span className="rounded-full bg-[#112250] px-3 py-0.5 text-xs font-bold text-white uppercase tracking-wider inline-block">
                               {step.name || `Diagnostic Method #${idx + 1}`}
                             </span>
                             {step.what && (
-                              <div className="text-xs font-bold text-[#112250]">
-                                What it is: <span className="font-medium text-[#3B507D]"><LinkifiedText text={step.what} /></span>
-                              </div>
+                              <p className="text-base text-[#112250] font-medium leading-relaxed">
+                                <strong className="font-bold">What it is:</strong> <LinkifiedText text={step.what} />
+                              </p>
                             )}
                             {step.how && (
-                              <div className="text-xs font-bold text-[#112250]">
-                                How it works: <span className="font-medium text-[#3B507D]"><LinkifiedText text={step.how} /></span>
-                              </div>
+                              <p className="text-base text-[#3B507D] font-medium leading-relaxed">
+                                <strong className="font-bold text-[#112250]">How it works:</strong> <LinkifiedText text={step.how} />
+                              </p>
                             )}
                             {step.result && (
-                              <div className="text-xs font-bold text-[#112250]">
-                                Result meaning: <span className="font-medium text-[#3B507D]"><LinkifiedText text={step.result} /></span>
-                              </div>
+                              <p className="text-sm text-[#3B507D] font-medium leading-relaxed pl-3 border-l-2 border-[#112250]">
+                                <strong className="font-bold text-[#112250]">Result meaning:</strong> <LinkifiedText text={step.result} />
+                              </p>
                             )}
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-[#3B507D] italic">Diagnostic information is currently being updated.</p>
+                      <p className="text-base text-[#3B507D] italic">Diagnostic information is currently being updated.</p>
                     )}
                   </div>
                 </motion.div>
               )}
 
-              {/* ── 5. RESEARCH & PHARMA TAB (Defects 5 & 6) ── */}
-              {activeTab === "researchPharma" && (
-                <motion.div key="treatments" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <FlaskConical className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Research & Pharma Directory
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Approved treatments, active clinical trials, and dedicated research organizations.
-                        </p>
-                      </div>
-                    </div>
-
-                    {researchBlocks && researchBlocks.length > 0 ? (
-                      <BlocksRenderer blocks={researchBlocks} />
-                    ) : (
-                      <div className="space-y-8">
-                        {/* Section 1: Treatments */}
-                        {treatmentSections.length > 0 ? (
-                          <div>
-                            <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
-                              <HeartPulse className="h-4 w-4 text-[#112250]" /> Treatments & Management
-                            </h3>
-                            <StructuredSections sections={treatmentSections} emptyHeading="Treatment" />
-                          </div>
-                        ) : (typeof disease.treatmentsAndPharma === "string" && disease.treatmentsAndPharma.trim()) ? (
-                          <div>
-                            <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
-                              <HeartPulse className="h-4 w-4 text-[#112250]" /> Treatments & Management
-                            </h3>
-                            <div className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 text-xs text-[#112250] font-medium leading-relaxed">
-                              <LinkifiedText text={disease.treatmentsAndPharma.replace(/^<!--rbm:[^>]*-->\s*/, "")} />
-                            </div>
-                          </div>
-                        ) : null}
-
-                        {/* Section 2: Clinical Trials */}
-                        {(clinicalTrials.length > 0 || clinicalTrialSections.length > 0) && (
-                          <div>
-                            <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
-                              <FlaskConical className="h-4 w-4 text-[#112250]" /> Clinical Trials
-                            </h3>
-                            {clinicalTrials.length > 0 ? (
-                              <div className="space-y-4">
-                                {clinicalTrials.map((res: any, idx: number) => (
-                                  <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-3">
-                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                                      <div className="min-w-0">
-                                        <h4 className="font-heading font-black text-base text-[#112250]">
-                                          {res.name || res.title || "Clinical Trial / Research"}
-                                        </h4>
-                                        {res.drugName && (
-                                          <span className="mt-1 inline-block text-xs font-bold text-[#3B507D]">
-                                            Drug / Compound: {res.drugName}
-                                          </span>
-                                        )}
-                                      </div>
-                                      {res.url && (
-                                        <a
-                                          href={res.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#112250] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#3B507D] transition-all shrink-0"
-                                        >
-                                          <span>Official Trial Website</span>
-                                          <ExternalLink className="h-3.5 w-3.5" />
-                                        </a>
-                                      )}
-                                    </div>
-                                    <p className="text-xs text-[#112250] font-medium leading-relaxed">
-                                      <LinkifiedText text={res.focus || res.description || "Active clinical trial research."} />
-                                    </p>
-                                    <div className="grid gap-2 text-[11px] text-[#3B507D] font-semibold grid-cols-1 sm:grid-cols-2 pt-2 border-t border-[#E7E2CE]">
-                                      {res.stage && <div>Stage: <span className="text-[#112250]">{res.stage}</span></div>}
-                                      {res.status && <div>Status: <span className="text-[#112250]">{res.status}</span></div>}
-                                      {res.eligibility && <div>Eligibility: <span className="text-[#112250]">{res.eligibility}</span></div>}
-                                      {res.location && <div>Location: <span className="text-[#112250]">{res.location}</span></div>}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <StructuredSections sections={clinicalTrialSections} emptyHeading="Clinical Trials" />
-                            )}
-                          </div>
-                        )}
-
-                        {/* Section 3: Research Organizations */}
-                        {researchOrganizations.length > 0 && (
-                          <div>
-                            <h3 className="mb-3 font-heading text-base sm:text-lg font-black text-[#112250] flex items-center gap-2">
-                              <Building2 className="h-4 w-4 text-[#112250]" /> Research Organizations
-                            </h3>
-                            <div className="space-y-4">
-                              {researchOrganizations.map((org: any, idx: number) => (
-                                <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6">
-                                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                                    <div className="space-y-1.5 flex-1 min-w-0">
-                                      <h4 className="font-heading font-black text-base text-[#112250] flex items-center gap-2">
-                                        <Building2 className="h-4 w-4 text-[#112250] shrink-0" />
-                                        <span>{org.name || "Research Organization"}</span>
-                                      </h4>
-                                      {org.focus && (
-                                        <p className="text-xs text-[#3B507D] font-medium leading-relaxed pl-6">
-                                          <span className="font-bold text-[#112250]">Focus Area: </span>
-                                          <LinkifiedText text={org.focus} />
-                                        </p>
-                                      )}
-                                    </div>
-                                    {org.url && (
-                                      <a
-                                        href={org.url.startsWith("http") ? org.url : `https://${org.url}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#112250] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#3B507D] transition-colors shrink-0"
-                                      >
-                                        <ExternalLink className="h-3.5 w-3.5" />
-                                        <span>Official Website</span>
-                                      </a>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {treatmentSections.length === 0 && clinicalTrials.length === 0 && clinicalTrialSections.length === 0 && researchOrganizations.length === 0 && (
-                          <p className="text-xs text-[#3B507D] italic">No research records found for this disease.</p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ── 6. LIFESTYLE & DAILY SUPPORT TAB (Defect 8) ── */}
+              {/* ── LIFESTYLE & DAILY SUPPORT TAB ── */}
               {activeTab === "lifestyleCommunity" && (
-                <motion.div key="lifestyle" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <HeartPulse className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Lifestyle & Daily Support
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Therapies, nutrition, assistive equipment, caregiver advice, and community resources.
-                        </p>
-                      </div>
-                    </div>
+                <motion.div
+                  key="lifestyle"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                    <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-4 flex items-center gap-2">
+                      <HeartPulse className="h-5 w-5 text-[#112250]" />
+                      <span>Daily Living & Family Support</span>
+                    </h3>
 
                     {lifestyleBlocks && lifestyleBlocks.length > 0 ? (
                       <BlocksRenderer blocks={lifestyleBlocks} />
-                    ) : lifestyleSections.length > 0 ? (
-                      <StructuredSections sections={lifestyleSections} emptyHeading="Lifestyle & Daily Support" />
                     ) : (
-                      <div className="space-y-4">
-                        {disease.lifestyleAndDailySupport?.raw && (
-                          <div className="rounded-xl bg-[#F5F4F0] p-4 sm:p-5 text-xs text-[#112250] leading-relaxed font-medium border border-[#E7E2CE] break-words mb-4">
-                            <LinkifiedText text={disease.lifestyleAndDailySupport.raw} />
-                          </div>
-                        )}
-
-                        {/* Accordion 1: Recommended Therapies */}
-                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                      <div className="space-y-3">
+                        {/* 1. Recommended Therapies */}
+                        <div className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] overflow-hidden">
                           <button
                             type="button"
                             onClick={() => toggleLifestyleAccordion("therapies")}
-                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-base text-[#112250] hover:bg-[#D6EAF5]/40 transition-colors cursor-pointer min-h-[44px]"
                           >
-                            <span className="flex items-center gap-2.5">
-                              <Activity className="h-4 w-4 text-[#112250]" />
+                            <span className="flex items-center gap-2">
+                              <Activity className="h-5 w-5 text-[#112250]" />
                               <span>1. Recommended Therapies</span>
-                              {Array.isArray(disease.lifestyleAndDailySupport?.therapies) && (
-                                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]">
-                                  {disease.lifestyleAndDailySupport.therapies.length}
-                                </span>
-                              )}
                             </span>
-                            {openLifestyleAccordions.therapies ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                            {openLifestyleAccordions.therapies ? <ChevronUp className="h-5 w-5 text-[#112250]" /> : <ChevronDown className="h-5 w-5 text-[#3B507D]" />}
                           </button>
                           {openLifestyleAccordions.therapies && (
-                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white">
+                            <div className="p-4 sm:p-5 border-t border-[#112250]/10 bg-white">
                               {Array.isArray(disease.lifestyleAndDailySupport?.therapies) && disease.lifestyleAndDailySupport.therapies.length > 0 ? (
-                                <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-2">
+                                <div className="grid gap-2.5 sm:grid-cols-2">
                                   {disease.lifestyleAndDailySupport.therapies.map((th: any, idx: number) => (
-                                    <div key={idx} className="rounded-lg bg-[#F5F4F0] p-3 text-xs font-bold text-[#112250] border border-[#E7E2CE] break-words">
+                                    <div key={idx} className="rounded-xl bg-[#F7FBFE] p-3 text-sm font-bold text-[#112250] border border-[#112250]/10">
                                       {typeof th === "string" ? th : `${th.name}${th.desc ? `: ${th.desc}` : ""}`}
                                     </div>
                                   ))}
                                 </div>
                               ) : (
-                                <p className="text-xs text-[#3B507D] italic">Therapy recommendations currently being updated.</p>
+                                <p className="text-sm text-[#3B507D] italic">Physical, occupational, and speech therapy recommendations.</p>
                               )}
                             </div>
                           )}
                         </div>
 
-                        {/* Accordion 2: Diets & Nutrition */}
-                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                        {/* 2. Diets & Nutrition */}
+                        <div className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] overflow-hidden">
                           <button
                             type="button"
                             onClick={() => toggleLifestyleAccordion("nutrition")}
-                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-base text-[#112250] hover:bg-[#D6EAF5]/40 transition-colors cursor-pointer min-h-[44px]"
                           >
-                            <span className="flex items-center gap-2.5">
-                              <HeartPulse className="h-4 w-4 text-[#112250]" />
+                            <span className="flex items-center gap-2">
+                              <HeartPulse className="h-5 w-5 text-[#112250]" />
                               <span>2. Diets & Nutrition</span>
                             </span>
-                            {openLifestyleAccordions.nutrition ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                            {openLifestyleAccordions.nutrition ? <ChevronUp className="h-5 w-5 text-[#112250]" /> : <ChevronDown className="h-5 w-5 text-[#3B507D]" />}
                           </button>
                           {openLifestyleAccordions.nutrition && (
-                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white text-xs text-[#3B507D] font-medium leading-relaxed">
+                            <div className="p-4 sm:p-5 border-t border-[#112250]/10 bg-white text-base text-[#112250] font-medium leading-relaxed">
                               {disease.lifestyleAndDailySupport?.nutrition ? (
                                 <LinkifiedText text={disease.lifestyleAndDailySupport.nutrition} />
                               ) : (
-                                <p className="italic">Nutritional guidance currently being updated.</p>
+                                <p className="italic text-sm text-[#3B507D]">Nutritional and dietary considerations guidance.</p>
                               )}
                             </div>
                           )}
                         </div>
 
-                        {/* Accordion 3: Assistive Devices & Equipment */}
-                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                        {/* 3. Assistive Devices */}
+                        <div className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] overflow-hidden">
                           <button
                             type="button"
                             onClick={() => toggleLifestyleAccordion("devices")}
-                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-base text-[#112250] hover:bg-[#D6EAF5]/40 transition-colors cursor-pointer min-h-[44px]"
                           >
-                            <span className="flex items-center gap-2.5">
-                              <Zap className="h-4 w-4 text-[#112250]" />
+                            <span className="flex items-center gap-2">
+                              <Zap className="h-5 w-5 text-[#112250]" />
                               <span>3. Assistive Devices & Medical Equipment</span>
-                              {Array.isArray(disease.lifestyleAndDailySupport?.devices) && (
-                                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]">
-                                  {disease.lifestyleAndDailySupport.devices.length}
-                                </span>
-                              )}
                             </span>
-                            {openLifestyleAccordions.devices ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                            {openLifestyleAccordions.devices ? <ChevronUp className="h-5 w-5 text-[#112250]" /> : <ChevronDown className="h-5 w-5 text-[#3B507D]" />}
                           </button>
                           {openLifestyleAccordions.devices && (
-                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white">
+                            <div className="p-4 sm:p-5 border-t border-[#112250]/10 bg-white">
                               {Array.isArray(disease.lifestyleAndDailySupport?.devices) && disease.lifestyleAndDailySupport.devices.length > 0 ? (
-                                <ul className="list-disc list-inside space-y-1.5 text-xs text-[#3B507D] font-medium">
+                                <ul className="space-y-1.5 text-base text-[#112250] font-medium">
                                   {disease.lifestyleAndDailySupport.devices.map((dev: string, idx: number) => (
-                                    <li key={idx} className="break-words">{dev}</li>
+                                    <li key={idx}>• {dev}</li>
                                   ))}
                                 </ul>
                               ) : (
-                                <p className="text-xs text-[#3B507D] italic">Assistive equipment details currently being updated.</p>
+                                <p className="text-sm text-[#3B507D] italic">Assistive equipment and mobility aids details.</p>
                               )}
                             </div>
                           )}
                         </div>
 
-                        {/* Accordion 4: Daily Care Tips & Practical Advice */}
-                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
+                        {/* 4. Caregiver Advice */}
+                        <div className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] overflow-hidden">
                           <button
                             type="button"
                             onClick={() => toggleLifestyleAccordion("caregiverTips")}
-                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
+                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-base text-[#112250] hover:bg-[#D6EAF5]/40 transition-colors cursor-pointer min-h-[44px]"
                           >
-                            <span className="flex items-center gap-2.5">
-                              <CheckCircle className="h-4 w-4 text-[#112250]" />
+                            <span className="flex items-center gap-2">
+                              <CheckCircle className="h-5 w-5 text-[#112250]" />
                               <span>4. Daily Care Tips & Practical Advice</span>
-                              {Array.isArray(disease.lifestyleAndDailySupport?.caregiverTips) && (
-                                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]">
-                                  {disease.lifestyleAndDailySupport.caregiverTips.length}
-                                </span>
-                              )}
                             </span>
-                            {openLifestyleAccordions.caregiverTips ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
+                            {openLifestyleAccordions.caregiverTips ? <ChevronUp className="h-5 w-5 text-[#112250]" /> : <ChevronDown className="h-5 w-5 text-[#3B507D]" />}
                           </button>
                           {openLifestyleAccordions.caregiverTips && (
-                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white">
+                            <div className="p-4 sm:p-5 border-t border-[#112250]/10 bg-white">
                               {Array.isArray(disease.lifestyleAndDailySupport?.caregiverTips) && disease.lifestyleAndDailySupport.caregiverTips.length > 0 ? (
-                                <ul className="space-y-2">
+                                <ul className="space-y-2 text-base text-[#112250] font-medium">
                                   {disease.lifestyleAndDailySupport.caregiverTips.map((tip: string, idx: number) => (
-                                    <li key={idx} className="flex items-start gap-2 text-xs text-[#112250] font-semibold">
-                                      <CheckCircle className="h-4 w-4 text-[#112250] shrink-0 mt-0.5" />
-                                      <span className="break-words"><LinkifiedText text={tip} /></span>
+                                    <li key={idx} className="flex items-start gap-2">
+                                      <CheckCircle className="h-4 w-4 text-[#112250] shrink-0 mt-1" />
+                                      <span><LinkifiedText text={tip} /></span>
                                     </li>
                                   ))}
                                 </ul>
                               ) : (
-                                <p className="text-xs text-[#3B507D] italic">Daily care advice currently being updated.</p>
-                              )}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Accordion 5: Community Links & Support Resources */}
-                        <div className="rounded-xl border-2 border-[#E7E2CE] bg-white overflow-hidden shadow-2xs">
-                          <button
-                            type="button"
-                            onClick={() => toggleLifestyleAccordion("community")}
-                            className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-sm text-[#112250] bg-[#F5F4F0] hover:bg-[#E7E2CE]/40 transition-colors"
-                          >
-                            <span className="flex items-center gap-2.5">
-                              <Users className="h-4 w-4 text-[#112250]" />
-                              <span>5. Community Links & Patient Support Resources</span>
-                              {communityResources.length > 0 && (
-                                <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-[#112250] border border-[#E7E2CE]">
-                                  {communityResources.length}
-                                </span>
-                              )}
-                            </span>
-                            {openLifestyleAccordions.community ? <ChevronUp className="h-4 w-4 text-[#112250]" /> : <ChevronDown className="h-4 w-4 text-[#3B507D]" />}
-                          </button>
-                          {openLifestyleAccordions.community && (
-                            <div className="p-4 sm:p-5 border-t border-[#E7E2CE] bg-white space-y-4">
-                              {communityResources.map((resource: any, index: number) => (
-                                <article key={`${resource.name}-${index}`} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-5">
-                                  <div className="flex items-start gap-3">
-                                    <Users className="mt-0.5 h-5 w-5 shrink-0 text-[#112250]" />
-                                    <div className="min-w-0">
-                                      <h4 className="font-heading text-sm font-black text-[#112250]">{resource.name}</h4>
-                                      {resource.category && <p className="mt-0.5 text-xs font-bold text-[#3B507D]">{resource.category}</p>}
-                                    </div>
-                                  </div>
-                                  {resource.description && (
-                                    <p className="mt-2 text-xs font-medium leading-relaxed text-[#112250]">
-                                      <LinkifiedText text={resource.description} />
-                                    </p>
-                                  )}
-                                  {Array.isArray(resource.links) && resource.links.length > 0 ? (
-                                    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 border-t border-[#E7E2CE] pt-2">
-                                      {resource.links.map((link: any, linkIndex: number) => (
-                                        <a key={`${link.url}-${linkIndex}`} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#112250] hover:underline">
-                                          <span>{link.label || "Visit resource"}</span><ExternalLink className="h-3.5 w-3.5" />
-                                        </a>
-                                      ))}
-                                    </div>
-                                  ) : resource.url ? (
-                                    <a href={resource.url} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 border-t border-[#E7E2CE] pt-2 text-xs font-bold text-[#112250] hover:underline">
-                                      <span>Visit resource</span><ExternalLink className="h-3.5 w-3.5" />
-                                    </a>
-                                  ) : null}
-                                </article>
-                              ))}
-                              {communityResources.length === 0 && disease.lifestyleAndDailySupport?.community && (
-                                <p className="text-xs text-[#112250] leading-relaxed">
-                                  <LinkifiedText text={disease.lifestyleAndDailySupport.community} />
-                                </p>
-                              )}
-                              {communityResources.length === 0 && !disease.lifestyleAndDailySupport?.community && (
-                                <p className="text-xs text-[#3B507D] italic">Community resources currently being updated.</p>
+                                <p className="text-sm text-[#3B507D] italic">Caregiver tips and routines guidance.</p>
                               )}
                             </div>
                           )}
@@ -1262,23 +1195,77 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                 </motion.div>
               )}
 
-              {/* ── 7. FAQS TAB ── */}
+              {/* ── RESEARCH & PHARMA TAB ── */}
+              {activeTab === "researchPharma" && (
+                <motion.div
+                  key="researchPharma"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                    <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-4 flex items-center gap-2">
+                      <FlaskConical className="h-5 w-5 text-[#112250]" />
+                      <span>Research & Clinical Pipeline</span>
+                    </h3>
+
+                    {researchBlocks && researchBlocks.length > 0 ? (
+                      <BlocksRenderer blocks={researchBlocks} />
+                    ) : (
+                      <div className="space-y-4">
+                        {clinicalTrials.map((res: any, idx: number) => (
+                          <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] p-4 sm:p-5 card-hover-lift space-y-2">
+                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                              <div>
+                                <h4 className="font-heading font-black text-base text-[#112250]">
+                                  {res.name || res.title || "Clinical Trial / Drug Study"}
+                                </h4>
+                                {res.drugName && (
+                                  <span className="inline-block mt-0.5 text-xs font-bold text-[#112250] bg-[#D6EAF5] px-2.5 py-0.5 rounded-full">
+                                    Compound: {res.drugName}
+                                  </span>
+                                )}
+                              </div>
+                              {res.url && (
+                                <a
+                                  href={res.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 rounded-full bg-[#112250] px-4 py-2 text-xs font-bold text-white hover:bg-[#1a3365] transition-colors shrink-0 min-h-[44px]"
+                                >
+                                  <span>Trial Details</span>
+                                  <ExternalLink className="h-3.5 w-3.5" />
+                                </a>
+                              )}
+                            </div>
+                            <p className="text-base text-[#112250] font-medium leading-relaxed">
+                              <LinkifiedText text={res.focus || res.description || "Active clinical research program."} />
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ── FAQS TAB (Collapsible Accordions) ── */}
               {activeTab === "faqs" && (
-                <motion.div key="faqs" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <HelpCircle className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Frequently Asked Questions (FAQs)
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Structured clinical Q&A extracted from research documentation.
-                        </p>
-                      </div>
-                    </div>
+                <motion.div
+                  key="faqs"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div id="sec-faqs-accordion" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                    <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-4 flex items-center gap-2">
+                      <HelpCircle className="h-5 w-5 text-[#112250]" />
+                      <span>Frequently Asked Questions</span>
+                    </h3>
 
                     {faqsList.length > 0 ? (
                       <div className="space-y-3">
@@ -1288,20 +1275,23 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                           const aText = faq.answer || faq.a || "Information unavailable.";
 
                           return (
-                            <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] overflow-hidden transition-all">
+                            <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] overflow-hidden transition-all shadow-xs">
                               <button
                                 onClick={() => toggleFaq(idx)}
-                                className="flex w-full items-start sm:items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-xs sm:text-sm text-[#112250] hover:bg-[#E7E2CE]/40 transition-colors gap-3"
+                                className="flex w-full items-start sm:items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-base text-[#112250] hover:bg-[#D6EAF5]/40 transition-colors gap-3 cursor-pointer min-h-[44px]"
                               >
-                                <span className="flex items-start gap-2 pr-1 min-w-0">
-                                  <HelpCircle className="h-4 w-4 text-[#112250] shrink-0 mt-0.5 sm:mt-0" />
-                                  <span className="break-words">{qText}</span>
+                                <span className="flex items-start gap-2.5">
+                                  <HelpCircle className="h-5 w-5 text-[#112250] shrink-0 mt-0.5 sm:mt-0" />
+                                  <span>{qText}</span>
                                 </span>
-                                {isOpen ? <ChevronUp className="h-4 w-4 text-[#112250] shrink-0 mt-0.5 sm:mt-0" /> : <ChevronDown className="h-4 w-4 text-[#3B507D] shrink-0 mt-0.5 sm:mt-0" />}
+                                {isOpen ? (
+                                  <ChevronUp className="h-5 w-5 text-[#112250] shrink-0" />
+                                ) : (
+                                  <ChevronDown className="h-5 w-5 text-[#3B507D] shrink-0" />
+                                )}
                               </button>
-
                               {isOpen && (
-                                <div className="p-4 sm:p-5 pt-0 border-t border-[#E7E2CE] bg-white text-xs text-[#3B507D] font-medium leading-relaxed break-words">
+                                <div className="p-4 sm:p-5 pt-0 border-t border-[#112250]/10 bg-white text-base text-[#112250] font-medium leading-relaxed">
                                   <LinkifiedText text={aText} />
                                 </div>
                               )}
@@ -1310,306 +1300,215 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                         })}
                       </div>
                     ) : (
-                      <p className="text-xs text-[#3B507D] italic">No FAQs available for this condition.</p>
+                      <p className="text-base text-[#3B507D] italic">No FAQs available for this condition.</p>
                     )}
                   </div>
                 </motion.div>
               )}
 
-              {/* ── 8. FACTS VS MYTHS TAB ── */}
+              {/* ── FACTS VS MYTHS TAB (Collapsible Accordions) ── */}
               {activeTab === "myths" && (
-                <motion.div key="myths" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <Lightbulb className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Facts vs. Myths
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Paired medical misconceptions and evidence-based facts.
-                        </p>
-                      </div>
-                    </div>
+                <motion.div
+                  key="myths"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div id="sec-myths-accordion" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                    <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-4 flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5 text-[#112250]" />
+                      <span>Facts vs. Myths Accordion</span>
+                    </h3>
 
                     {mythsBlocks && mythsBlocks.length > 0 ? (
                       <BlocksRenderer blocks={mythsBlocks} />
                     ) : mythsList.length > 0 ? (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {mythsList.map((item: any, idx: number) => {
-                          const mythText = item.myth || item.statement || "Common Myth";
-                          const factText = item.fact || item.explanation || "Medical Fact";
+                          const isOpen = openMythIndices[idx] ?? (idx === 0);
+                          const mythText = item.myth || item.statement || `Myth #${idx + 1}`;
+                          const factText = item.fact || item.explanation || "Medical guidance verified by clinical specialists.";
 
                           return (
-                            <div key={idx} className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 space-y-4 shadow-xs">
-                              {/* Myth Section */}
-                              <div className="rounded-lg bg-white border border-[#E7E2CE] p-3.5 sm:p-4 shadow-2xs">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-[#112250] px-2.5 py-0.5 text-[10px] font-bold text-white uppercase shadow-2xs">
-                                    <ShieldAlert className="h-3 w-3" /> Myth
+                            <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] overflow-hidden shadow-xs">
+                              <button
+                                onClick={() => toggleMyth(idx)}
+                                className="flex w-full items-start sm:items-center justify-between p-4 sm:p-5 text-left font-heading font-black text-base text-[#112250] hover:bg-[#D6EAF5]/40 transition-colors gap-3 cursor-pointer min-h-[44px]"
+                              >
+                                <span className="flex items-start gap-2.5">
+                                  <span className="rounded-full bg-[#112250] px-2.5 py-0.5 text-xs font-bold text-white uppercase shrink-0 mt-0.5">
+                                    Myth
                                   </span>
+                                  <span>{mythText}</span>
+                                </span>
+                                {isOpen ? (
+                                  <ChevronUp className="h-5 w-5 text-[#112250] shrink-0" />
+                                ) : (
+                                  <ChevronDown className="h-5 w-5 text-[#3B507D] shrink-0" />
+                                )}
+                              </button>
+                              {isOpen && (
+                                <div className="p-4 sm:p-5 pt-0 border-t border-[#112250]/10 bg-white space-y-2">
+                                  <div className="rounded-xl bg-[#D6EAF5]/40 p-4 border border-[#BCE0F5]">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <CheckCircle className="h-4 w-4 text-[#112250]" />
+                                      <span className="font-heading font-black text-xs uppercase tracking-wider text-[#112250]">
+                                        Verified Medical Fact
+                                      </span>
+                                    </div>
+                                    <p className="text-base text-[#112250] font-medium leading-relaxed">
+                                      <LinkifiedText text={factText} />
+                                    </p>
+                                  </div>
                                 </div>
-                                <p className="text-xs font-bold text-[#112250] break-words">{mythText}</p>
-                              </div>
-
-                              {/* Fact Section */}
-                              <div className="rounded-lg bg-[#F0F5FF] border border-[#BFD5F8] p-3.5 sm:p-4 shadow-2xs">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="inline-flex items-center gap-1 rounded-full bg-[#3B507D] px-2.5 py-0.5 text-[10px] font-bold text-white uppercase shadow-2xs">
-                                    <CheckCircle className="h-3 w-3" /> Fact
-                                  </span>
-                                </div>
-                                <p className="text-xs font-medium text-[#112250] leading-relaxed break-words">
-                                  <LinkifiedText text={factText} />
-                                </p>
-                              </div>
+                              )}
                             </div>
                           );
                         })}
                       </div>
                     ) : (
-                      <p className="text-xs text-[#3B507D] italic">No Myth vs. Fact pairs available.</p>
+                      <p className="text-base text-[#3B507D] italic">No Myth vs. Fact pairs available.</p>
                     )}
                   </div>
                 </motion.div>
               )}
 
-              {/* ── 9. SPECIALIST DIRECTORY TAB ── */}
+              {/* ── SPECIALISTS TAB ── */}
               {activeTab === "specialists" && (
-                <motion.div key="specialists" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <Stethoscope className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Specialist Directory
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Medical specialists and clinical experts for this condition.
-                        </p>
-                      </div>
-                    </div>
+                <motion.div
+                  key="specialists"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-6"
+                >
+                  <div id="sec-specialists-list" className="rounded-2xl border border-[#112250]/15 bg-white p-5 sm:p-6 shadow-xs">
+                    <h3 className="font-heading font-black text-lg sm:text-xl text-[#112250] mb-4 flex items-center gap-2">
+                      <Stethoscope className="h-5 w-5 text-[#112250]" />
+                      <span>Verified Specialists & Centers</span>
+                    </h3>
 
                     {specialistsBlocks && specialistsBlocks.length > 0 ? (
                       <BlocksRenderer blocks={specialistsBlocks} />
                     ) : specialistsList.length > 0 ? (
-                      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
-                        {specialistsList.map((spec: any, idx: number) => {
-                          return (
-                            <article key={`${spec.name}-${spec.organization || ""}-${spec.location || ""}-${idx}`} className="flex min-w-0 flex-col gap-4 rounded-xl border border-[#E3E0D7] bg-white p-4 transition-colors hover:border-[#A9B2C5] sm:p-6">
-                              <div className="flex min-w-0 items-start gap-4">
-                                <SpecialistAvatar name={spec.name} photoUrl={spec.photoUrl} />
-                                <div className="min-w-0">
-                                  <h3 className="break-words font-heading text-lg font-bold leading-snug text-[#112250] sm:text-xl">{spec.name}</h3>
-                                  {spec.profession && <p className="mt-1 break-words text-sm font-semibold text-[#3B507D]">{spec.profession}</p>}
-                                </div>
-                              </div>
-
-                              {spec.specialization && (
-                                <div className="break-words">
-                                  <h4 className="text-xs font-bold text-[#112250]">Specialty / expertise</h4>
-                                  <p className="mt-1 text-sm leading-relaxed text-[#3B507D]">
-                                    <LinkifiedText text={spec.specialization} />
-                                  </p>
-                                </div>
-                              )}
-
-                              <div className="space-y-2 text-sm text-[#3B507D]">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {specialistsList.map((spec: any, idx: number) => (
+                          <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] p-5 card-hover-lift flex flex-col justify-between space-y-3">
+                            <div className="flex items-start gap-3">
+                              <SpecialistAvatar name={spec.name} size="md" />
+                              <div>
+                                <h4 className="font-heading font-black text-base text-[#112250]">{spec.name}</h4>
+                                <p className="text-xs font-bold text-[#3B507D] mt-0.5">{spec.profession || "Specialist"}</p>
                                 {spec.organization && (
-                                  <div className="flex items-start gap-2">
-                                    <Building2 className="mt-0.5 h-4 w-4 shrink-0 text-[#112250]" />
-                                    <span className="break-words">{spec.organization}</span>
-                                  </div>
-                                )}
-                                {spec.location && (
-                                  <div className="flex items-start gap-2">
-                                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#112250]" />
-                                    <span className="break-words">{spec.location}</span>
-                                  </div>
-                                )}
-                                {spec.contact && (
-                                  <div className="flex items-start gap-2">
-                                    <Mail className="mt-0.5 h-4 w-4 shrink-0 text-[#112250]" />
-                                    <span className="break-words"><LinkifiedText text={spec.contact} /></span>
-                                  </div>
+                                  <p className="text-xs text-[#112250] mt-1 flex items-center gap-1">
+                                    <Building2 className="h-3.5 w-3.5 text-[#3B507D] shrink-0" />
+                                    <span className="truncate">{spec.organization}</span>
+                                  </p>
                                 )}
                               </div>
-
-                              {spec.publications && spec.publications !== "0" && (
-                                <div className="break-words border-t border-[#F5F4F0] pt-3 text-sm text-[#3B507D]">
-                                  <strong className="text-[#112250]">Publications / research:</strong>{" "}
-                                  <LinkifiedText text={String(spec.publications)} />
-                                </div>
-                              )}
-                              {Array.isArray(spec.additionalContent) && spec.additionalContent.length > 0 && (
-                                <div className="space-y-3 border-t border-[#F5F4F0] pt-3">
-                                  {spec.additionalContent.map((item: ContentNode, extraIndex: number) => {
-                                    const titleText = Array.isArray(item.title)
-                                      ? item.title.map((run: any) => run.text || "").join("")
-                                      : typeof item.title === "string"
-                                      ? item.title
-                                      : "";
-                                    return (
-                                      <div key={`${extraIndex}-${titleText || "additional"}`} className="break-words">
-                                        {titleText && <h4 className="text-xs font-bold text-[#112250]">{titleText}</h4>}
-                                        <ContentNodeRenderer nodes={item.children} />
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                              {Array.isArray(spec.links) && spec.links.length > 0 && (
-                                <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-[#F5F4F0] pt-3">
-                                  {spec.links.map((link: any, linkIndex: number) => (
-                                    <a key={`${link.url}-${linkIndex}`} href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full items-center gap-1.5 break-all text-xs font-bold text-[#112250] hover:underline">
-                                      <span>{link.label || "View source"}</span><ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                                    </a>
-                                  ))}
-                                </div>
-                              )}
-                            </article>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-[#3B507D] italic">No specialist records found for this condition.</p>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* ── 10. SOURCES & LINKS TAB ── */}
-              {activeTab === "overview" && (sourcesBlocks?.length ? true : sourcesList.length > 0) && (
-                <motion.div key="sources" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-6">
-                  <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 lg:p-8 shadow-xs">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#F0F4FA] text-[#112250] shrink-0">
-                        <ExternalLink className="h-5 w-5 text-[#112250]" />
-                      </div>
-                      <div>
-                        <h2 className="font-heading text-xl sm:text-2xl font-black text-[#112250]">
-                          Disease Sources & External References
-                        </h2>
-                        <p className="text-xs font-medium text-[#3B507D] mt-0.5">
-                          Detected websites, clinical trials, academic publications, and official registry citations.
-                        </p>
-                      </div>
-                    </div>
-
-                    {sourcesBlocks && sourcesBlocks.length > 0 ? (
-                      <BlocksRenderer blocks={sourcesBlocks} />
-                    ) : sourcesList.length > 0 ? (
-                      <div className="space-y-3">
-                        {sourcesList.map((src: any, idx: number) => {
-                          const title = src.title || src.name || `Reference ${idx + 1}`;
-                          const url = src.url || (typeof src === "string" ? src : null);
-
-                          return (
-                            <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between rounded-xl bg-[#F5F4F0] p-3.5 sm:p-4 border border-[#E7E2CE] gap-3">
-                              <div className="min-w-0">
-                                <span className="rounded-full bg-[#112250] px-2.5 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider mb-1 inline-block">
-                                  {src.type || "Reference"}
-                                </span>
-                                <h4 className="text-xs font-bold text-[#112250] break-words">{title}</h4>
-                                {src.description && <p className="text-[11px] text-[#3B507D] mt-0.5 break-words">{src.description}</p>}
-                              </div>
-                              {url && (
-                                <a
-                                  href={url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 text-xs font-bold text-[#112250] hover:underline shrink-0 self-start sm:self-auto bg-white sm:bg-transparent px-3 py-1.5 sm:p-0 rounded-lg sm:rounded-none border sm:border-0 border-[#E7E2CE]"
-                                >
-                                  <span>Visit Link</span>
-                                  <ExternalLink className="h-3.5 w-3.5" />
-                                </a>
-                              )}
                             </div>
-                          );
-                        })}
+                            {spec.specialization && (
+                              <p className="text-xs text-[#112250] font-medium leading-relaxed pl-3 border-l-2 border-[#112250]">
+                                {spec.specialization}
+                              </p>
+                            )}
+                            {spec.contact && (
+                              <a
+                                href={spec.contact.startsWith("http") ? spec.contact : `https://${spec.contact}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-[#112250] px-4 py-2 text-xs font-bold text-white hover:bg-[#1a3365] transition-colors min-h-[44px]"
+                              >
+                                <span>Official Profile</span>
+                                <ExternalLink className="h-3.5 w-3.5" />
+                              </a>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-[#3B507D] italic">No external references listed for this condition.</p>
+                      <p className="text-base text-[#3B507D] italic">Specialist directory currently being updated.</p>
                     )}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
 
-            {/* ── ANTI-DATA-LOSS FALLBACK SECTION ── */}
-            {uncategorizedList.length > 0 && (
-              <div className="rounded-xl border-2 border-[#BFD5F8] bg-[#F5F8FF] p-4 sm:p-6 shadow-xs">
-                <h3 className="font-heading font-black text-sm sm:text-base text-[#112250] flex items-center gap-2 mb-2">
-                  <ShieldAlert className="h-5 w-5 text-[#112250] shrink-0" />
-                  <span>Uncategorized / Additional Preserved Information</span>
-                </h3>
-                <p className="text-xs text-[#3B507D] font-medium mb-4">
-                  Information preserved by the anti-data-loss validation layer to guarantee no source content was discarded.
-                </p>
-                <div className="space-y-2">
-                  {uncategorizedList.map((item: string, idx: number) => (
-                    <div key={idx} className="rounded-lg bg-white p-3 text-xs font-medium text-[#112250] border border-[#E7E2CE] break-words">
-                      <LinkifiedText text={item} />
+          {/* ================= RIGHT COLUMN: STICKY SIDEBAR (4 COLS) ================= */}
+          <aside className="lg:col-span-4 space-y-5">
+            <div className="lg:sticky lg:top-28 space-y-5">
+              {/* Sidebar Box 1: Key Takeaway (Soft sky blue #D6EAF5) */}
+              <div className="rounded-2xl border border-[#112250]/15 bg-[#D6EAF5] p-5 shadow-xs">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white border border-[#112250]/15 text-[#112250]">
+                      <Lightbulb className="h-4 w-4" />
+                    </span>
+                    <h3 className="font-heading font-black text-sm uppercase tracking-wider text-[#112250]">
+                      Key Takeaway
+                    </h3>
+                  </div>
+                  <BabyZebraBadge size={20} />
+                </div>
+                <div className="space-y-2 mt-2">
+                  {keyTakeaways.map((point, idx) => (
+                    <div key={idx} className="flex items-start gap-2 text-sm text-[#112250] font-medium leading-relaxed">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#112250] mt-2 shrink-0" />
+                      <span>{point}</span>
                     </div>
                   ))}
                 </div>
               </div>
-            )}
 
-            {/* ── MEDICAL DISCLAIMER CARD ── */}
-            <div className="rounded-xl border-2 border-[#E7E2CE] bg-[#F5F4F0] p-4 sm:p-6 text-center shadow-2xs">
-              <div className="flex justify-center mb-2">
-                <ShieldAlert className="h-6 w-6 text-[#112250]" />
-              </div>
-              <h4 className="text-xs font-bold text-[#112250] uppercase tracking-wider mb-1">Medical Disclaimer</h4>
-              <p className="text-xs text-[#3B507D] font-medium leading-relaxed max-w-2xl mx-auto">
-                This information is provided for general educational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified physician regarding any medical condition.
-              </p>
-            </div>
-          </div>
+              {/* Sidebar Box 2: Contextual "Jump to" List */}
+              {jumpLinks.length > 0 && (
+                <div className="rounded-2xl border border-[#112250]/15 bg-white p-5 shadow-xs">
+                  <h4 className="font-heading font-black text-sm uppercase tracking-wider text-[#112250] mb-3 flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-[#112250]" />
+                    <span>Jump to in this tab</span>
+                  </h4>
+                  <div className="space-y-1.5">
+                    {jumpLinks.map((link, idx) => (
+                      <a
+                        key={idx}
+                        href={link.href}
+                        className="flex items-center justify-between rounded-xl px-3 py-2 text-sm font-bold text-[#112250] bg-[#F7FBFE] hover:bg-[#D6EAF5] transition-colors min-h-[44px]"
+                      >
+                        <span>{link.label}</span>
+                        <ChevronRight className="h-4 w-4 text-[#3B507D]" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-          {/* ================= RIGHT SIDEBAR COLUMN (4 COLS) ================= */}
-          <div className="lg:col-span-4 space-y-4 sm:space-y-6">
-            {/* Sidebar Card 1: Quick Links */}
-            <div className="rounded-xl border-2 border-[#E7E2CE] bg-white p-4 sm:p-6 shadow-xs">
-              <h3 className="font-heading font-black text-base text-[#112250] mb-4 flex items-center gap-2">
-                <Zap className="h-4 w-4 text-[#112250]" /> Quick Links
-              </h3>
-              <div className="space-y-2">
-                {tabs.filter((tab) => tab.id !== "overview").map((tab) => {
-                  const IconComp = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => navigateToTab(tab.id)}
-                      className="flex w-full items-center justify-between rounded-lg bg-[#F5F4F0] p-3 text-left text-xs font-bold text-[#112250] transition-all hover:bg-[#E7E2CE]"
-                    >
-                      <span className="flex min-w-0 items-center gap-2 pr-1">
-                        <IconComp className="h-4 w-4 shrink-0 text-[#112250]" />
-                        <span className="truncate">{tab.label}</span>
-                      </span>
-                      <span className="shrink-0">→</span>
-                    </button>
-                  );
-                })}
-
+              {/* Sidebar Box 3: Rare-Ze Chat Button */}
+              <div className="rounded-2xl border border-[#112250]/15 bg-white p-5 shadow-xs">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <Bot className="h-5 w-5 text-[#112250]" />
+                    <span className="font-heading font-black text-sm text-[#112250]">Rare-Ze Assistant</span>
+                  </div>
+                  <BabyZebraBadge size={22} />
+                </div>
+                <p className="text-xs text-[#3B507D] font-medium leading-relaxed mb-3.5">
+                  Have questions about symptoms, therapies, or clinical research for <strong>{disease.name}</strong>?
+                </p>
                 <button
-                  onClick={() => generateDiseasePDF(disease)}
-                  className="flex w-full items-center justify-between rounded-lg bg-[#F5F4F0] p-3 text-xs font-bold text-[#112250] hover:bg-[#E7E2CE] transition-all text-left"
+                  type="button"
+                  onClick={openRareZeChat}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#112250] hover:bg-[#1a3365] px-4 py-3 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 min-h-[44px] cursor-pointer"
                 >
-                  <span className="flex items-center gap-2 pr-1 min-w-0">
-                    <Download className="h-4 w-4 text-[#112250] shrink-0" />
-                    <span className="truncate">Download Resources (PDF)</span>
-                  </span>
-                  <span className="shrink-0">→</span>
+                  <MessageCircle className="h-4 w-4 text-[#D6EAF5]" />
+                  <span>Chat with Rare-Ze</span>
                 </button>
               </div>
             </div>
-          </div>
+          </aside>
         </div>
       </section>
     </div>

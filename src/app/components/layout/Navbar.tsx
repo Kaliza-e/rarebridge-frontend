@@ -221,9 +221,20 @@ export default function Navbar({
               onClick={() => handleNavigation("directory")}
               aria-label="Explore Disease Guide"
               title="Explore Disease Guide"
-              className="flex items-center gap-1.5 rounded-full bg-[#112250] hover:bg-[#1C376F] text-white px-3 sm:px-3.5 py-1.5 text-xs font-heading font-semibold shadow-xs hover:shadow transition-all duration-150 active:scale-95 cursor-pointer shrink-0"
+              className="group relative flex items-center gap-2 rounded-full bg-[#112250] hover:bg-[#1C376F] text-white px-3.5 sm:px-4 py-2 min-h-[44px] text-xs font-heading font-semibold shadow-xs hover:shadow transition-all duration-150 active:scale-95 cursor-pointer shrink-0 overflow-hidden"
             >
-              <BookOpen size={14} className="text-[#BCE0F5] shrink-0" />
+              {/* Subtle baby zebra striped pill accent around icon */}
+              <span
+                className="relative flex items-center justify-center w-6 h-6 rounded-full overflow-hidden shrink-0 border border-white/30"
+                style={{
+                  backgroundImage: "repeating-linear-gradient(45deg, #112250, #112250 2px, #ffffff 2px, #ffffff 4px)",
+                }}
+                aria-hidden="true"
+              >
+                <span className="w-4 h-4 rounded-full bg-[#112250] flex items-center justify-center">
+                  <BookOpen size={11} className="text-[#BCE0F5] shrink-0" />
+                </span>
+              </span>
               <span className="hidden sm:inline">Disease Guide</span>
               <span className="sm:hidden">Guide</span>
             </button>

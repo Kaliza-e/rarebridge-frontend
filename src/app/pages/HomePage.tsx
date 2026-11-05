@@ -11,6 +11,8 @@ import {
   DiseaseCard,
   EdelweissFlower,
   FourPointStar,
+  BabyZebraBadge,
+  ZebraStripeDivider,
 } from "../components/common/Visuals";
 
 import {
@@ -42,25 +44,41 @@ const HERO_SLIDES = [
     tag: "A Warm Safe Place for Rare Families",
     title: "Understanding rare conditions with clarity, care & hope.",
     subtitle: "Plain-language medical guides, world-class specialist directories, and compassionate family support for children, parents, and caregivers.",
-    image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1920&q=80",
-    alt: "Healthcare specialist offering compassionate medical support to family",
+    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=2000&q=85",
+    alt: "Caring physician consulting warmly with reassurance in modern clinic",
     badge: "100% Free & Family-Centered",
+  },
+  {
+    tag: "Caregiver & Family Circles",
+    title: "Connecting parents & caregivers through real experience.",
+    subtitle: "You are never alone. Join parent support circles, practical caregiver wellness guides, and peer advocacy networks.",
+    image: "https://images.unsplash.com/photo-1536640712-4d4c36ff0e4e?auto=format&fit=crop&w=2000&q=85",
+    alt: "Joyful parent hugging their child with genuine love and optimism",
+    badge: "Compassionate Peer Support",
   },
   {
     tag: "Plain-Language Medical Education",
     title: "Simplifying complex genetic reports into everyday guidance.",
     subtitle: "Our certified clinical networks break down ORPHA codes, symptoms, and inheritance patterns into clear, encouraging steps.",
-    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=1920&q=80",
-    alt: "Medical researcher and geneticist studying molecular pathology under microscope",
+    image: "https://images.unsplash.com/photo-1579165466791-78822d31e672?auto=format&fit=crop&w=2000&q=85",
+    alt: "Genetics researcher analyzing diagnostic sequencing in high-tech laboratory",
     badge: "Sourced from Certified Geneticists",
   },
   {
-    tag: "Caregiver & Family Network",
-    title: "Connecting parents & caregivers through real experience.",
-    subtitle: "You are never alone. Join parent support circles, practical caregiver wellness guides, and peer advocacy networks.",
-    image: "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1920&q=80",
-    alt: "Supportive family walking together with care and hope",
-    badge: "Compassionate Support Circles",
+    tag: "Specialist & Center Directory",
+    title: "Find trusted specialists who truly understand rare diseases.",
+    subtitle: "Explore over 2,400 verified medical centers, metabolic clinicians, and neurological genetics teams worldwide.",
+    image: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=2000&q=85",
+    alt: "Pediatric physician caring gently for a child in a sunny clinic",
+    badge: "Verified Clinical Network",
+  },
+  {
+    tag: "Community Advocacy & Research",
+    title: "Empowering every family on their rare disease journey.",
+    subtitle: "Access practical therapies, assistive equipment guides, and research pipelines tailored for daily living.",
+    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=2000&q=85",
+    alt: "Warm collaborative circle of family caregivers sharing hope",
+    badge: "Every Journey Matters",
   },
 ];
 
@@ -153,8 +171,8 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 className="h-full w-full object-cover object-center transition-transform duration-[7000ms] ease-out scale-105"
               />
               {/* Deep navy atmospheric gradient overlays matching Tour */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#070D1E]/92 via-[#070D1E]/80 to-[#070D1E]/95" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070D1E]/40 to-[#070D1E]/90 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#070D1E]/75 via-[#070D1E]/55 to-[#070D1E]/85" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070D1E]/30 to-[#070D1E]/75 pointer-events-none" />
             </div>
           ))}
         </div>
@@ -250,7 +268,15 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
         {/* Bottom Status Bar inside the Hero container */}
         <div className="max-w-7xl mx-auto w-full relative z-20 flex flex-col sm:flex-row items-center sm:justify-between gap-3 pt-4 px-4 sm:px-6">
-          {/* Status Capsule */}
+          {/* Decorative Zebra Stars */}
+            <div className="hidden sm:flex items-center gap-2 select-none">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 shadow-xs">
+                <BabyZebraBadge size={22} className="border-white/40 shadow-xs" />
+                <span className="text-[11px] font-heading font-bold text-white tracking-wide">Rare-Ze Official Mascot</span>
+              </div>
+            </div>
+
+            {/* Status Capsule */}
           <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 text-xs text-white/85 shadow-sm">
             <span
               className={`h-2 w-2 rounded-full ${
@@ -330,7 +356,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 label: "Rare Conditions",
                 subtext: "Plain-language medical guides",
                 icon: BookOpen,
-                bg: "bg-[#112250] text-white",
+                bg: "bg-[#112250] text-white card-hover-lift",
                 iconBox: "bg-white/10 text-white",
               },
               {
@@ -338,7 +364,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 label: "Verified Specialists",
                 subtext: "Top metabolic & genetic experts",
                 icon: Stethoscope,
-                bg: "bg-white/95 border border-[#112250]/10 text-[#112250]",
+                bg: "bg-white border-2 border-[#112250]/15 text-[#112250] card-hover-lift shadow-xs",
                 iconBox: "bg-[#EDF6FC] text-[#112250]",
               },
               {
@@ -346,15 +372,15 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 label: "Research Trials",
                 subtext: "Gene therapy & pipeline updates",
                 icon: Microscope,
-                bg: "bg-white/95 border border-[#112250]/10 text-[#112250]",
-                iconBox: "bg-[#EDF6FC] text-[#112250]",
+                bg: "bg-[#D6EAF5] border-2 border-[#BCE0F5] text-[#112250] card-hover-lift shadow-xs",
+                iconBox: "bg-white text-[#112250]",
               },
               {
                 number: "120K+",
                 label: "Families Supported",
                 subtext: "Compassionate peer advocacy",
                 icon: HeartHandshake,
-                bg: "bg-[#EDF6FC] border border-[#BCE0F5] text-[#112250]",
+                bg: "bg-[#EDF6FC] border-2 border-[#BCE0F5] text-[#112250] card-hover-lift shadow-xs",
                 iconBox: "bg-white text-[#112250]",
               },
             ].map((stat, i) => {
@@ -383,6 +409,8 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
         </div>
       </section>
 
+      <ZebraStripeDivider />
+
       {/* ================= THE 4 PILLARS OF RAREBRIDGE ("WHAT WE OFFER" IN TOUR) ================= */}
       <section className="py-20 sm:py-28 relative overflow-hidden">
         {/* Subtle radial lighting backdrop */}
@@ -391,10 +419,13 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section Header */}
           <div className="mx-auto max-w-3xl text-center space-y-4">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white border border-[#112250]/15 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#112250] shadow-xs">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#112250] animate-pulse" />
-              Core Disciplines
-            </span>
+            <div className="relative inline-flex items-center gap-2">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white border border-[#112250]/15 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#112250] shadow-xs">
+                <BabyZebraBadge size={18} className="shrink-0" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#112250] animate-pulse" />
+                Core Disciplines
+              </span>
+            </div>
             <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-black text-[#112250] tracking-tight">
               Everything your family needs, in one friendly space
             </h2>
@@ -686,7 +717,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
               {/* Bottom Reassurance Banner */}
               <div className="rounded-2xl border border-[#BCE0F5] bg-[#EDF6FC] px-6 py-4 flex items-center gap-3 shadow-xs">
-                <FourPointStar size={18} className="text-[#112250] shrink-0" />
+                <BabyZebraBadge size={22} className="shrink-0" />
                 <p className="text-sm font-semibold text-[#112250]">
                   Our commitment is clear: plain language, zero barriers, and supportive community for every caregiver.
                 </p>

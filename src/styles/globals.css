@@ -57,7 +57,7 @@
 }
 
 .rb-app-shell {
-  background-color: #FFFFFF;
+  background-color: #F7FBFE;
   color: #112250;
   font-family: var(--rb-font-body);
   -webkit-font-smoothing: antialiased;
@@ -213,5 +213,25 @@ input[type="search"]::-webkit-search-results-decoration {
       420px 420px,
       cover;
     opacity: 0.04;
+  }
+}
+/* Accessible card hover lifts & sparkle touches (prefers-reduced-motion safe) */
+.card-hover-lift {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(17, 34, 80, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-hover-lift,
+  .animate-float-slow,
+  .animate-twinkle,
+  .fade-in-up {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
   }
 }
