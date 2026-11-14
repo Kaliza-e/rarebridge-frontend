@@ -133,7 +133,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
     onNav("directory");
   };
 
-  const featuredDiseases = diseases.slice(0, 3);
+  const featuredDiseases = diseases.slice(0, 6);
   const activeSlide = HERO_SLIDES[currentSlide];
 
   return (
@@ -728,28 +728,33 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
         </div>
       </section>
 
-      {/* ================= FEATURED CONDITIONS SECTION ("RECENT PUBLICATIONS" IN TOUR) ================= */}
+      {/* ================= EXPLORE DISEASES PREVIEW SECTION ================= */}
       <section className="py-20 sm:py-28 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#112250]">
-                Knowledge Base
+              <span className="inline-flex items-center gap-1.5 text-xs font-heading font-bold uppercase tracking-widest text-[#112250] bg-[#112250]/5 px-3 py-1 rounded-full border border-[#112250]/10">
+                <BookOpen className="h-3.5 w-3.5" />
+                Featured Diseases
               </span>
-              <h2 className="mt-2 font-heading text-3xl font-bold text-[#112250] md:text-4xl">
-                Featured Rare Diseases
+              <h2 className="mt-3 font-heading text-3xl font-black text-[#112250] md:text-4xl tracking-tight">
+                Explore Rare Diseases
               </h2>
+              <p className="mt-1 text-sm sm:text-base text-[#3B507D] max-w-xl font-normal leading-relaxed">
+                Clear, medically-vetted guides to help families, caregivers, and clinicians understand rare conditions with confidence.
+              </p>
             </div>
             <button
               type="button"
               onClick={() => onNav("directory")}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#112250] hover:text-[#1e3a7a] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-sm font-bold text-[#112250] hover:text-[#1C376F] transition-colors cursor-pointer shrink-0"
             >
-              <span>Explore all conditions</span>
+              <span>Explore full library</span>
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
 
+          {/* Clean 3-6 Disease Preview Cards */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featuredDiseases.map((disease) => (
               <DiseaseCard
@@ -758,6 +763,33 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                 onClick={() => onDisease(disease.id)}
               />
             ))}
+          </div>
+
+          {/* Prominent CTA: Explore the Disease Guide */}
+          <div className="rounded-3xl border border-[#112250]/15 bg-gradient-to-br from-[#F7FBFE] via-white to-[#EDF6FC] p-8 sm:p-10 text-center shadow-xs">
+            <div className="max-w-2xl mx-auto space-y-4">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#112250]/5 border border-[#112250]/10 px-3.5 py-1 text-xs font-heading font-bold uppercase tracking-wider text-[#112250]">
+                <BookOpen className="h-3.5 w-3.5" />
+                Comprehensive Directory
+              </span>
+              <h3 className="font-heading text-2xl sm:text-3xl font-black text-[#112250] tracking-tight">
+                Explore the Disease Guide
+              </h3>
+              <p className="text-sm sm:text-base text-[#3B507D] font-normal leading-relaxed">
+                Discover our growing library of rare diseases. Search by name, explore different categories, and access detailed information.
+              </p>
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => onNav("directory")}
+                  className="inline-flex items-center gap-2 rounded-full bg-[#112250] hover:bg-[#1C376F] text-white px-7 py-3.5 text-sm font-heading font-bold shadow-md hover:shadow-lg transition-all duration-200 active:scale-95 cursor-pointer"
+                >
+                  <BookOpen className="h-4 w-4 text-[#BCE0F5]" />
+                  <span>Explore the Disease Guide</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

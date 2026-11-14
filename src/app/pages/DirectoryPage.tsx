@@ -13,6 +13,7 @@ import {
   DiseaseCard,
   EdelweissFlower,
   FourPointStar,
+  BabyZebraBadge,
 } from "../components/common/Visuals";
 
 import {
@@ -172,17 +173,17 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
           {/* Centered Pill Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-semibold text-white shadow-xs mb-5">
             <FourPointStar size={11} className="text-[#7DD3FC] shrink-0" />
-            <span className="uppercase tracking-wider text-[11px] font-bold">Rare Disease Directory</span>
+            <span className="uppercase tracking-wider text-[11px] font-bold">RareBridge Knowledge Base</span>
           </div>
 
           {/* Centered Large Headline */}
           <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-black leading-[1.18] tracking-tight text-white max-w-4xl mx-auto drop-shadow-sm">
-            Explore 7,000+ Rare Conditions &amp; Plain-Language Guides.
+            Disease Guide
           </h1>
 
           {/* Centered Subtitle */}
           <p className="font-sans mt-4 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed text-[#D6E0F5] font-normal">
-            Search medically-vetted guides, symptom breakdowns, and specialist resources designed for families, patients, and healthcare providers.
+            Discover our growing library of rare diseases. Search by name, explore different categories, and access detailed, medically-vetted guides designed for families, patients, and healthcare providers.
           </p>
 
           {/* Centered Search Bar */}
@@ -193,7 +194,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by condition name, symptom, or ORPHA code..."
+                placeholder="Search by disease name, abbreviation (e.g. ALD, MPS I), or category..."
                 aria-label="Search conditions by name, symptom, or ORPHA code"
                 autoComplete="off"
                 autoCorrect="off"
@@ -288,7 +289,7 @@ export default function DirectoryPage({ onDisease }: DirectoryPageProps) {
         {/* Results Counter */}
         <div className="mb-6 flex items-center justify-between px-1">
           <p className="font-sans text-sm font-bold text-[#3B507D]">
-            Showing <strong className="text-[#112250] font-black">{filtered.length}</strong> conditions cataloged
+            Showing <strong className="text-[#112250] font-black">{filtered.length}</strong> rare diseases in catalog
           </p>
         </div>
 

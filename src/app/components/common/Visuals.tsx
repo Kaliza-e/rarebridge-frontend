@@ -892,53 +892,40 @@ export function Accordion({ items }: { items: { title: string; content: React.Re
 }
 
 export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: () => void }) {
-  const getCardVisual = (category?: string, name?: string) => {
-    const text = (category || "").toLowerCase() + " " + (name || "").toLowerCase();
+  const categoryLabel = disease.category || (Array.isArray(disease.categoryBadges) && disease.categoryBadges[0]) || "Rare Condition";
+  const researchStatus = (disease as any).researchStatus;
 
-    if (text.includes("heart") || text.includes("cardio") || text.includes("cardiac") || text.includes("vascular")) {
-      return {
-        icon: Heart,
-        categoryLabel: "Heart & Vascular",
-        background: "from-[#321A3F] via-[#512744] to-[#172344]",
-      };
+  const shortDescription = (() => {
+    const rawOverview = (disease as any).overview;
+    if (typeof disease.shortDesc === "string" && disease.shortDesc.trim()) {
+      return disease.shortDesc.replace(/<!--rbm:[^>]*-->/gi, "").trim();
     }
-    if (text.includes("neuro") || text.includes("brain") || text.includes("cerebral") || text.includes("leuko") || text.includes("dystrophy") || text.includes("alexander") || text.includes("canavan")) {
-      return {
-        icon: Brain,
-        categoryLabel: "Neurological & Brain",
-        background: "from-[#18234A] via-[#293A70] to-[#172344]",
-      };
+    if (typeof rawOverview === "object" && rawOverview !== null) {
+      if (typeof rawOverview.simple === "string" && rawOverview.simple.trim()) {
+        return rawOverview.simple.replace(/<!--rbm:[^>]*-->/gi, "").trim();
+      }
     }
-    if (text.includes("genet") || text.includes("dna") || text.includes("adreno") || text.includes("cancer") || text.includes("carcinoma")) {
-      return {
-        icon: Dna,
-        categoryLabel: "Genetic & Cell",
-        background: "from-[#123D49] via-[#1F5660] to-[#172344]",
-      };
+    if (typeof rawOverview === "string" && rawOverview.trim()) {
+      const text = rawOverview.replace(/<!--rbm:[^>]*-->/gi, "").trim();
+      if (text.startsWith("{") && text.endsWith("}")) {
+        try {
+          const parsed = JSON.parse(text);
+          if (parsed.simple) return String(parsed.simple);
+        } catch {
+          // ignore
+        }
+      }
+      return text;
     }
-    if (text.includes("metabol") || text.includes("storage") || text.includes("syndrome") || text.includes("gaucher") || text.includes("fabry")) {
-      return {
-        icon: HeartPulse,
-        categoryLabel: "Metabolic Care",
-        background: "from-[#25305B] via-[#374A79] to-[#172344]",
-      };
-    }
-    return {
-      icon: Stethoscope,
-      categoryLabel: disease.category || "Rare Condition",
-      background: "from-[#172344] via-[#263B65] to-[#172344]",
-    };
-  };
-
-  const visual = getCardVisual(disease.category, disease.name);
-  const IconComp = visual.icon;
+    return "Plain-language medical summary, diagnosis breakdown, and research profile.";
+  })();
 
   return (
     <div
       role="button"
       tabIndex={0}
       aria-label={`View ${disease.name} condition guide and research`}
-      className="group relative overflow-hidden rounded-2xl border border-[#BCE0F5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#112250] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#112250] focus-visible:ring-offset-2 cursor-pointer flex flex-col justify-between"
+      className="group relative flex flex-col justify-between rounded-2xl border border-[#112250]/15 bg-white p-6 shadow-xs hover:border-[#112250] hover:shadow-md transition-all duration-200 cursor-pointer text-left h-full"
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -947,60 +934,37 @@ export function DiseaseCard({ disease, onClick }: { disease: Disease; onClick: (
         }
       }}
     >
-      <div className={`relative isolate flex h-40 w-full flex-col justify-between overflow-hidden bg-gradient-to-br ${visual.background} p-4 sm:p-5`}>
-        <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.14),transparent_55%)]" />
-        <div className="pointer-events-none absolute right-0 top-0 z-0 text-white/[0.12]">
-          <IconComp className="h-36 w-36 stroke-[1.15]" aria-hidden="true" />
-        </div>
-        <div className="relative z-10 flex h-full flex-col justify-between">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold text-white shadow-sm backdrop-blur-md">
-              <IconComp className="h-3.5 w-3.5 text-[#BCE0F5]" aria-hidden="true" />
-              <span>{visual.categoryLabel}</span>
-            </div>
-            <span className="shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-sm backdrop-blur-md">
-              {(disease as any).researchStatus || "Active Research"}
+      <div>
+        {/* Top Meta: Category & Research Status */}
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3.5">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#D6EAF5] px-3 py-1 text-xs font-heading font-bold text-[#112250]">
+            <Dna className="h-3 w-3 text-[#112250]" aria-hidden="true" />
+            <span>{categoryLabel}</span>
+          </span>
+          {researchStatus && (
+            <span className="inline-flex items-center rounded-full bg-[#F5F4F0] border border-[#112250]/10 px-2.5 py-0.5 text-[11px] font-semibold text-[#3B507D]">
+              {researchStatus}
             </span>
-          </div>
-
-          <h3 className="font-heading text-lg font-black leading-tight text-white line-clamp-2 drop-shadow-sm">
-            {disease.name}
-          </h3>
+          )}
         </div>
+
+        {/* Disease Title */}
+        <h3 className="font-heading text-lg sm:text-xl font-black text-[#112250] group-hover:text-[#1C376F] transition-colors leading-snug line-clamp-2 mb-2.5">
+          {disease.name}
+        </h3>
+
+        {/* Short Description */}
+        <p className="font-sans text-xs sm:text-sm text-[#3B507D] font-normal leading-relaxed line-clamp-3 mb-5">
+          {shortDescription}
+        </p>
       </div>
 
-      <div className="p-5 flex-1 flex flex-col justify-between">
-        <p className="font-sans text-xs text-[#3B507D] leading-relaxed line-clamp-2 mb-4 font-medium">
-          {(() => {
-            const rawOverview = (disease as any).overview;
-            if (typeof disease.shortDesc === "string" && disease.shortDesc.trim()) {
-              return disease.shortDesc.replace(/<!--rbm:[^>]*-->/gi, "").trim();
-            }
-            if (typeof rawOverview === "object" && rawOverview !== null) {
-              if (typeof rawOverview.simple === "string" && rawOverview.simple.trim()) {
-                return rawOverview.simple.replace(/<!--rbm:[^>]*-->/gi, "").trim();
-              }
-            }
-            if (typeof rawOverview === "string" && rawOverview.trim()) {
-              const text = rawOverview.replace(/<!--rbm:[^>]*-->/gi, "").trim();
-              if (text.startsWith("{") && text.endsWith("}")) {
-                try {
-                  const parsed = JSON.parse(text);
-                  if (parsed.simple) return String(parsed.simple);
-                } catch {
-                  // ignore
-                }
-              }
-              return text;
-            }
-            return "Plain-language medical summary and research profile.";
-          })()}
-        </p>
-
-        <div className="font-sans flex items-center justify-between border-t border-[#EDF6FC] pt-3 text-xs font-black text-[#112250] group-hover:text-[#3B507D]">
-          <span>View Overview & Research</span>
-          <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-        </div>
+      {/* Footer Action */}
+      <div className="pt-4 border-t border-[#112250]/10 flex items-center justify-between text-xs font-heading font-bold text-[#112250] group-hover:text-[#1C376F] transition-colors mt-auto">
+        <span>Read Medical Guide</span>
+        <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#F5F4F0] group-hover:bg-[#D6EAF5] transition-colors">
+          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+        </span>
       </div>
     </div>
   );
