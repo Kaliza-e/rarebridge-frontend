@@ -225,6 +225,33 @@ input[type="search"]::-webkit-search-results-decoration {
   box-shadow: 0 12px 28px rgba(17, 34, 80, 0.08);
 }
 
+/* ================= CUSTOM ZEBRA CURSOR ================= */
+html,
+body,
+.rb-app-shell {
+  cursor: url('/zebra-cursor.svg') 2 2, auto;
+}
+
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+select,
+[role="button"],
+.cursor-pointer {
+  cursor: url('/zebra-cursor-pointer.svg') 10 2, pointer !important;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="password"],
+input[type="number"],
+textarea {
+  cursor: text !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card-hover-lift,
   .animate-float-slow,

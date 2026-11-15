@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <pattern id="zebraStripe" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+      <rect width="4" height="8" fill="#112250"/>
+      <rect x="4" width="4" height="8" fill="#FFFFFF"/>
+    </pattern>
+    <filter id="cursorShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="1" dy="1.5" stdDeviation="1" flood-color="#070D1E" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <!-- Main Cursor Body with Zebra Stripes -->
+  <path d="M 2 2 L 2 25 L 8 19 L 13 29 L 17 27 L 11 17 L 19 17 Z" fill="url(#zebraStripe)" stroke="#112250" stroke-width="1.5" stroke-linejoin="round" filter="url(#cursorShadow)"/>
+  <!-- Precision pointer tip in sky blue -->
+  <path d="M 2 2 L 9 9 L 2 12 Z" fill="#D6EAF5" stroke="#112250" stroke-width="1.2"/>
+  <circle cx="3" cy="3" r="1.5" fill="#112250" />
+</svg>

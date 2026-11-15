@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <pattern id="zebraStripePointer" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+      <rect width="4" height="8" fill="#112250"/>
+      <rect x="4" width="4" height="8" fill="#BCE0F5"/>
+    </pattern>
+    <filter id="pointerShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="1" dy="1.5" stdDeviation="1.5" flood-color="#112250" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <!-- Pointing Hand with Signature Zebra Stripes -->
+  <path d="M 10 2 C 8 2 8 5 8 11 L 8 15 L 6 15 C 4 15 3 16 3 18 C 3 21 5 23 8 26 C 11 29 14 30 19 30 C 25 30 27 26 27 20 L 27 12 C 27 10 25 10 24 10 C 23 10 22 11 22 12 L 22 10 C 22 8 20 8 19 8 C 18 8 17 9 17 10 L 17 9 C 17 7 15 7 14 7 C 13 7 12 8 12 9 L 12 5 C 12 2 10 2 10 2 Z" fill="url(#zebraStripePointer)" stroke="#112250" stroke-width="1.5" stroke-linejoin="round" filter="url(#pointerShadow)"/>
+  <!-- Precision pointer indicator on index finger -->
+  <circle cx="10" cy="4.5" r="2.5" fill="#112250" />
+  <circle cx="10" cy="4.5" r="1.2" fill="#BCE0F5" />
+</svg>

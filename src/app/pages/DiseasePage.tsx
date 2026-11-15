@@ -4,14 +4,16 @@ import { fetchDiseasesFromAPI } from "../data";
 import {
   ZebraEmptyState,
   BabyZebraBadge,
+  ZebraStripeBackground,
 } from "../components/common/Visuals";
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
 import { generateDiseasePDF } from "../utils/pdf-generator";
 import { LinkifiedText, RichTextRunsRenderer } from "../utils/link-helper";
 import { getBlocks } from "../utils/rbm";
 import { BlocksRenderer } from "../components/rbm";
-import type { ParsedSection, ContentNode } from "../services/api.service";
 import {
+  Search,
+  X,
   ArrowLeft,
   Download,
   BookOpen,
@@ -25,8 +27,6 @@ import {
   Building2,
   CheckCircle,
   ExternalLink,
-  MapPin,
-  Mail,
   FileText,
   Dna,
   ChevronDown,
@@ -35,7 +35,6 @@ import {
   Layers,
   Zap,
   Bot,
-  Sparkles,
   MessageCircle,
   ShieldCheck,
 } from "lucide-react";
@@ -43,6 +42,7 @@ import {
 type DiseasePageProps = {
   diseaseId: string;
   onBack: () => void;
+  onSelectDisease?: (id: string) => void;
 };
 
 function renderNodeRunsOrString(runsOrText: any) {
@@ -56,72 +56,19 @@ function renderNodeRunsOrString(runsOrText: any) {
   return String(runsOrText);
 }
 
-function EditorialContentRenderer({ nodes }: { nodes?: any[] }) {
-  if (!nodes || !Array.isArray(nodes) || nodes.length === 0) return null;
-
-  return (
-    <div className="space-y-6">
-      {nodes.map((node, idx) => {
-        if (!node) return null;
-
-        if (node.type === "section" || node.type === "subsection") {
-          return (
-            <div key={idx} className="space-y-3 pt-2">
-              {node.title && (
-                <h3 className="font-heading font-bold text-lg sm:text-xl text-[#112250] flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-[#112250]" />
-                  <span>{renderNodeRunsOrString(node.title)}</span>
-                </h3>
-              )}
-              {node.content && (
-                <p className="text-base text-[#112250]/90 font-normal leading-relaxed">
-                  {renderNodeRunsOrString(node.content)}
-                </p>
-              )}
-              {Array.isArray(node.children) && node.children.length > 0 && (
-                <div className="pl-4 border-l-2 border-[#112250]/15 space-y-3 mt-3">
-                  <EditorialContentRenderer nodes={node.children} />
-                </div>
-              )}
-            </div>
-          );
-        }
-
-        if (node.type === "bullet") {
-          return (
-            <div key={idx} className="flex items-start gap-3 text-base text-[#112250]/90 font-normal leading-relaxed">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#112250] mt-2.5 shrink-0" />
-              <span>{renderNodeRunsOrString(node.content)}</span>
-            </div>
-          );
-        }
-
-        if (node.type === "numbered") {
-          return (
-            <div key={idx} className="flex items-start gap-3 text-base text-[#112250]/90 font-normal leading-relaxed">
-              <span className="font-bold text-[#112250] shrink-0">{idx + 1}.</span>
-              <span>{renderNodeRunsOrString(node.content)}</span>
-            </div>
-          );
-        }
-
-        return (
-          <p key={idx} className="text-base font-normal text-[#112250]/90 leading-relaxed">
-            {renderNodeRunsOrString(node.content)}
-          </p>
-        );
-      })}
-    </div>
-  );
-}
-
-export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
+export default function DiseasePage({ diseaseId, onBack, onSelectDisease }: DiseasePageProps) {
   const [disease, setDisease] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<
     "overview" | "causes" | "typesAndSymptoms" | "diagnosis" | "lifestyleCommunity" | "researchPharma" | "faqs" | "myths" | "specialists"
   >("overview");
+
+  // All diseases for the Book of Diseases
+  const [allDiseases, setAllDiseases] = useState<any[]>([]);
+  const [isBookSidebarOpen, setIsBookSidebarOpen] = useState(false);
+  const [bookSearchQuery, setBookSearchQuery] = useState("");
+  const [bookSelectedCat, setBookSelectedCat] = useState("All");
 
   // Accordion states
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
@@ -137,6 +84,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
         setLoadError(null);
         const list = await fetchDiseasesFromAPI();
         if (cancelled) return;
+        setAllDiseases(list);
 
         const targetId = String(diseaseId || "").trim().toLowerCase();
         const found = list.find((d: any) => {
@@ -449,6 +397,41 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
     window.dispatchEvent(new CustomEvent("open-ai-assistant"));
   };
 
+  // Categories & filtering for the Book of Diseases
+  const bookCategories = useMemo(() => {
+    const cats = new Set<string>();
+    cats.add("All");
+    allDiseases.forEach((d: any) => {
+      if (d.category) cats.add(d.category);
+    });
+    return Array.from(cats);
+  }, [allDiseases]);
+
+  const filteredBookDiseases = useMemo(() => {
+    return allDiseases.filter((d: any) => {
+      const q = bookSearchQuery.trim().toLowerCase();
+      const matchesSearch =
+        !q ||
+        (d.name && d.name.toLowerCase().includes(q)) ||
+        (d.abbreviation && d.abbreviation.toLowerCase().includes(q)) ||
+        (d.category && d.category.toLowerCase().includes(q));
+      const matchesCat =
+        bookSelectedCat === "All" || d.category === bookSelectedCat;
+      return matchesSearch && matchesCat;
+    });
+  }, [allDiseases, bookSearchQuery, bookSelectedCat]);
+
+  const handleSelectDisease = (targetId: string) => {
+    if (onSelectDisease) {
+      onSelectDisease(targetId);
+    }
+    if (window.innerWidth < 1024) {
+      setIsBookSidebarOpen(false);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setActiveTab("overview");
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F7FBFE] flex items-center justify-center p-6 text-[#112250]">
@@ -479,21 +462,214 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#F7FBFE] pb-24 text-[#112250] selection:bg-[#D6EAF5] selection:text-[#112250]">
-      {/* ================= EDITORIAL HEADER ================= */}
-      <header className="relative pt-24 sm:pt-28 pb-4 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs font-semibold text-[#3B507D] mb-4">
-          <button onClick={onBack} className="hover:text-[#112250] hover:underline flex items-center gap-1 cursor-pointer">
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>Disease Guide</span>
-          </button>
-          <ChevronRight className="h-3.5 w-3.5 text-[#3B507D]/50 shrink-0" />
-          <span className="text-[#112250] font-bold truncate">{disease.name}</span>
-        </nav>
+    <div className="relative min-h-screen bg-transparent pb-24 text-[#112250] selection:bg-[#D6EAF5] selection:text-[#112250]">
+      {/* Background Zebra Stripe & Soft Pastel Glows */}
+      <ZebraStripeBackground />
 
-        {/* Editorial Header Row: Title, Meta, & PDF Action */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 pb-6 border-b border-[#112250]/10">
+      {/* ================= BOOK OF DISEASES DRAWER / SIDEBAR ================= */}
+      <AnimatePresence>
+        {isBookSidebarOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsBookSidebarOpen(false)}
+              className="fixed inset-0 z-50 bg-[#112250]/40 backdrop-blur-xs cursor-pointer"
+            />
+
+            {/* Drawer panel */}
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 26, stiffness: 260 }}
+              className="fixed inset-y-0 left-0 z-50 w-full max-w-sm sm:max-w-md bg-white shadow-2xl flex flex-col border-r border-[#112250]/15"
+            >
+              {/* Drawer Header */}
+              <div className="p-4 sm:p-5 border-b border-[#112250]/10 bg-[#F7FBFE] flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="h-10 w-10 rounded-xl bg-[#112250] flex items-center justify-center text-white shadow-xs">
+                    <BookOpen className="h-5 w-5 text-[#BCE0F5]" />
+                  </div>
+                  <div>
+                    <h3 className="font-heading font-black text-base text-[#112250] flex items-center gap-2">
+                      <span>Book of Diseases</span>
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#D6EAF5] text-[#112250]">
+                        {allDiseases.length} Chapters
+                      </span>
+                    </h3>
+                    <p className="text-xs text-[#3B507D]">Select any condition to switch chapter</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsBookSidebarOpen(false)}
+                  className="h-8 w-8 rounded-full hover:bg-[#112250]/10 flex items-center justify-center text-[#3B507D] hover:text-[#112250] transition-colors cursor-pointer"
+                  aria-label="Close Book of Diseases"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Search & Filter within Book */}
+              <div className="p-4 border-b border-[#112250]/10 space-y-3 bg-white">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#3B507D]" />
+                  <input
+                    type="text"
+                    value={bookSearchQuery}
+                    onChange={(e) => setBookSearchQuery(e.target.value)}
+                    placeholder="Search condition or category..."
+                    className="w-full pl-9 pr-8 py-2 text-xs sm:text-sm rounded-xl border border-[#112250]/15 bg-[#F7FBFE] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#112250]/20 text-[#112250] placeholder:text-[#3B507D]/60"
+                  />
+                  {bookSearchQuery && (
+                    <button
+                      onClick={() => setBookSearchQuery("")}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#3B507D] hover:text-[#112250] p-0.5"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Category Pills */}
+                <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 text-xs">
+                  {bookCategories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setBookSelectedCat(cat)}
+                      className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                        bookSelectedCat === cat
+                          ? "bg-[#112250] text-white"
+                          : "bg-[#F5F4F0] text-[#3B507D] hover:bg-[#D6EAF5] hover:text-[#112250]"
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Disease List Items */}
+              <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
+                {filteredBookDiseases.length === 0 ? (
+                  <div className="p-8 text-center text-sm text-[#3B507D]">
+                    No diseases match your search.
+                  </div>
+                ) : (
+                  filteredBookDiseases.map((d: any) => {
+                    const isCurrent =
+                      String(d.id || "").toLowerCase() === String(disease.id || "").toLowerCase() ||
+                      String(d.name || "").toLowerCase() === String(disease.name || "").toLowerCase();
+                    return (
+                      <button
+                        key={d.id || d.name}
+                        onClick={() => handleSelectDisease(d.id || d.name)}
+                        className={`w-full text-left p-3 rounded-2xl transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                          isCurrent
+                            ? "bg-[#112250] text-white shadow-sm ring-2 ring-[#112250]/30"
+                            : "hover:bg-[#D6EAF5]/40 text-[#112250] border border-transparent hover:border-[#112250]/10"
+                        }`}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className={`font-heading font-bold text-sm truncate ${isCurrent ? "text-white" : "text-[#112250]"}`}>
+                            {d.name}
+                          </p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            {d.category && (
+                              <span className={`text-[11px] truncate ${isCurrent ? "text-[#BCE0F5]" : "text-[#3B507D]"}`}>
+                                {d.category}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {isCurrent ? (
+                          <span className="shrink-0 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#BCE0F5] text-[#112250]">
+                            Reading
+                          </span>
+                        ) : (
+                          <ChevronRight className="h-4 w-4 text-[#3B507D]/40 shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Drawer Footer */}
+              <div className="p-3 border-t border-[#112250]/10 bg-[#F7FBFE] flex items-center justify-between text-xs text-[#3B507D]">
+                <span>Showing {filteredBookDiseases.length} of {allDiseases.length}</span>
+                <button
+                  type="button"
+                  onClick={onBack}
+                  className="font-bold text-[#112250] hover:underline cursor-pointer"
+                >
+                  Go to Disease Guide →
+                </button>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ================= SLEEK READER TOP BAR (Replaces fixed navbar on disease view) ================= */}
+      <nav aria-label="Reader Navigation" className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#112250]/10 shadow-xs">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-4">
+          {/* Left: Back to Disease Guide + Book of Diseases Toggle */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={onBack}
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-heading font-bold text-[#3B507D] hover:text-[#112250] hover:bg-[#D6EAF5]/50 transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Disease Guide</span>
+              <span className="sm:hidden">Guide</span>
+            </button>
+
+            <div className="h-4 w-px bg-[#112250]/15" />
+
+            <button
+              type="button"
+              onClick={() => setIsBookSidebarOpen(!isBookSidebarOpen)}
+              className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-heading font-bold transition-all cursor-pointer ${
+                isBookSidebarOpen
+                  ? "bg-[#112250] text-white shadow-xs"
+                  : "bg-[#D6EAF5]/60 hover:bg-[#D6EAF5] text-[#112250] border border-[#112250]/10"
+              }`}
+              title="Open Book of Diseases"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              <span>Book of Diseases</span>
+              {allDiseases.length > 0 && (
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${isBookSidebarOpen ? "bg-white/20 text-white" : "bg-white text-[#112250]"}`}>
+                  {allDiseases.length}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* Right: PDF Action */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => generateDiseasePDF(disease)}
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#112250] hover:bg-[#1C376F] px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-heading font-bold text-white shadow-xs transition-colors cursor-pointer"
+            >
+              <Download className="h-3.5 w-3.5 text-[#BCE0F5] shrink-0" />
+              <span className="hidden sm:inline">Download Family Guide (PDF)</span>
+              <span className="sm:hidden">Family Guide</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* ================= EDITORIAL HEADER ================= */}
+      <header className="relative pt-6 sm:pt-8 pb-4 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Editorial Header Row: Title & Badges (Repetitive paragraph removed so user reads directly in Overview tab) */}
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 pb-4 border-b border-[#112250]/10">
           <div className="space-y-3 max-w-3xl">
             {/* Meta Tags */}
             <div className="flex flex-wrap items-center gap-2">
@@ -519,29 +695,13 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
             <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-[#112250] tracking-tight leading-tight">
               {disease.name}
             </h1>
-
-            {/* Introductory Lead Sentence */}
-            <p className="text-base sm:text-lg text-[#3B507D] font-normal leading-relaxed max-w-2xl">
-              {disease.shortDesc || (typeof disease.overview === "object" && disease.overview?.simple ? disease.overview.simple : "Comprehensive clinical guide and caregiver resources.")}
-            </p>
-          </div>
-
-          {/* Download PDF button */}
-          <div className="shrink-0 pt-1">
-            <button
-              onClick={() => generateDiseasePDF(disease)}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#112250] hover:bg-[#1C376F] px-6 py-3 text-xs sm:text-sm font-heading font-bold text-white shadow-sm hover:shadow-md transition-all duration-200 active:scale-95 cursor-pointer min-h-[44px]"
-            >
-              <Download className="h-4 w-4 text-[#BCE0F5] shrink-0" />
-              <span>Download Family Guide (PDF)</span>
-            </button>
           </div>
         </div>
       </header>
 
       {/* ================= STICKY HORIZONTAL TAB NAVIGATION ================= */}
       {tabs.length > 0 && (
-        <section className="sticky top-[72px] sm:top-[76px] z-30 py-2.5 bg-[#F7FBFE]/95 backdrop-blur-md border-b border-[#112250]/10">
+        <section className="sticky top-[49px] sm:top-[53px] z-30 py-2.5 bg-[#F7FBFE]/90 backdrop-blur-md border-b border-[#112250]/10 shadow-2xs">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-1">
               {tabs.map((tab) => {
@@ -1060,7 +1220,9 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                         {tabSummaries.myths}
                       </p>
 
-                      {mythsList.length > 0 ? (
+                      {mythsBlocks && mythsBlocks.length > 0 ? (
+                        <BlocksRenderer blocks={mythsBlocks} />
+                      ) : mythsList.length > 0 ? (
                         <div className="space-y-4 pt-2">
                           {mythsList.map((m: any, idx: number) => {
                             const isOpen = openMythIndex === idx;
@@ -1138,7 +1300,7 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
                           {specialistsList.map((spec: any, idx: number) => (
                             <div key={idx} className="rounded-2xl border border-[#112250]/15 bg-[#F7FBFE] p-5 flex flex-col justify-between space-y-3">
                               <div className="flex items-start gap-3">
-                                <SpecialistAvatar name={spec.name} size="md" />
+                                <SpecialistAvatar name={spec.name} size={48} className="h-12 w-12" />
                                 <div>
                                   <h3 className="font-heading font-bold text-base text-[#112250]">{spec.name}</h3>
                                   <p className="text-xs font-semibold text-[#3B507D] mt-0.5">{spec.profession || "Specialist"}</p>
@@ -1189,6 +1351,30 @@ export default function DiseasePage({ diseaseId, onBack }: DiseasePageProps) {
           {/* ================= RIGHT COLUMN: SECONDARY INFORMATION SIDEBAR (4 COLS) ================= */}
           <aside className="lg:col-span-4 space-y-6">
             <div className="lg:sticky lg:top-28 space-y-6">
+              {/* Sidebar Box 0: Book of Diseases Quick Switcher */}
+              <div className="rounded-3xl border border-[#112250]/12 bg-[#D6EAF5]/40 p-5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs font-heading font-black text-[#112250] uppercase tracking-wider">
+                    <BookOpen className="h-4 w-4 text-[#112250]" />
+                    <span>Book of Diseases</span>
+                  </div>
+                  <span className="text-[11px] font-bold text-[#3B507D]">
+                    {allDiseases.length} chapters
+                  </span>
+                </div>
+                <p className="text-xs text-[#3B507D] leading-relaxed">
+                  Flip through our medical catalogue of rare disease condition chapters.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsBookSidebarOpen(true)}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#112250] hover:bg-[#1C376F] px-4 py-2.5 text-xs font-heading font-bold text-white shadow-xs transition-colors cursor-pointer"
+                >
+                  <BookOpen className="h-3.5 w-3.5 text-[#BCE0F5]" />
+                  <span>Browse All Chapters</span>
+                </button>
+              </div>
+
               {/* Sidebar Box 1: At a Glance (Key Clinical Facts & Takeaways) */}
               <div className="rounded-3xl border border-[#112250]/12 bg-white p-6 shadow-xs space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-[#112250]/10">

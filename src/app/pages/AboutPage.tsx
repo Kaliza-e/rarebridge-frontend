@@ -107,8 +107,8 @@ export default function AboutPage({ onNav }: AboutPageProps) {
         {/* Background Photo & Dark Gradient Overlays */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1600&q=80"
-            alt="Caring family and community walking together with support"
+            src="https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1600&q=80"
+            alt="Plains zebras in natural African savanna — the international symbol of rare disease"
             className="h-full w-full object-cover object-center"
           />
           {/* Multi-layer gradient overlays to guarantee WCAG AAA text legibility */}

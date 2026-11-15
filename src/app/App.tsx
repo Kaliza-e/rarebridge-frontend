@@ -323,6 +323,19 @@ export default function App() {
           -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Zebra Custom Cursor */
+        html, body, .rb-app-shell {
+          cursor: url('/zebra-cursor.svg') 2 2, auto;
+        }
+
+        button, a, select, [role="button"], .cursor-pointer {
+          cursor: url('/zebra-cursor-pointer.svg') 10 2, pointer !important;
+        }
+
+        input[type="text"], input[type="email"], input[type="search"], textarea {
+          cursor: text !important;
+        }
+
         ::selection {
           background: var(--secondary);
           color: var(--primary);
@@ -331,14 +344,16 @@ export default function App() {
 
           <ZebraStripeBackground />
 
-          {/* Navbar */}
-          <Navbar
-            onNav={handleNav}
-            activeView={view}
-          />
+          {/* Navbar (hidden on disease reading page to give full space to the Book of Diseases) */}
+          {view !== "disease" && (
+            <Navbar
+              onNav={handleNav}
+              activeView={view}
+            />
+          )}
 
           {/* Main content */}
-          <main className={`rb-content-layer pb-20 md:pb-0 ${view === "home" ? "pt-0" : "pt-20 sm:pt-24"}`}>
+          <main className={`rb-content-layer pb-20 md:pb-0 ${view === "home" || view === "disease" ? "pt-0" : "pt-20 sm:pt-24"}`}>
             {view === "home" && (
               <HomePage
                 onNav={handleNav}
@@ -366,6 +381,7 @@ export default function App() {
               <DiseasePage
                 diseaseId={selectedDisease}
                 onBack={handleBackToDirectory}
+                onSelectDisease={handleDisease}
               />
             )}
           </main>
