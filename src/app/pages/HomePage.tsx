@@ -41,36 +41,44 @@ interface HomePageProps {
 
 const HERO_SLIDES = [
   {
-    tag: "The Symbol of Rare Diseases",
+    tag: "THE SYMBOL OF RARE CONDITIONS",
+    badge: "When You Hear Hoofbeats, Think Zebras",
     title: "In medicine, when you hear hoofbeats, think of zebras.",
     subtitle: "Zebras represent rare diseases worldwide. We bring clinical clarity, empathetic guidance, and compassionate community to families navigating rare conditions.",
-    image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1920&q=80",
-    alt: "Gentle zebras in natural African savannah — the universal symbol of rare diseases",
-    badge: "Symbol of Rare Conditions",
+    image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1920&q=80",
+    alt: "Hopeful smiling child looking towards a brighter future",
+    cornerTopic: "The Zebra Metaphor",
+    cornerDesc: "In Medicine, When You Hear Hoofbeats, Think of Rare Diseases",
   },
   {
-    tag: "Child-Friendly & Family-Centered",
+    tag: "CHILD-FRIENDLY & FAMILY-CENTERED",
+    badge: "Plain-Language Medicine",
     title: "Understanding rare conditions with clarity, care & hope.",
     subtitle: "Plain-language medical guides, world-class specialist directories, and compassionate family support for children, parents, and caregivers.",
-    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&w=1920&q=80",
-    alt: "Kind pediatrician offering gentle, compassionate medical care to a smiling child",
-    badge: "100% Free & Family-Centered",
+    image: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1920&q=80",
+    alt: "Happy child smiling warmly in natural sunlight",
+    cornerTopic: "Family Health Guides",
+    cornerDesc: "Plain-Language Guidance Sourced from Certified Pediatric Networks",
   },
   {
-    tag: "Caregiver & Family Network",
+    tag: "CAREGIVER & PEER SUPPORT",
+    badge: "Compassionate Support Circles",
     title: "Connecting parents & caregivers through real experience.",
     subtitle: "You are never alone. Join parent support circles, practical caregiver wellness guides, and peer advocacy networks.",
-    image: "https://images.unsplash.com/photo-1536640712-4d4c36ff0e4e?auto=format&fit=crop&w=1920&q=80",
-    alt: "Supportive family and smiling child sharing a joyful moment in warm daylight",
-    badge: "Compassionate Support Circles",
+    image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=1920&q=80",
+    alt: "Smiling child surrounded by supportive family",
+    cornerTopic: "Caregiver Circles",
+    cornerDesc: "Peer Advocacy & Practical Caregiver Wellness Support",
   },
   {
-    tag: "Plain-Language Medical Education",
+    tag: "PLAIN-LANGUAGE MEDICAL EDUCATION",
+    badge: "7,000+ Verified Conditions",
     title: "Simplifying complex genetic reports into everyday guidance.",
     subtitle: "Our certified clinical networks break down ORPHA codes, symptoms, and inheritance patterns into clear, encouraging steps.",
-    image: "https://images.unsplash.com/photo-1501705388883-4ed8a543392c?auto=format&fit=crop&w=1920&q=80",
-    alt: "Peaceful zebra herd roaming across open natural savannah",
-    badge: "Sourced from Certified Geneticists",
+    image: "https://images.unsplash.com/photo-1543332164-6e82f355badc?auto=format&fit=crop&w=1920&q=80",
+    alt: "Hopeful child with a gentle smile in open daylight",
+    cornerTopic: "Clinical Clarity",
+    cornerDesc: "Turning Complex Genetics into Clear Everyday Steps",
   },
 ];
 
@@ -116,12 +124,12 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
     };
   }, []);
 
-  // Auto-advance hero carousel every 6 seconds
+  // Auto-advance hero carousel every 6.5 seconds
   useEffect(() => {
     if (!isAutoPlaying) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 6000);
+    }, 6500);
     return () => clearInterval(timer);
   }, [isAutoPlaying]);
 
@@ -146,9 +154,9 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-transparent text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250]">
-      {/* ================= HERO SECTION (TOUR-INSPIRED CURVED BOTTOM HERO) ================= */}
-      <section className="relative min-h-[680px] lg:min-h-[780px] flex flex-col justify-between pt-24 sm:pt-32 lg:pt-36 pb-12 sm:pb-16 overflow-hidden rounded-b-[2.5rem] sm:rounded-b-[4.5rem] shadow-2xl relative z-20 bg-[#070D1E]">
-        {/* Background Visual Slides with Crossfade */}
+      {/* ================= HERO SECTION (Tour Architecture - Full Width Edge-to-Edge with Curved Bottom) ================= */}
+      <section className="relative overflow-hidden w-full m-0 rounded-b-[2.5rem] sm:rounded-b-[4.5rem] shadow-2xl bg-[#070D1E] min-h-[660px] lg:min-h-[740px] flex flex-col justify-between pt-24 sm:pt-32 lg:pt-36 pb-8 sm:pb-12">
+        {/* Background Visual Carousel with Gentle Ken-Burns Crossfade */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           {HERO_SLIDES.map((slide, idx) => (
             <div
@@ -160,11 +168,11 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
               <img
                 src={slide.image}
                 alt={slide.alt}
-                className="h-full w-full object-cover object-center transition-transform duration-[7000ms] ease-out scale-105"
+                className="h-full w-full object-cover object-[center_35%] transition-transform duration-[8500ms] ease-out scale-105 select-none"
               />
-              {/* Deep navy atmospheric gradient overlays matching Tour */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#070D1E]/92 via-[#070D1E]/80 to-[#070D1E]/95" />
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070D1E]/40 to-[#070D1E]/90 pointer-events-none" />
+              {/* Deep atmospheric gradient overlays guaranteeing WCAG AAA contrast */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[#070D1E]/90 via-[#0D1B3E]/80 to-[#070D1E]/95 pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#070D1E]/40 to-[#070D1E]/85 pointer-events-none" />
             </div>
           ))}
         </div>
@@ -172,135 +180,140 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
         {/* Ambient Top Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[42rem] h-64 bg-[#1A3365]/30 blur-[130px] pointer-events-none z-10" />
 
-        {/* Centered Hero Content */}
-        <div className="max-w-7xl mx-auto w-full relative z-10 my-auto text-center px-4 sm:px-6 pt-6 sm:pt-10 pb-8 sm:pb-12">
-          <div className="max-w-3xl mx-auto space-y-4 sm:space-y-5">
-            {/* Pill Badge with Pulsing Ping Dot */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-xs font-light text-white/90 backdrop-blur-md shadow-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BCE0F5] opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#BCE0F5]" />
-              </span>
-              <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#BCE0F5]">
-                {activeSlide.tag}
-              </span>
-              <span className="text-white/30 hidden sm:inline">·</span>
-              <span className="text-[11px] text-white/80 font-light hidden sm:inline">
-                {activeSlide.badge}
-              </span>
-            </div>
+        {/* Centered Hero Content with Wordings Animations */}
+        <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 text-center my-auto w-full">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSlide}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="space-y-4 sm:space-y-5"
+            >
+              {/* Centered Pill Badge with Pulsing Ping Dot */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-semibold text-white shadow-xs">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BCE0F5] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#BCE0F5]" />
+                </span>
+                <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-[#BCE0F5]">
+                  {activeSlide.tag}
+                </span>
+                <span className="text-white/30 hidden sm:inline">·</span>
+                <span className="text-[11px] text-white/80 font-light hidden sm:inline">
+                  {activeSlide.badge}
+                </span>
+              </div>
 
-            {/* Headline */}
-            <div className="relative">
-              <div className="absolute -inset-x-8 -top-6 -bottom-6 bg-gradient-to-r from-[#1A3365]/30 via-[#3B507D]/20 to-[#1A3365]/30 blur-2xl pointer-events-none rounded-full opacity-70 animate-pulse" />
-              <h1 className="relative font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight sm:leading-snug md:leading-[1.18] drop-shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+              {/* Large Animated Headline */}
+              <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[1.15] tracking-tight text-white max-w-4xl mx-auto drop-shadow-md">
                 {activeSlide.title}
               </h1>
-            </div>
 
-            {/* Subtitle */}
-            <p className="text-xs sm:text-sm md:text-base text-white/85 max-w-xl mx-auto font-light leading-relaxed drop-shadow-sm">
-              {activeSlide.subtitle}
-            </p>
+              {/* Animated Subtitle */}
+              <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed text-[#D6E0F5] font-light">
+                {activeSlide.subtitle}
+              </p>
+            </motion.div>
+          </AnimatePresence>
 
-            {/* Central Search Bar (Tour's signature search input flow) */}
-            <div className="w-full max-w-xl mx-auto pt-2">
-              <form
-                onSubmit={handleSearchSubmit}
-                className="group relative flex items-center rounded-full bg-white border-2 border-white/40 shadow-xl p-1.5 sm:p-2 backdrop-blur-xl transition-all duration-300 hover:border-white/60 focus-within:border-white focus-within:shadow-2xl"
+          {/* Central Sleek Search Bar (Tour signature search architecture) */}
+          <div className="w-full max-w-xl mx-auto pt-6 sm:pt-7">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="group relative flex items-center rounded-full bg-white border-2 border-white/40 shadow-2xl p-1.5 sm:p-2 backdrop-blur-xl transition-all duration-300 hover:border-white/70 focus-within:border-white focus-within:shadow-[0_12px_36px_rgba(0,0,0,0.35)]"
+            >
+              <div className="flex items-center pl-3.5 sm:pl-4 pr-2 pointer-events-none text-[#112250]/50 transition-colors group-focus-within:text-[#112250]">
+                <Search className="h-4 w-4" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search 7,000+ conditions, genes, symptoms, or specialists..."
+                aria-label="Search conditions"
+                autoComplete="off"
+                spellCheck="false"
+                className="w-full bg-transparent py-2 sm:py-2.5 pr-3 text-xs sm:text-sm md:text-base text-[#112250] placeholder:text-[#112250]/45 font-medium border-0 outline-none focus:outline-none focus:ring-0 shadow-none"
+              />
+              <button
+                type="submit"
+                aria-label="Search RareBridge"
+                className="shrink-0 flex items-center gap-1.5 rounded-full bg-[#112250] hover:bg-[#1A3365] px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-heading font-bold text-white shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-95"
               >
-                <div className="flex items-center pl-3.5 sm:pl-4 pr-2 pointer-events-none text-[#112250]/50 transition-colors group-focus-within:text-[#112250]">
-                  <Search className="h-4 w-4" />
-                </div>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search 7,000+ conditions, genes, symptoms, or specialists..."
-                  aria-label="Search conditions"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck="false"
-                  className="w-full bg-transparent py-2 sm:py-2.5 pr-4 text-xs sm:text-sm md:text-base text-[#112250] placeholder:text-[#112250]/45 font-medium border-0 outline-none focus:outline-none focus:ring-0 focus-visible:outline-none shadow-none focus:shadow-none"
-                />
-                <button
-                  type="submit"
-                  aria-label="Search RareBridge"
-                  className="shrink-0 flex items-center gap-1.5 rounded-full bg-[#112250] hover:bg-[#1A3365] px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-95"
-                >
-                  <span>Search</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              </form>
-            </div>
+                <span>Search</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </form>
 
-            {/* Primary Action Buttons */}
-            <div className="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            {/* Quick Action Shortcut Pills */}
+            <div className="pt-4 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
               <button
                 type="button"
                 onClick={() => onNav("directory")}
-                className="inline-flex items-center gap-2 rounded-full bg-white text-[#112250] hover:bg-[#EDF6FC] px-6 sm:px-8 py-3 text-xs sm:text-sm font-bold shadow-xl transition-all duration-200 active:scale-95 cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 px-4.5 py-2 text-xs font-heading font-semibold text-white backdrop-blur-md transition-all active:scale-95 cursor-pointer shadow-xs"
               >
-                <BookOpen className="h-4 w-4 text-[#112250]" />
+                <BookOpen className="h-3.5 w-3.5 text-[#BCE0F5]" />
                 <span>Browse Disease Library</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => onNav("community")}
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white/40 bg-white/10 text-white hover:bg-white hover:text-[#112250] px-6 sm:px-8 py-3 text-xs sm:text-sm font-bold backdrop-blur-sm transition-all duration-200 active:scale-95 cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 px-4.5 py-2 text-xs font-heading font-semibold text-white backdrop-blur-md transition-all active:scale-95 cursor-pointer shadow-xs"
               >
-                <Users className="h-4 w-4" />
+                <Users className="h-3.5 w-3.5 text-[#BCE0F5]" />
                 <span>Join Caregiver Community</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Bottom Status Bar inside the Hero container */}
-        <div className="max-w-7xl mx-auto w-full relative z-20 flex flex-col sm:flex-row items-center sm:justify-between gap-3 pt-4 px-4 sm:px-6">
-          {/* Decorative Zebra Stars */}
-            <div className="hidden sm:flex items-center gap-2 select-none">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 shadow-xs">
-                <BabyZebraBadge size={22} className="border-white/40 shadow-xs" />
-                <span className="text-[11px] font-heading font-bold text-white tracking-wide">Rare-Ze Official Mascot</span>
-              </div>
-            </div>
+        {/* ================= CORNERS CAROUSEL OF IMAGES AND WORDINGS (Matching Tour) ================= */}
+        <div className="max-w-7xl mx-auto w-full relative z-20 flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 px-4 sm:px-6">
+          {/* Bottom-Left Corner: Animated Wordings Pill */}
+          <div className="flex items-center gap-2.5">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center gap-2.5 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 text-xs text-white/90 shadow-sm"
+              >
+                <span className="h-2 w-2 rounded-full bg-[#BCE0F5] shrink-0 animate-pulse" />
+                <span className="font-heading font-bold text-white tracking-wide text-xs">
+                  {activeSlide.cornerTopic}
+                </span>
+                <span className="text-white/30 hidden sm:inline">·</span>
+                <span className="text-white/80 font-light hidden sm:inline text-[11px] truncate max-w-xs md:max-w-sm">
+                  {activeSlide.cornerDesc}
+                </span>
+              </motion.div>
+            </AnimatePresence>
 
-            {/* Status Capsule */}
-          <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 text-xs text-white/85 shadow-sm">
-            <span
-              className={`h-2 w-2 rounded-full ${
-                apiStatus === "online"
-                  ? "bg-emerald-400 animate-pulse"
-                  : apiStatus === "offline"
-                  ? "bg-amber-400"
-                  : "bg-[#BCE0F5] animate-pulse"
-              }`}
-            />
-            <span className="font-semibold text-[#BCE0F5]">
-              {apiStatus === "online"
-                ? "Live Clinical API Connected"
-                : "Verified Clinical Knowledge Base"}
-            </span>
-            <span className="text-white/30 hidden md:inline">·</span>
-            <span className="font-light text-white/80 hidden md:inline text-[11px]">
-              {activeSlide.badge}
-            </span>
+            {/* Mascot Badge */}
+            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-white shadow-xs">
+              <BabyZebraBadge size={18} className="border-white/30 shadow-xs" />
+              <span className="text-[10px] font-heading font-semibold text-white/90">Rare-Ze</span>
+            </div>
           </div>
 
-          {/* Carousel Slide Indicators & Controls */}
-          <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-sm">
+          {/* Bottom-Right Corner: Sleek Tour-Style Dot Scrubber Capsule (< ● ● ▬ ● >) */}
+          <div className="flex items-center gap-2 bg-black/45 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/15 text-white shadow-lg">
+            {/* Prev Arrow */}
             <button
               type="button"
               onClick={handlePrevSlide}
               aria-label="Previous slide"
-              className="text-white/60 hover:text-white transition p-1 cursor-pointer"
+              className="text-white/60 hover:text-white transition-colors p-0.5 cursor-pointer active:scale-90"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
             </button>
 
+            {/* Micro Dot Indicators with Active Pill Elongation */}
             <div className="flex items-center gap-1.5 mx-1">
               {HERO_SLIDES.map((_, idx) => (
                 <button
@@ -309,30 +322,22 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   onClick={() => setCurrentSlide(idx)}
                   aria-label={`Go to slide ${idx + 1}`}
                   className={`transition-all duration-300 rounded-full cursor-pointer h-2 ${
-                    currentSlide === idx ? "w-6 bg-[#BCE0F5] shadow-xs" : "w-2 bg-white/40 hover:bg-white/70"
+                    currentSlide === idx
+                      ? "w-6 bg-[#BCE0F5] shadow-xs"
+                      : "w-2 bg-white/40 hover:bg-white/70"
                   }`}
                 />
               ))}
             </div>
 
+            {/* Next Arrow */}
             <button
               type="button"
               onClick={handleNextSlide}
               aria-label="Next slide"
-              className="text-white/60 hover:text-white transition p-1 cursor-pointer"
+              className="text-white/60 hover:text-white transition-colors p-0.5 cursor-pointer active:scale-90"
             >
               <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-
-            <div className="h-3 w-[1px] bg-white/20 mx-0.5" />
-
-            <button
-              type="button"
-              onClick={() => setIsAutoPlaying((prev) => !prev)}
-              aria-label={isAutoPlaying ? "Pause carousel" : "Resume carousel"}
-              className="text-white/60 hover:text-white transition p-1 cursor-pointer"
-            >
-              {isAutoPlaying ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3" />}
             </button>
           </div>
         </div>
