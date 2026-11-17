@@ -154,8 +154,8 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-transparent text-[#112250] selection:bg-[#DDF0FA] selection:text-[#112250]">
-      {/* ================= HERO SECTION (Tour Architecture - Full Width Edge-to-Edge with Curved Bottom) ================= */}
-      <section className="relative overflow-hidden w-full m-0 rounded-b-[2.5rem] sm:rounded-b-[4.5rem] shadow-2xl bg-[#070D1E] min-h-[660px] lg:min-h-[740px] flex flex-col justify-between pt-24 sm:pt-32 lg:pt-36 pb-8 sm:pb-12">
+      {/* ================= HERO SECTION (Tour Architecture - Edge-to-Edge with Modern Curved Bottom) ================= */}
+      <section className="relative overflow-hidden w-full m-0 rounded-b-2xl sm:rounded-b-3xl shadow-xl bg-[#070D1E] min-h-[660px] lg:min-h-[740px] flex flex-col justify-between pt-24 sm:pt-32 lg:pt-36 pb-8 sm:pb-12">
         {/* Background Visual Carousel with Gentle Ken-Burns Crossfade */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           {HERO_SLIDES.map((slide, idx) => (
@@ -189,23 +189,8 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="space-y-4 sm:space-y-5"
+              className="space-y-4 sm:space-y-6"
             >
-              {/* Centered Pill Badge with Pulsing Ping Dot */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-4 py-1.5 text-xs font-semibold text-white shadow-xs">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BCE0F5] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#BCE0F5]" />
-                </span>
-                <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-[#BCE0F5]">
-                  {activeSlide.tag}
-                </span>
-                <span className="text-white/30 hidden sm:inline">·</span>
-                <span className="text-[11px] text-white/80 font-light hidden sm:inline">
-                  {activeSlide.badge}
-                </span>
-              </div>
-
               {/* Large Animated Headline */}
               <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[1.15] tracking-tight text-white max-w-4xl mx-auto drop-shadow-md">
                 {activeSlide.title}
@@ -270,39 +255,10 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           </div>
         </div>
 
-        {/* ================= CORNERS CAROUSEL OF IMAGES AND WORDINGS (Matching Tour) ================= */}
-        <div className="max-w-7xl mx-auto w-full relative z-20 flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 px-4 sm:px-6">
-          {/* Bottom-Left Corner: Animated Wordings Pill */}
-          <div className="flex items-center gap-2.5">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentSlide}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                transition={{ duration: 0.3 }}
-                className="flex items-center gap-2.5 bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 text-xs text-white/90 shadow-sm"
-              >
-                <span className="h-2 w-2 rounded-full bg-[#BCE0F5] shrink-0 animate-pulse" />
-                <span className="font-heading font-bold text-white tracking-wide text-xs">
-                  {activeSlide.cornerTopic}
-                </span>
-                <span className="text-white/30 hidden sm:inline">·</span>
-                <span className="text-white/80 font-light hidden sm:inline text-[11px] truncate max-w-xs md:max-w-sm">
-                  {activeSlide.cornerDesc}
-                </span>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Mascot Badge */}
-            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-white shadow-xs">
-              <BabyZebraBadge size={18} className="border-white/30 shadow-xs" />
-              <span className="text-[10px] font-heading font-semibold text-white/90">Rare-Ze</span>
-            </div>
-          </div>
-
-          {/* Bottom-Right Corner: Sleek Tour-Style Dot Scrubber Capsule (< ● ● ▬ ● >) */}
-          <div className="flex items-center gap-2 bg-black/45 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/15 text-white shadow-lg">
+        {/* ================= BOTTOM CAROUSEL CONTROLLER ================= */}
+        <div className="max-w-7xl mx-auto w-full relative z-20 flex items-center justify-end pt-4 px-4 sm:px-6">
+          {/* Sleek Tour-Style Dot Scrubber Capsule (< ● ● ▬ ● >) */}
+          <div className="flex items-center gap-2 bg-black/45 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/15 text-white shadow-lg">
             {/* Prev Arrow */}
             <button
               type="button"
@@ -436,7 +392,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
             {/* Card 01: Disease Library */}
             <div
               onClick={() => onNav("directory")}
-              className="group relative flex flex-col justify-between rounded-[2rem] border border-[#112250]/10 bg-white/95 backdrop-blur-md p-7 sm:p-9 shadow-card hover:shadow-2xl hover:border-[#112250]/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
+              className="group relative flex flex-col justify-between rounded-2xl border border-[#112250]/10 bg-white/95 backdrop-blur-md p-7 sm:p-9 shadow-card hover:shadow-2xl hover:border-[#112250]/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
             >
               <div>
                 <div className="flex items-center justify-between">
@@ -480,7 +436,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
             {/* Card 02: Specialists Directory */}
             <div
               onClick={() => onNav("specialists")}
-              className="group relative flex flex-col justify-between rounded-[2rem] border border-[#112250]/10 bg-white/95 backdrop-blur-md p-7 sm:p-9 shadow-card hover:shadow-2xl hover:border-[#112250]/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
+              className="group relative flex flex-col justify-between rounded-2xl border border-[#112250]/10 bg-white/95 backdrop-blur-md p-7 sm:p-9 shadow-card hover:shadow-2xl hover:border-[#112250]/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
             >
               <div>
                 <div className="flex items-center justify-between">
@@ -524,7 +480,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
             {/* Card 03: Research & Trials */}
             <div
               onClick={() => onNav("research")}
-              className="group relative flex flex-col justify-between rounded-[2rem] border border-[#112250]/10 bg-white/95 backdrop-blur-md p-7 sm:p-9 shadow-card hover:shadow-2xl hover:border-[#112250]/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
+              className="group relative flex flex-col justify-between rounded-2xl border border-[#112250]/10 bg-white/95 backdrop-blur-md p-7 sm:p-9 shadow-card hover:shadow-2xl hover:border-[#112250]/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
             >
               <div>
                 <div className="flex items-center justify-between">
@@ -568,7 +524,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
             {/* Card 04: Caregiver Community */}
             <div
               onClick={() => onNav("community")}
-              className="group relative flex flex-col justify-between rounded-[2rem] border border-[#112250]/10 bg-white/95 backdrop-blur-md p-7 sm:p-9 shadow-card hover:shadow-2xl hover:border-[#112250]/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
+              className="group relative flex flex-col justify-between rounded-2xl border border-[#112250]/10 bg-white/95 backdrop-blur-md p-7 sm:p-9 shadow-card hover:shadow-2xl hover:border-[#112250]/40 transition-all duration-300 hover:-translate-y-1.5 cursor-pointer"
             >
               <div>
                 <div className="flex items-center justify-between">
@@ -618,7 +574,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           <div className="grid gap-12 lg:grid-cols-12 items-center">
             {/* Left: 5 Cols Photo Card with Floating Corner Badge */}
             <div className="lg:col-span-5 relative">
-              <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-[#112250]/15 shadow-2xl">
+              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-[#112250]/15 shadow-2xl">
                 <img
                   src="/rarebridge_family_photo.png"
                   alt="RareBridge supportive family photo"
@@ -740,7 +696,7 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
           </div>
         </div>
       </section>
-
+        <ZebraStripeDivider />
       {/* ================= EXPLORE DISEASES PREVIEW SECTION ================= */}
       <section className="py-20 sm:py-28 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -800,59 +756,6 @@ export const HomePage = ({ onNav, onDisease }: HomePageProps) => {
                   <BookOpen className="h-4 w-4 text-[#BCE0F5]" />
                   <span>Explore the Disease Guide</span>
                   <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= CHILD-FRIENDLY AI ZEBRA ASSISTANT BANNER ("CTA BANNER" IN TOUR) ================= */}
-      <section className="py-16 sm:py-24 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="px-8 py-14 sm:py-16 md:py-20 text-center rounded-[2.5rem] sm:rounded-[3.5rem] text-white shadow-2xl relative overflow-hidden border border-white/20 bg-gradient-to-r from-[#112250] via-[#1A3365] to-[#112250]">
-            {/* Ambient Background Glow */}
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 rounded-full bg-[#3B507D]/30 blur-3xl pointer-events-none" />
-
-            <div className="relative z-10 space-y-6 max-w-2xl mx-auto">
-              {/* Mascot Image */}
-              <div className="flex justify-center">
-                <img
-                  src="/rarebridge_zebra_with_book.png"
-                  alt="Friendly Zebra Mascot"
-                  className="h-24 w-24 object-contain animate-float"
-                />
-              </div>
-
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold text-[#BCE0F5] backdrop-blur-xs border border-white/15">
-                <BrainCircuit className="h-3.5 w-3.5 text-[#BCE0F5]" />
-                <span>Child-Friendly AI Assistant</span>
-              </div>
-
-              <h2 className="font-heading text-3xl font-bold text-white md:text-5xl leading-tight">
-                Have questions about a genetic report or symptom?
-              </h2>
-
-              <p className="text-white/85 text-base md:text-lg font-light leading-relaxed">
-                Ask our friendly AI mascot to break down complex medical terms into simple, comforting language.
-              </p>
-
-              <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => window.dispatchEvent(new CustomEvent("open-ai-assistant"))}
-                  className="inline-flex items-center justify-center gap-2 h-14 rounded-full bg-white text-[#112250] hover:bg-[#EDF6FC] px-9 py-4 font-bold text-base transition-all duration-200 shadow-xl cursor-pointer active:scale-95"
-                >
-                  <BrainCircuit className="h-5 w-5 text-[#112250]" />
-                  <span>Ask Zebra Assistant</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => onNav("directory")}
-                  className="inline-flex items-center justify-center gap-2 h-14 rounded-full border-2 border-white/40 bg-white/10 text-white hover:bg-white hover:text-[#112250] px-8 py-4 font-bold text-base transition-all duration-200 cursor-pointer backdrop-blur-sm active:scale-95"
-                >
-                  <span>Explore Plain-Language Guides</span>
                 </button>
               </div>
             </div>

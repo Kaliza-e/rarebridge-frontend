@@ -109,7 +109,13 @@ export default function Footer({ onNav }: FooterProps) {
             {/* Column 1: Brand (4 cols on lg) */}
             <div className="lg:col-span-4 space-y-4">
               <div className="flex items-center gap-2.5">
-                <BabyZebraBadge size={30} className="border-white/20 shadow-xs" />
+                <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-white/10 border border-white/20 overflow-hidden shadow-xs shrink-0">
+                  <img
+                    src="/logo-icon.png"
+                    alt="RareBridge Mascot Emblem"
+                    className="h-full w-full object-contain p-0.5"
+                  />
+                </div>
                 <span className="font-heading font-black text-xl text-white tracking-tight">
                   RareBridge
                 </span>

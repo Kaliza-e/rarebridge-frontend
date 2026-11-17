@@ -89,51 +89,36 @@ export default function Navbar({
     <button
       type="button"
       onClick={() => handleNavigation("home")}
-      aria-label="Go to home"
-      className="group flex shrink-0 items-center text-left outline-none transition-transform duration-200 hover:scale-105 pr-1 cursor-pointer"
+      aria-label="RareBridge Home"
+      className="group flex shrink-0 items-center gap-2 sm:gap-2.5 text-left outline-none transition-transform duration-200 hover:scale-[1.02] cursor-pointer select-none"
     >
-      <img
-        src="/logo-transparent.png"
-        alt="RareBridge Logo"
-        className={`block object-contain ${mobile ? "h-8 w-auto sm:h-9" : "h-8 sm:h-9 w-auto"}`}
-      />
+      <div className="relative flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-xl overflow-hidden shrink-0 border border-[#112250]/15 bg-[#E8F2FA] shadow-xs group-hover:border-[#112250]/30 transition-colors">
+        <img
+          src="/logo-icon.png"
+          alt="RareBridge Mascot Emblem"
+          className="h-full w-full object-contain p-0.5"
+        />
+      </div>
     </button>
   );
 
   const renderDesktopLink = (link: string) => {
     const view = NAV_MAP[link] ?? "home";
     const isActive = activeView === view;
-    const Icon = NAV_ICONS[link];
-
+    const displayText = link === "Explore Diseases" ? "Diseases" : link;
     return (
       <button
         key={link}
         type="button"
         onClick={() => handleNavigation(view)}
         aria-current={isActive ? "page" : undefined}
-        className={`group relative flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs sm:text-[13px] font-heading transition-all duration-200 whitespace-nowrap cursor-pointer select-none active:scale-95 ${
+        className={`relative px-3 sm:px-3.5 py-1.5 rounded-xl text-xs sm:text-[13px] font-heading transition-all duration-150 whitespace-nowrap cursor-pointer select-none active:scale-95 ${
           isActive
-            ? "text-[#112250] font-bold"
-            : "text-[#3B507D] font-medium hover:text-[#112250]"
+            ? "text-[#112250] font-bold bg-[#112250]/10"
+            : "text-[#3B507D] font-medium hover:text-[#112250] hover:bg-[#112250]/5"
         }`}
       >
-        {Icon && (
-          <Icon
-            size={14}
-            strokeWidth={isActive ? 2.3 : 1.9}
-            className={`shrink-0 transition-colors ${
-              isActive ? "text-[#112250]" : "text-[#556D9B] group-hover:text-[#112250]"
-            }`}
-            aria-hidden="true"
-          />
-        )}
-        <span>{link}</span>
-        {isActive && (
-          <span
-            className="h-1.5 w-1.5 rounded-full bg-[#112250]"
-            aria-hidden="true"
-          />
-        )}
+        <span>{displayText}</span>
       </button>
     );
   };
@@ -185,11 +170,11 @@ export default function Navbar({
   return (
     <header className="fixed top-3 sm:top-5 left-0 right-0 z-50 w-full pointer-events-none font-heading flex justify-center px-3 sm:px-6">
       <div className="flex flex-col items-center w-full max-w-lg lg:w-auto lg:max-w-none">
-        {/* Centered Floating Capsule Bar - snugly sized, perfectly centered */}
-        <div className="pointer-events-auto relative flex items-center justify-between lg:justify-center gap-2 sm:gap-3 lg:gap-3.5 h-13 sm:h-14 px-3.5 sm:px-4.5 rounded-full bg-white/95 border-2 border-[#112250]/15 shadow-[0_8px_32px_rgba(17,34,80,0.12)] backdrop-blur-md transition-all duration-300 w-full lg:w-auto overflow-hidden">
-          {/* Subtle zebra stripe background pattern ("not make it too much") */}
+        {/* Floating Bar - spacious, well-aligned, refined modern corners */}
+        <div className="pointer-events-auto relative flex items-center justify-between lg:justify-center gap-2.5 sm:gap-4 lg:gap-5 h-13 sm:h-14 px-3 sm:px-5 lg:px-6 rounded-2xl bg-white/95 border border-[#112250]/15 shadow-[0_8px_32px_rgba(17,34,80,0.12)] backdrop-blur-md transition-all duration-300 w-full lg:w-auto overflow-hidden">
+          {/* Subtle zebra stripe background pattern (minimal whisper texture) */}
           <div
-            className="pointer-events-none absolute inset-0 opacity-[0.05] rounded-full"
+            className="pointer-events-none absolute inset-0 opacity-[0.015] rounded-2xl"
             style={{
               backgroundImage: 'url("/zebra-stripe-pattern.svg")',
               backgroundSize: "240px 240px",
@@ -199,21 +184,21 @@ export default function Navbar({
           />
 
           {/* Brand & Desktop Links */}
-          <div className="relative z-10 flex items-center gap-2 sm:gap-2.5 shrink-0">
+          <div className="relative z-10 flex items-center gap-2 sm:gap-3 shrink-0">
             {renderBrand()}
-            <div className="hidden lg:block h-5 w-[1px] bg-[#112250]/15 mx-0.5 shrink-0" aria-hidden="true" />
+            <div className="hidden lg:block h-5 w-[1px] bg-[#112250]/15 mx-1 shrink-0" aria-hidden="true" />
             <nav
               aria-label="Primary navigation"
-              className="hidden lg:flex items-center gap-1 sm:gap-1.5"
+              className="hidden lg:flex items-center gap-1.5 sm:gap-2"
             >
               {NAV_LINKS.map(renderDesktopLink)}
             </nav>
           </div>
 
           {/* Friendly Divider before Action Button */}
-          <div className="relative z-10 hidden lg:block h-5 w-[1px] bg-[#112250]/15 mx-0.5 shrink-0" aria-hidden="true" />
+          <div className="relative z-10 hidden lg:block h-5 w-[1px] bg-[#112250]/15 mx-1 shrink-0" aria-hidden="true" />
 
-          {/* Right Actions: Friendly Disease Guide button & Mobile Menu */}
+          {/* Right Actions: Disease Guide button & Mobile Menu */}
           <div className="relative z-10 flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Quick Disease Guide button */}
             <button
@@ -221,22 +206,11 @@ export default function Navbar({
               onClick={() => handleNavigation("directory")}
               aria-label="Explore Disease Guide"
               title="Explore Disease Guide"
-              className="group relative flex items-center gap-2 rounded-full bg-[#112250] hover:bg-[#1C376F] text-white px-3.5 sm:px-4 py-2 min-h-[44px] text-xs font-heading font-semibold shadow-xs hover:shadow transition-all duration-150 active:scale-95 cursor-pointer shrink-0 overflow-hidden"
+              className="flex items-center gap-1.5 sm:gap-2 rounded-xl bg-[#112250] hover:bg-[#1C376F] text-white px-2.5 sm:px-4 py-2 min-h-[38px] sm:min-h-[40px] text-xs font-heading font-bold shadow-xs hover:shadow transition-all duration-150 active:scale-95 cursor-pointer shrink-0"
             >
-              {/* Subtle baby zebra striped pill accent around icon */}
-              <span
-                className="relative flex items-center justify-center w-6 h-6 rounded-full overflow-hidden shrink-0 border border-white/30"
-                style={{
-                  backgroundImage: "repeating-linear-gradient(45deg, #112250, #112250 2px, #ffffff 2px, #ffffff 4px)",
-                }}
-                aria-hidden="true"
-              >
-                <span className="w-4 h-4 rounded-full bg-[#112250] flex items-center justify-center">
-                  <BookOpen size={11} className="text-[#BCE0F5] shrink-0" />
-                </span>
-              </span>
+              <BookOpen size={13} className="text-[#BCE0F5] shrink-0" />
               <span className="hidden sm:inline">Disease Guide</span>
-              <span className="sm:hidden">Guide</span>
+              <span className="sm:hidden text-[11px]">Guide</span>
             </button>
 
             {/* Mobile menu button */}
@@ -270,11 +244,11 @@ export default function Navbar({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.97, y: -6 }}
               transition={{ duration: 0.2 }}
-              className="pointer-events-auto relative mt-2 w-full rounded-3xl border-2 border-[#112250]/15 bg-white/95 p-3.5 shadow-2xl backdrop-blur-xl lg:hidden overflow-hidden"
+              className="pointer-events-auto relative mt-2 w-full rounded-2xl border border-[#112250]/15 bg-white/95 p-3.5 shadow-2xl backdrop-blur-xl lg:hidden overflow-hidden"
             >
               {/* Subtle zebra background */}
               <div
-                className="pointer-events-none absolute inset-0 opacity-[0.04]"
+                className="pointer-events-none absolute inset-0 opacity-[0.015]"
                 style={{
                   backgroundImage: 'url("/zebra-stripe-pattern.svg")',
                   backgroundSize: "240px 240px",

@@ -1,6 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
-
 @import 'tailwindcss' source(none);
 @source '../**/*.{js,ts,jsx,tsx}';
 
@@ -9,6 +7,36 @@
 @theme {
   --font-sans: "Nunito", system-ui, sans-serif;
   --font-body: "Nunito", system-ui, sans-serif;
-  --font-heading: "Comfortaa", system-ui, sans-serif;
-  --font-display: "Comfortaa", system-ui, sans-serif;
+  --font-heading: "Baloo 2", system-ui, sans-serif;
+  --font-display: "Baloo 2", system-ui, sans-serif;
+}
+
+/* Global typography */
+html,
+body {
+  font-family: "Nunito", system-ui, sans-serif;
+  font-weight: 400;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-weight: 600;
+}
+
+/* Form elements and buttons */
+button,
+input,
+textarea,
+select {
+  font-family: "Nunito", system-ui, sans-serif;
+}
+
+button {
+  font-weight: 500;
 }

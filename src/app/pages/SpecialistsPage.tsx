@@ -18,7 +18,7 @@ import type { ContentNode, Disease as ApiDisease } from "../services/api.service
 import { fetchDiseasesFromAPI, DISEASES } from "../data";
 import { renderTextWithLinks, RichTextRunsRenderer } from "../utils/link-helper";
 import SpecialistAvatar from "../components/common/SpecialistAvatar";
-import { EdelweissFlower, FourPointStar } from "../components/common/Visuals";
+import {  FourPointStar } from "../components/common/Visuals";
 import {
   fadeUpVariants,
   staggerContainerVariants,
@@ -463,7 +463,7 @@ export default function SpecialistsPage() {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              className="relative w-full max-w-3xl lg:max-w-4xl max-h-[90vh] flex flex-col rounded-[2rem] sm:rounded-[2.5rem] border-2 border-[#112250]/15 bg-white shadow-2xl z-10 my-auto overflow-hidden"
+              className="relative w-full max-w-3xl lg:max-w-4xl max-h-[90vh] flex flex-col rounded-2xl border border-[#112250]/15 bg-white shadow-2xl z-10 my-auto overflow-hidden"
             >
               {(() => {
                 const { rawName, profession, specialization } = cleanSpecialistInfo(selectedSpecialist);
@@ -475,7 +475,7 @@ export default function SpecialistsPage() {
                       <button
                         type="button"
                         onClick={() => setSelectedSpecialist(null)}
-                        className="absolute top-5 right-5 sm:top-6 sm:right-6 rounded-full bg-white border border-[#112250]/15 p-2.5 text-[#112250] hover:bg-[#EDF6FC] hover:border-[#112250] transition-colors cursor-pointer shadow-xs z-10"
+                        className="absolute top-5 right-5 sm:top-6 sm:right-6 rounded-xl bg-white border border-[#112250]/15 p-2 text-[#112250] hover:bg-[#EDF6FC] hover:border-[#112250] transition-colors cursor-pointer shadow-xs z-10"
                         aria-label="Close specialist modal"
                       >
                         <X className="h-5 w-5" />
@@ -524,7 +524,7 @@ export default function SpecialistsPage() {
                     <div className="overflow-y-auto px-6 sm:px-8 py-6 space-y-5 flex-1">
                       {/* Specialty / Clinical Focus Box */}
                       {specialization && (
-                        <div className="rounded-2xl bg-[#EDF6FC]/70 p-5 sm:p-6 border border-[#BCE0F5]">
+                        <div className="rounded-xl bg-[#EDF6FC]/70 p-4 sm:p-5 border border-[#BCE0F5]">
                           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2">
                             <Stethoscope className="h-4 w-4 text-[#243B6B] shrink-0" />
                             <span>Clinical Focus &amp; Specialty</span>
@@ -538,7 +538,7 @@ export default function SpecialistsPage() {
                       {/* Organization & Location 2-Column Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {selectedSpecialist.organization && (
-                          <div className="rounded-2xl border border-[#BCE0F5] bg-[#FAF9F5] p-5 flex flex-col justify-between">
+                          <div className="rounded-xl border border-[#BCE0F5] bg-[#FAF9F5] p-4 sm:p-5 flex flex-col justify-between">
                             <div>
                               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2">
                                 <Building2 className="h-4 w-4 text-[#243B6B] shrink-0" />
@@ -552,7 +552,7 @@ export default function SpecialistsPage() {
                         )}
 
                         {selectedSpecialist.location && (
-                          <div className="rounded-2xl border border-[#BCE0F5] bg-[#FAF9F5] p-5 flex flex-col justify-between">
+                          <div className="rounded-xl border border-[#BCE0F5] bg-[#FAF9F5] p-4 sm:p-5 flex flex-col justify-between">
                             <div>
                               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2">
                                 <MapPin className="h-4 w-4 text-[#243B6B] shrink-0" />
@@ -568,8 +568,8 @@ export default function SpecialistsPage() {
 
                       {/* Appointments & Direct Contact */}
                       {selectedSpecialist.contact && (
-                        <div className="rounded-2xl border border-[#BCE0F5] bg-white p-5 sm:p-6 shadow-xs">
-                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2.5">
+                        <div className="rounded-xl border border-[#BCE0F5] bg-white p-4 sm:p-5 shadow-xs">
+                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2">
                             <ExternalLink className="h-4 w-4 text-[#243B6B] shrink-0" />
                             <span>Appointments &amp; Direct Contact Guidance</span>
                           </div>
@@ -581,8 +581,8 @@ export default function SpecialistsPage() {
 
                       {/* Publications & Clinical Trials */}
                       {selectedSpecialist.publications && (
-                        <div className="rounded-2xl border border-[#BCE0F5] bg-[#FAF9F5] p-5 sm:p-6">
-                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2.5">
+                        <div className="rounded-xl border border-[#BCE0F5] bg-[#FAF9F5] p-4 sm:p-5">
+                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2">
                             <BookOpen className="h-4 w-4 text-[#243B6B] shrink-0" />
                             <span>Key Publications &amp; Active Clinical Trials</span>
                           </div>
@@ -594,19 +594,19 @@ export default function SpecialistsPage() {
 
                       {/* Additional Content */}
                       {selectedSpecialist.additionalContent && selectedSpecialist.additionalContent.length > 0 && (
-                        <div className="space-y-4 rounded-2xl border border-[#BCE0F5] bg-white p-5 sm:p-6">
+                        <div className="space-y-4 rounded-xl border border-[#BCE0F5] bg-white p-4 sm:p-5">
                           {renderAdditionalContent(selectedSpecialist.additionalContent)}
                         </div>
                       )}
 
                       {/* Verified Sources & External References */}
                       {selectedSpecialist.sources && selectedSpecialist.sources.length > 0 && (
-                        <div className="rounded-2xl border border-[#BCE0F5]/80 bg-[#EDF6FC]/40 p-5">
-                          <h4 className="text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2.5 flex items-center gap-2">
+                        <div className="rounded-xl border border-[#BCE0F5]/80 bg-[#EDF6FC]/40 p-4 sm:p-5">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-[#243B6B] mb-2 flex items-center gap-2">
                             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                             <span>Verified Medical Literature &amp; Consortium Sources</span>
                           </h4>
-                          <ul className="space-y-2">
+                          <ul className="space-y-1.5">
                             {selectedSpecialist.sources.map((source, sIdx) => (
                               <li key={sIdx} className="break-all text-xs sm:text-sm text-[#3B507D] flex items-start gap-2">
                                 <span className="text-[#243B6B] font-bold">•</span>
@@ -623,7 +623,7 @@ export default function SpecialistsPage() {
                       <button
                         type="button"
                         onClick={() => setSelectedSpecialist(null)}
-                        className="rounded-full bg-[#112250] hover:bg-[#1C376F] px-8 py-3 text-sm font-bold text-white shadow-md hover:shadow-lg transition-all cursor-pointer"
+                        className="rounded-xl bg-[#112250] hover:bg-[#1C376F] px-6 py-2.5 text-xs sm:text-sm font-heading font-bold text-white shadow-xs transition-colors cursor-pointer"
                       >
                         Close Details
                       </button>

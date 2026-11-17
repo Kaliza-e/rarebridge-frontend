@@ -6,17 +6,7 @@ import {
   Flame, Award, CheckCircle, XCircle, Lock, Download, Heart, Brain, Dna, Activity, ArrowRight
 } from "lucide-react";
 import { Disease } from "../../data";
-import { generateDiseasePDF } from "../../utils/pdf-generator";
 
-/**
- * Buttery yellow (#FBE08A) cartoon star with friendly rounded points.
- * Inspired by the warm baby zebra illustration.
- */
-
-/**
- * Adorable Baby Zebra mascot badge using official Rare-Ze artwork.
- * Replaces star emojis with warm zebra branding.
- */
 export function BabyZebraBadge({
   size = 24,
   className = "",
@@ -28,14 +18,14 @@ export function BabyZebraBadge({
 }) {
   return (
     <div
-      className={`inline-flex items-center justify-center rounded-full overflow-hidden shrink-0 border border-[#112250]/20 bg-white shadow-2xs ${className}`}
+      className={`inline-flex items-center justify-center rounded-full overflow-hidden shrink-0 border border-[#112250]/15 bg-[#E8F2FA] shadow-2xs ${className}`}
       style={{ width: size, height: size, ...style }}
-      aria-label="Rare-Ze Baby Zebra Mascot"
+      aria-label="RareBridge Mascot Emblem"
     >
       <img
-        src="/baby-zebra.jpg"
-        alt="Rare-Ze Baby Zebra"
-        className="w-full h-full object-cover scale-110"
+        src="/logo-icon.png"
+        alt="RareBridge Mascot"
+        className="w-full h-full object-contain p-0.5"
       />
     </div>
   );
@@ -77,9 +67,6 @@ export function ZebraStar({
   );
 }
 
-/**
- * Soft sky blue (#D6EAF5) cloud-shaped blob.
- */
 export function ZebraCloudBlob({
   className = "",
   style = {},
@@ -105,24 +92,15 @@ export function ZebraCloudBlob({
 }
 
 /**
- * Thin black-and-white zebra stripe divider line between major sections.
+ * Subtle refined divider between major sections.
  */
 export function ZebraStripeDivider({ className = "" }: { className?: string }) {
   return (
     <div
       aria-hidden="true"
-      className={`w-full flex items-center justify-center my-8 sm:my-12 px-4 select-none ${className}`}
+      className={`w-full flex items-center justify-center my-6 sm:my-8 px-4 select-none ${className}`}
     >
-      <div className="relative w-full max-w-4xl h-2.5 rounded-full overflow-hidden shadow-2xs border border-[#112250]/15 bg-white">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, #112250 0, #112250 10px, #FFFFFF 10px, #FFFFFF 20px)",
-            opacity: 0.95,
-          }}
-        />
-      </div>
+      <div className="relative w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#112250]/15 to-transparent" />
     </div>
   );
 }
@@ -423,7 +401,7 @@ export function ZebraGridDoodle({
   gridColorLavender = "#A7A9C6",
   gridColorBeige = "#D8D3C8",
   gridColorNavy = "#3B507D",
-  opacity = 0.04,
+  opacity = 0.015,
   patternId = "zebra-grid-doodle-pattern"
 }: {
   className?: string;
@@ -536,16 +514,16 @@ export function ZebraStripeBackground() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
     >
-      {/* Warm child-friendly ambient pastel glows (soft sunshine & baby blue) */}
-      <div className="absolute -top-16 right-1/4 h-88 w-88 rounded-full bg-[#FFF5D6]/35 blur-[120px]" />
-      <div className="absolute top-[30%] -left-16 h-[26rem] w-[26rem] rounded-full bg-[#DDF0FA]/30 blur-[130px]" />
-      <div className="absolute top-[65%] -right-16 h-88 w-88 rounded-full bg-[#EBF5FE]/35 blur-[120px]" />
-      <div className="absolute bottom-10 left-1/3 h-72 w-72 rounded-full bg-[#FFF0E6]/25 blur-[110px]" />
+      {/* Gentle ambient pastel glows (soft sunshine & baby blue) */}
+      <div className="absolute -top-16 right-1/4 h-88 w-88 rounded-full bg-[#FFF5D6]/15 blur-[140px]" />
+      <div className="absolute top-[30%] -left-16 h-[26rem] w-[26rem] rounded-full bg-[#DDF0FA]/15 blur-[150px]" />
+      <div className="absolute top-[65%] -right-16 h-88 w-88 rounded-full bg-[#EBF5FE]/15 blur-[140px]" />
+      <div className="absolute bottom-10 left-1/3 h-72 w-72 rounded-full bg-[#FFF0E6]/10 blur-[130px]" />
 
       {/* Perimeter organic reference wave frame */}
-      <div className="rb-reference-wave pointer-events-none absolute inset-0 z-0 opacity-60" />
-      {/* Characteristic repeating zebra stripe pattern - subtle and friendly */}
-      <div className="rb-zebra-stripes pointer-events-none absolute inset-0 z-0" />
+      <div className="rb-reference-wave pointer-events-none absolute inset-0 z-0 opacity-20" />
+      {/* Characteristic repeating zebra stripe pattern - ultra-subtle texture */}
+      <div className="rb-zebra-stripes pointer-events-none absolute inset-0 z-0 opacity-30" />
     </div>
   );
 }

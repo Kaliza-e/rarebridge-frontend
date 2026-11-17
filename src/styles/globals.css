@@ -112,7 +112,7 @@ nav,
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  opacity: 0.05;
+  opacity: 0.03;
 }
 
 .rb-zebra-stripes {
@@ -120,7 +120,7 @@ nav,
   background-position: center top;
   background-repeat: repeat;
   background-size: 560px 560px;
-  opacity: 0.09;
+  opacity: 0.02;
 }
 
 .rb-navbar-zebra {
@@ -128,7 +128,7 @@ nav,
   background-position: center center;
   background-repeat: repeat;
   background-size: 240px 240px;
-  opacity: 0.06;
+  opacity: 0.015;
 }
 
 .rb-zebra-background {
@@ -144,7 +144,7 @@ nav,
   background-size:
     560px 560px,
     cover;
-  opacity: 0.10;
+  opacity: 0.025;
 }
 
 .rb-footer {
@@ -202,7 +202,7 @@ input[type="search"]::-webkit-search-results-decoration {
   .rb-zebra-stripes {
     background-position: 38% top;
     background-size: 420px 420px;
-    opacity: 0.03;
+    opacity: 0.015;
   }
 
   .rb-zebra-background {
@@ -212,7 +212,7 @@ input[type="search"]::-webkit-search-results-decoration {
     background-size:
       420px 420px,
       cover;
-    opacity: 0.04;
+    opacity: 0.015;
   }
 }
 /* Accessible card hover lifts & sparkle touches (prefers-reduced-motion safe) */
